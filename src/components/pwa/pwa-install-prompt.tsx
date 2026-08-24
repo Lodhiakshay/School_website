@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Download, X, Smartphone } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Download, X } from 'lucide-react';
 
 export const PwaInstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -12,8 +11,9 @@ export const PwaInstallPrompt: React.FC = () => {
   useEffect(() => {
     // Check if already in standalone PWA mode
     if (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone === true)
     ) {
       setIsInstalled(true);
       return;
@@ -56,8 +56,12 @@ export const PwaInstallPrompt: React.FC = () => {
       className="fixed bottom-3 right-3 left-3 sm:left-auto sm:right-6 z-50 max-w-sm bg-slate-950/95 text-white border border-amber-400/40 rounded-2xl p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-4 duration-300"
     >
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl overflow-hidden border border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
-          <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+        <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-1 shadow-md flex-shrink-0 flex items-center justify-center">
+          <img
+            src="/icon-192.png"
+            alt="SGM Logo"
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="flex-1 min-w-0">
           <h4 className="text-xs font-black text-amber-300 truncate font-serif">
@@ -77,7 +81,7 @@ export const PwaInstallPrompt: React.FC = () => {
           </button>
           <button
             onClick={() => setShowPrompt(false)}
-            className="p-1 text-slate-400 hover:text-white rounded-lg"
+            className="p-1 text-slate-400 hover:text-white rounded-lg transition"
             aria-label="Dismiss install banner"
           >
             <X className="w-3.5 h-3.5" />
