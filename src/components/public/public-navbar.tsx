@@ -21,7 +21,6 @@ import {
   Mail,
   UserCheck,
   ChevronRight,
-  GraduationCap,
 } from 'lucide-react';
 
 export const PublicNavbar: React.FC = () => {
@@ -35,7 +34,7 @@ export const PublicNavbar: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -54,33 +53,33 @@ export const PublicNavbar: React.FC = () => {
 
   const navLinks = [
     { label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-    { label: 'About Us', href: '/about', icon: <Info className="w-4 h-4" /> },
-    { label: 'Principal Desk', href: '/principal-message', icon: <UserCheck className="w-4 h-4" /> },
+    { label: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
+    { label: 'Desk', href: '/principal-message', icon: <UserCheck className="w-4 h-4" /> },
     { label: 'Academics', href: '/academics', icon: <BookOpen className="w-4 h-4" /> },
     { label: 'Faculty', href: '/faculty', icon: <Users className="w-4 h-4" /> },
     { label: 'Facilities', href: '/facilities', icon: <Building2 className="w-4 h-4" /> },
     { label: 'Gallery', href: '/gallery', icon: <ImageIcon className="w-4 h-4" /> },
-    { label: 'Events & News', href: '/events', icon: <Calendar className="w-4 h-4" /> },
+    { label: 'Events', href: '/events', icon: <Calendar className="w-4 h-4" /> },
     { label: 'Contact', href: '/contact', icon: <Mail className="w-4 h-4" /> },
   ];
 
   return (
     <>
       <header
-        className={`w-full sticky top-0 z-40 transition-all duration-300 ${
+        className={`w-full sticky top-0 z-40 transition-all duration-200 ${
           isScrolled
-            ? 'bg-slate-950/95 backdrop-blur-2xl border-b border-white/10 shadow-2xl shadow-slate-950/60'
-            : 'bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 shadow-md'
+            ? 'bg-slate-950/95 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-slate-950/50'
+            : 'bg-slate-950 border-b border-slate-800/80 shadow-md'
         }`}
       >
         {/* Top Notification Strip */}
         <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-slate-300 py-1 px-4 text-xs border-b border-white/5">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            {/* Desktop Left: Address & Phone */}
+            {/* Desktop Left */}
             <div className="hidden sm:flex items-center gap-4 text-[11px] font-medium">
               <span className="flex items-center gap-1.5 text-slate-300">
                 <MapPin className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                Main Road, Shamsabad, Farrukhabad (209503)
+                Main Road, Shamsabad, Farrukhabad, UP (209503)
               </span>
               <span className="hidden md:flex items-center gap-1.5 text-slate-300">
                 <Phone className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
@@ -88,10 +87,10 @@ export const PublicNavbar: React.FC = () => {
               </span>
             </div>
 
-            {/* Mobile Left & Center: Single Line Compact Admissions Ticker */}
+            {/* Mobile Left & Center */}
             <div className="flex sm:hidden items-center justify-between w-full text-[11px]">
               <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Admissions 2026-27 Open
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Admissions 2026-27
               </span>
               <Link
                 href="/admissions"
@@ -101,10 +100,10 @@ export const PublicNavbar: React.FC = () => {
               </Link>
             </div>
 
-            {/* Desktop Right: Admissions Open Badge & Apply Link */}
+            {/* Desktop Right */}
             <div className="hidden sm:flex items-center gap-3 text-[11px]">
-              <span className="inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold shadow-sm">
-                <Sparkles className="w-3 h-3 text-amber-400" /> Admissions Open 2026-2027
+              <span className="inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Admissions Open 2026-2027
               </span>
               <Link
                 href="/admissions"
@@ -117,10 +116,10 @@ export const PublicNavbar: React.FC = () => {
         </div>
 
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 flex items-center justify-between gap-4">
-          {/* Brand Logo & Institution Name with Gold Aura */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+          {/* Brand Logo & Name with Radiant Gold Gradient Typography */}
           <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-            <div className="relative w-11 h-11 sm:w-13 sm:h-13 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all duration-300">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all">
               <img
                 src="/logo.png"
                 alt="सरस्वती ज्ञान मन्दिर"
@@ -128,27 +127,27 @@ export const PublicNavbar: React.FC = () => {
               />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-sm sm:text-base font-black text-white tracking-tight leading-tight uppercase font-serif whitespace-nowrap">
+              <h1 className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-100 tracking-tight leading-tight uppercase font-serif whitespace-nowrap">
                 सरस्वती ज्ञान मन्दिर
               </h1>
-              <p className="text-[10px] sm:text-[11px] text-amber-300 font-bold tracking-wider uppercase whitespace-nowrap">
-                तमसो मा ज्योतिर्गमय • शमसाबाद
+              <p className="text-[10px] sm:text-[11px] text-sky-300 font-extrabold tracking-wider uppercase whitespace-nowrap">
+                SARSWATI GYAN MANDIR • SHAMSABAD
               </p>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 flex-shrink-0">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold tracking-wide whitespace-nowrap transition-all duration-200 ${
+                  className={`text-xs font-bold tracking-wide whitespace-nowrap transition-colors py-1 ${
                     isActive
-                      ? 'bg-blue-600/30 text-amber-300 border border-blue-400/50 shadow-sm shadow-blue-500/20'
-                      : 'text-slate-300 hover:text-white hover:bg-white/10'
+                      ? 'text-amber-300 font-black border-b-2 border-amber-400'
+                      : 'text-slate-300 hover:text-white'
                   }`}
                 >
                   {link.label}
@@ -161,14 +160,14 @@ export const PublicNavbar: React.FC = () => {
           <div className="hidden sm:flex items-center gap-2.5 flex-shrink-0">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all backdrop-blur-md shadow-sm whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition shadow-sm whitespace-nowrap"
             >
               <LogIn className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
               <span>ERP Portal</span>
             </Link>
             <Link
               href="/admissions"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-lg shadow-blue-600/30 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md shadow-blue-600/30 whitespace-nowrap"
             >
               <Send className="w-3.5 h-3.5 flex-shrink-0" />
               <span>Online Admission</span>
@@ -179,14 +178,14 @@ export const PublicNavbar: React.FC = () => {
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open Navigation Menu"
-            className="lg:hidden w-10 h-10 rounded-xl text-slate-200 bg-white/10 hover:bg-white/20 border border-white/15 transition flex items-center justify-center flex-shrink-0 backdrop-blur-md"
+            className="lg:hidden p-2 rounded-xl text-slate-200 bg-white/10 hover:bg-white/20 border border-white/15 transition flex-shrink-0"
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-6 h-6" />
           </button>
         </div>
       </header>
 
-      {/* Mobile Backdrop Overlay (Touch anywhere to dismiss) */}
+      {/* Mobile Backdrop Overlay */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md transition-opacity duration-300 lg:hidden animate-in fade-in"
@@ -208,10 +207,10 @@ export const PublicNavbar: React.FC = () => {
               <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h2 className="text-xs font-black text-white font-serif leading-tight">
+              <h2 className="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-100 font-serif leading-tight">
                 सरस्वती ज्ञान मन्दिर
               </h2>
-              <p className="text-[9px] text-amber-300 font-bold uppercase">तमसो मा ज्योतिर्गमय • शमसाबाद</p>
+              <p className="text-[9px] text-sky-300 font-bold uppercase">Shamsabad, Farrukhabad</p>
             </div>
           </div>
           <button
@@ -234,7 +233,7 @@ export const PublicNavbar: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold transition-all ${
                   isActive
-                    ? 'bg-blue-600/30 text-amber-300 border border-blue-500/40 shadow-md shadow-blue-500/20'
+                    ? 'bg-blue-600/30 text-amber-300 border border-blue-500/40 shadow-sm'
                     : 'text-slate-300 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -261,7 +260,7 @@ export const PublicNavbar: React.FC = () => {
           <Link
             href="/admissions"
             onClick={() => setMobileMenuOpen(false)}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 transition shadow-lg shadow-blue-600/40"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black text-white bg-blue-600 hover:bg-blue-700 transition shadow-md shadow-blue-600/30"
           >
             <Send className="w-4 h-4" />
             <span>Submit Admission Inquiry</span>
