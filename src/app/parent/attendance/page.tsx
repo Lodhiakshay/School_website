@@ -58,7 +58,7 @@ export default function ParentAttendancePage() {
 
   return (
     <PortalLayout allowedRoles={['Parent', 'SuperAdmin']}>
-      <div className="space-y-6">
+      <div className="space-y-6 pt-1">
         {/* Header Ribbon & Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
@@ -106,23 +106,23 @@ export default function ParentAttendancePage() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 shadow-sm">
             <span className="text-[10px] font-bold text-emerald-700 uppercase">Cumulative Presence</span>
-            <div className="text-2xl font-black text-emerald-800 mt-1">{current.rate}</div>
-            <p className="text-[10px] text-emerald-600 font-bold mt-1">✓ {current.status}</p>
+            <div className="text-xl sm:text-2xl font-black text-emerald-800 mt-1">{current.rate}</div>
+            <p className="text-[10px] text-emerald-600 font-bold mt-1 truncate">✓ {current.status}</p>
           </div>
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
             <span className="text-[10px] font-bold text-slate-400 uppercase">Working Days</span>
-            <div className="text-2xl font-black text-slate-900 mt-1">{current.totalDays} Days</div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 mt-1">{current.totalDays} Days</div>
           </div>
           <div className="bg-blue-50 p-4 rounded-2xl border border-blue-200 shadow-sm">
             <span className="text-[10px] font-bold text-blue-700 uppercase">Days Attended</span>
-            <div className="text-2xl font-black text-blue-800 mt-1">{current.presentDays} Days</div>
+            <div className="text-xl sm:text-2xl font-black text-blue-800 mt-1">{current.presentDays} Days</div>
           </div>
           <div className="bg-rose-50 p-4 rounded-2xl border border-rose-200 shadow-sm">
             <span className="text-[10px] font-bold text-rose-700 uppercase">Recorded Leaves</span>
-            <div className="text-2xl font-black text-rose-700 mt-1">{current.leaves} Days</div>
+            <div className="text-xl sm:text-2xl font-black text-rose-700 mt-1">{current.leaves} Days</div>
           </div>
         </div>
 
@@ -135,32 +135,34 @@ export default function ParentAttendancePage() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[500px]">
                 <thead className="bg-white border-b border-slate-200 text-slate-500 uppercase font-bold text-[10px]">
                   <tr>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3 font-mono">Entry Time</th>
-                    <th className="p-3">Verification By</th>
+                    <th className="p-3.5">Date</th>
+                    <th className="p-3.5">Status</th>
+                    <th className="p-3.5 font-mono">Entry Time</th>
+                    <th className="p-3.5">Verification By</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                   {current.recentPunches.map((p, idx) => (
                     <tr key={idx} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold text-slate-900">{p.date}</td>
-                      <td className="p-3">
+                      <td className="p-3.5 font-bold text-slate-900 whitespace-nowrap">{p.date}</td>
+                      <td className="p-3.5">
                         <span
-                          className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                          className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full border inline-block whitespace-nowrap ${
                             p.status === 'Present'
                               ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                              : p.status.includes('Leave')
+                              ? 'bg-amber-100 text-amber-900 border-amber-300'
                               : 'bg-rose-100 text-rose-800 border-rose-200'
                           }`}
                         >
                           {p.status}
                         </span>
                       </td>
-                      <td className="p-3 font-mono text-[11px] text-slate-600">{p.time}</td>
-                      <td className="p-3 text-[11px] text-slate-500">{p.verifiedBy}</td>
+                      <td className="p-3.5 font-mono text-[11px] text-slate-600 whitespace-nowrap">{p.time}</td>
+                      <td className="p-3.5 text-[11px] text-slate-500 whitespace-nowrap">{p.verifiedBy}</td>
                     </tr>
                   ))}
                 </tbody>
