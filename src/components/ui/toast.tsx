@@ -51,8 +51,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Floating Toast Notification Stack (Optimized for all displays & curved screens) */}
-      <div className="fixed top-3 inset-x-3 sm:inset-x-auto sm:right-6 sm:top-6 sm:max-w-sm z-[9999] flex flex-col gap-2.5 pointer-events-none">
+      {/* Centered, Safe-Zone Toast Notification Stack for Curved & Standard Displays */}
+      <div className="fixed top-3 left-4 right-4 sm:left-auto sm:right-6 sm:top-6 z-[9999] max-w-sm mx-auto flex flex-col gap-2 pointer-events-none">
         {toasts.map((t) => {
           const isSuccess = t.type === 'success';
           const isError = t.type === 'error';
@@ -61,7 +61,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return (
             <div
               key={t.id}
-              className={`pointer-events-auto flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-top-3 fade-in ${
+              className={`pointer-events-auto flex items-start gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-top-3 fade-in ${
                 isSuccess
                   ? 'bg-slate-950/95 border-emerald-500/50 text-white'
                   : isError
@@ -72,19 +72,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               }`}
             >
               <div className="flex-shrink-0 mt-0.5">
-                {isSuccess && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
-                {isError && <AlertCircle className="w-5 h-5 text-rose-400" />}
-                {isWarning && <AlertTriangle className="w-5 h-5 text-amber-400" />}
-                {t.type === 'info' && <Info className="w-5 h-5 text-blue-400" />}
+                {isSuccess && <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />}
+                {isError && <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />}
+                {isWarning && <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />}
+                {t.type === 'info' && <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />}
               </div>
 
               <div className="flex-1 min-w-0 space-y-0.5">
                 {t.title && (
-                  <h4 className="text-xs font-black text-white font-serif tracking-tight">
+                  <h4 className="text-xs font-black text-white font-serif tracking-tight truncate">
                     {t.title}
                   </h4>
                 )}
-                <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                <p className="text-[11px] sm:text-xs text-slate-300 leading-snug font-medium line-clamp-2">
                   {t.message}
                 </p>
               </div>
