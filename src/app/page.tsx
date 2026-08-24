@@ -20,10 +20,10 @@ import { PublicFooter } from '../components/public/public-footer';
 
 export default function HomePage() {
   const stats = [
-    { label: 'Enrolled Scholars', value: '1,250+', icon: <Users className="w-5 h-5 text-blue-600" /> },
-    { label: 'Qualified Teachers', value: '42+ Faculty', icon: <GraduationCap className="w-5 h-5 text-emerald-600" /> },
-    { label: 'UP Board Pass Rate', value: '99.4%', icon: <Award className="w-5 h-5 text-amber-600" /> },
-    { label: 'Years of Excellence', value: '25+ Years', icon: <Building2 className="w-5 h-5 text-indigo-600" /> },
+    { value: '1,250+', label: 'Enrolled Scholars', icon: <Users className="w-5 h-5 text-blue-600" /> },
+    { value: '42+', label: 'Expert Faculty', icon: <GraduationCap className="w-5 h-5 text-emerald-600" /> },
+    { value: '99.4%', label: 'Board Pass Rate', icon: <Award className="w-5 h-5 text-amber-600" /> },
+    { value: '25+ Yrs', label: 'Academic Legacy', icon: <Building2 className="w-5 h-5 text-indigo-600" /> },
   ];
 
   const academicWings = [
@@ -109,48 +109,48 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105 transition-transform duration-1000"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=80')`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80')`,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-blue-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/90 to-slate-950" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Hero Left Content */}
-            <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-left">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-4 sm:space-y-6">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 border border-amber-400/40 px-3.5 py-1 rounded-full text-xs font-black shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
                 <span>Premier Intermediate College in Shamsabad, Farrukhabad (UP)</span>
               </div>
 
-              {/* Title & Tagline */}
-              <div className="space-y-1 sm:space-y-2">
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight font-serif">
+              {/* Title */}
+              <div className="space-y-1">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white font-serif leading-tight">
                   सरस्वती ज्ञान मन्दिर
                 </h1>
-                <p className="text-xl sm:text-3xl lg:text-4xl text-blue-400 font-sans font-extrabold tracking-tight">
+                <p className="text-base sm:text-2xl font-black text-blue-400 tracking-tight font-serif">
                   Nurturing Character, Culture &amp; Academic Excellence
                 </p>
               </div>
 
-              {/* Subtitle Description */}
-              <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed max-w-2xl font-medium">
+              {/* Description */}
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl font-medium">
                 Affiliated with the <strong className="text-white">UP State Board of High School and Intermediate Education</strong>. We provide state-of-the-art laboratory infrastructure, holistic values, disciplined learning, and complete digital portal management for students from Nursery to Class 12.
               </p>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-1">
+              {/* Action Buttons (Stacked on mobile, row on tablet/desktop) */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 w-full sm:w-auto">
                 <Link
                   href="/admissions"
-                  className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-black shadow-xl shadow-blue-600/30 transition transform hover:-translate-y-0.5"
+                  className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-black shadow-xl shadow-blue-600/30 transition transform hover:-translate-y-0.5"
                 >
                   <span>Apply Online 2026-27</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white hover:bg-slate-800 text-xs sm:text-sm font-bold transition"
+                  className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white hover:bg-slate-800 text-xs sm:text-sm font-bold transition"
                 >
                   <GraduationCap className="w-4 h-4 text-blue-400" />
                   <span>Central ERP Portal</span>
@@ -159,10 +159,10 @@ export default function HomePage() {
 
               {/* Badges */}
               <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1.5 text-emerald-400 font-bold bg-slate-900/80 px-3 py-1 rounded-full border border-slate-800">
+                <span className="inline-flex items-center gap-1.5 text-emerald-400 font-bold bg-slate-900/80 px-3 py-1 rounded-full border border-slate-800 text-[11px] sm:text-xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Code: UP-FBD-2026-SGM-089
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-slate-300 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-800">
+                <span className="inline-flex items-center gap-1.5 text-slate-300 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-800 text-[11px] sm:text-xs">
                   <MapPin className="w-3.5 h-3.5 text-amber-400" /> Shamsabad, Farrukhabad (PIN: 209503)
                 </span>
               </div>
@@ -220,18 +220,22 @@ export default function HomePage() {
 
       {/* Stats Counter Ribbon */}
       <section className="py-6 sm:py-8 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {stats.map((s, idx) => (
             <div
               key={idx}
-              className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-4 hover:shadow-md transition"
+              className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:shadow-md transition"
             >
-              <div className="p-2 sm:p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex-shrink-0">
+              <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl border border-slate-200 flex-shrink-0">
                 {s.icon}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-sm sm:text-xl font-black text-slate-900 truncate">{s.value}</div>
-                <div className="text-[10px] sm:text-xs font-bold text-slate-500 truncate">{s.label}</div>
+                <div className="text-base sm:text-xl font-black text-slate-900 leading-tight truncate">
+                  {s.value}
+                </div>
+                <div className="text-[11px] sm:text-xs font-bold text-slate-500 leading-tight truncate">
+                  {s.label}
+                </div>
               </div>
             </div>
           ))}
@@ -248,39 +252,43 @@ export default function HomePage() {
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif">
               Comprehensive Educational Wings
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Structured developmental pathways mapped to the UP State Board guidelines from primary to intermediate level.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {academicWings.map((w, idx) => (
               <div
                 key={idx}
-                className="rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group bg-white"
+                className="group bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                  <div className="h-44 w-full relative overflow-hidden">
                     <img
                       src={w.image}
                       alt={w.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-3 right-3 bg-blue-900 text-amber-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                    <span className="absolute bottom-3 left-3 bg-blue-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full shadow-md">
                       {w.grades}
-                    </div>
+                    </span>
                   </div>
-                  <div className="p-6 space-y-2.5">
-                    <h3 className="text-base font-black text-slate-900 group-hover:text-blue-700 transition">
+                  <div className="p-5 space-y-2">
+                    <h3 className="text-base font-black text-slate-900 font-serif group-hover:text-blue-600 transition">
                       {w.title}
                     </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">{w.desc}</p>
+                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
+                      {w.desc}
+                    </p>
                   </div>
                 </div>
-                <div className="p-6 pt-0">
+
+                <div className="p-5 pt-0">
                   <Link
                     href="/academics"
-                    className="inline-flex items-center gap-1.5 text-xs font-extrabold text-blue-700 hover:text-blue-900 group-hover:translate-x-1 transition-all"
+                    className="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 hover:text-blue-700 group-hover:translate-x-1 transition-transform"
                   >
                     <span>View Curriculum</span>
                     <ChevronRight className="w-4 h-4" />
@@ -292,144 +300,121 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Principal Desk Letter Highlight */}
-      <section className="py-20 bg-slate-950 text-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Principal Photo */}
-            <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="relative w-64 sm:w-72 rounded-3xl overflow-hidden border-4 border-amber-400/80 shadow-2xl bg-slate-900">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
-                  alt="Dr. Ramesh Kumar Sharma - Principal"
-                  className="w-full h-80 object-cover object-top"
-                />
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-4 text-center">
-                  <h4 className="text-base font-black text-white font-serif">Dr. Ramesh Kumar Sharma</h4>
-                  <p className="text-xs text-amber-300 font-bold">Principal &amp; Senior Academician</p>
-                  <p className="text-[10px] text-slate-400">M.Sc., M.Ed., Ph.D. (28+ Yrs Exp.)</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Principal Message Content */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 bg-blue-900/60 border border-blue-500/40 px-4 py-1.5 rounded-full text-xs font-bold text-blue-300">
-                <Quote className="w-3.5 h-3.5 text-amber-400" />
-                <span>From the Desk of the Principal</span>
-              </div>
-
-              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight font-serif">
-                &ldquo;Education is Not Merely Information, but Character Formation.&rdquo;
-              </h2>
-
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                At Sarswati Gyan Mandir, we strive to build a temple of wisdom where young students of Shamsabad and Farrukhabad are nurtured with Vedic values, scientific curiosity, critical reasoning, and moral integrity. Our alumni have achieved stellar positions in civil services, engineering, medical sciences, and national board examinations.
-              </p>
-
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <Link
-                  href="/principal-message"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20"
-                >
-                  <span>Read Full Principal Message</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <Link
-                  href="/faculty"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 text-xs font-bold transition"
-                >
-                  <span>Meet Our Faculty Roster</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Facilities Section */}
-      <section className="py-20 bg-slate-50">
+      {/* Facilities & Infrastructure */}
+      <section className="py-20 bg-slate-50 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-xs font-black uppercase tracking-widest text-amber-600 bg-amber-100 px-4 py-1.5 rounded-full border border-amber-300">
+            <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200">
               Campus Infrastructure
             </span>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif">
-              State-of-the-Art Laboratories &amp; Campus
+              World-Class Facilities &amp; Laboratories
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
-              Modern science labs, central library, and tech-enabled classrooms built for hands-on learning.
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Designed to foster practical scientific inquiry, digital literacy, and holistic sports development.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {facilities.map((f, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group"
+                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition p-4 space-y-4"
               >
-                <div className="h-44 w-full overflow-hidden bg-slate-200">
-                  <img
-                    src={f.image}
-                    alt={f.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <div className="h-40 rounded-2xl overflow-hidden relative">
+                  <img src={f.image} alt={f.title} className="w-full h-full object-cover" />
                 </div>
-                <div className="p-5 space-y-2">
-                  <h3 className="text-sm font-black text-slate-900 group-hover:text-blue-700 transition">
-                    {f.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{f.desc}</p>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black text-slate-900 font-serif">{f.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">{f.desc}</p>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center">
-            <Link
-              href="/facilities"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shadow-blue-700/20 transition"
-            >
-              <span>Explore All Campus Facilities</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+      {/* Principal Desk Letter */}
+      <section className="py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden border border-blue-800/40 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div className="md:col-span-4 text-center space-y-3">
+              <div className="w-32 h-32 rounded-3xl overflow-hidden border-4 border-amber-400 mx-auto shadow-xl bg-white p-1">
+                <img
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+                  alt="Principal Dr. Ramesh Kumar Sharma"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              </div>
+              <div>
+                <h4 className="font-serif font-black text-base text-amber-300">
+                  Dr. Ramesh Kumar Sharma
+                </h4>
+                <p className="text-xs text-slate-300 font-medium">Principal &bull; M.Sc., M.Ed., Ph.D.</p>
+                <p className="text-[10px] text-amber-400 font-mono mt-0.5">25+ Years Academic Leadership</p>
+              </div>
+            </div>
+
+            <div className="md:col-span-8 space-y-4">
+              <Quote className="w-8 h-8 text-amber-400 opacity-60" />
+              <h3 className="text-xl sm:text-2xl font-black font-serif text-white leading-tight">
+                &ldquo;Empowering Rural Youth with Modern Science, Moral Character &amp; Board Excellence&rdquo;
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                At Saraswati Gyan Mandir, we believe that education is not merely the acquisition of textbook knowledge, but the ignition of intellect, character building, and cultural roots. Our institution provides children from Shamsabad and Farrukhabad with the finest educational foundation.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/principal-message"
+                  className="inline-flex items-center gap-2 text-xs font-black text-amber-300 hover:text-amber-200 transition"
+                >
+                  <span>Read Full Welcome Letter from Principal&apos;s Desk</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="py-20 bg-white">
+      {/* Gallery Showcase */}
+      <section className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div className="space-y-2">
-              <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
-                Moments of Pride
+            <div>
+              <span className="text-xs font-black uppercase tracking-widest text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-200">
+                Campus Memories
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-serif">
-                Campus Life &amp; Events Gallery
+              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif mt-2">
+                Life &amp; Celebrations at Saraswati Gyan Mandir
               </h2>
             </div>
             <Link
               href="/gallery"
-              className="text-xs font-bold text-blue-700 hover:text-blue-900 inline-flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 hover:text-blue-700"
             >
-              View Full Gallery &rarr;
+              <span>Explore Complete Photo Gallery</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {galleryHighlights.map((g, idx) => (
-              <div key={idx} className="relative h-60 rounded-3xl overflow-hidden group shadow-md bg-slate-900">
+              <div
+                key={idx}
+                className="group h-64 rounded-3xl overflow-hidden relative shadow-md border border-slate-200"
+              >
                 <img
                   src={g.image}
                   alt={g.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-5 flex flex-col justify-end">
-                  <span className="text-[10px] font-black text-amber-300 uppercase tracking-wider">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 space-y-1">
+                  <span className="text-[9px] font-black uppercase bg-blue-600 text-white px-2 py-0.5 rounded-full">
                     {g.category}
                   </span>
-                  <h3 className="text-sm font-black text-white leading-tight">{g.title}</h3>
+                  <h3 className="text-sm font-black text-white font-serif">{g.title}</h3>
                 </div>
               </div>
             ))}
