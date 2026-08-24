@@ -113,8 +113,8 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col bg-white font-sans">
       <PublicNavbar />
 
-      {/* Hero Banner with Rich Campus Background */}
-      <section className="relative bg-slate-950 text-white py-24 lg:py-32 overflow-hidden">
+      {/* Hero Banner with Rich Campus Background & Luminous Lighting */}
+      <section className="relative bg-slate-950 text-white py-16 sm:py-24 lg:py-28 overflow-hidden">
         {/* Background Image with Deep Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105 transition-transform duration-1000"
@@ -122,89 +122,94 @@ export default function HomePage() {
             backgroundImage: `url('https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=80')`,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-blue-950/80" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-950/90 to-slate-950" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Hero Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-black shadow-sm">
-                <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
-                <span>Premier Intermediate College in Shamsabad, Farrukhabad (UP)</span>
+            <div className="lg:col-span-7 space-y-5 text-left">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 via-blue-500/20 to-transparent text-amber-300 border border-amber-400/30 px-3.5 py-1 rounded-full text-xs font-bold shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                <span>UP Board Affiliated • College Code: UP-FBD-2026-SGM-089</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight font-serif">
-                सरस्वती ज्ञान मन्दिर
-                <span className="block text-2xl sm:text-3xl lg:text-4xl text-blue-400 font-sans font-extrabold mt-2">
-                  Nurturing Character, Culture &amp; Academic Excellence
-                </span>
-              </h1>
+              <div className="space-y-2">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight font-serif">
+                  सरस्वती ज्ञान मन्दिर
+                  <span className="block text-xl sm:text-3xl lg:text-4xl text-sky-400 font-sans font-extrabold mt-1.5">
+                    इण्टर कॉलेज • शमसाबाद (फर्रुखाबाद)
+                  </span>
+                </h1>
+                <p className="text-xs sm:text-sm font-serif italic text-amber-300/90 font-medium">
+                  &ldquo;तमसो मा ज्योतिर्गमय — Lead Us From Darkness Unto Enlightenment&rdquo;
+                </p>
+              </div>
 
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl font-medium">
-                Affiliated with the <strong className="text-white">UP State Board of High School and Intermediate Education</strong>. We provide state-of-the-art laboratory infrastructure, holistic values, disciplined learning, and complete digital portal management for students from Nursery to Class 12.
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl font-medium">
+                Premier intermediate institution providing Vedic cultural values, advanced science laboratories (Physics, Chemistry, Biology), air-conditioned IT computing, and dedicated board examination coaching from Nursery to Class 12.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3.5 pt-1">
                 <Link
                   href="/admissions"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-black shadow-xl shadow-blue-600/30 transition transform hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-black shadow-xl shadow-blue-600/30 transition transform hover:-translate-y-0.5"
                 >
-                  <span>Apply Online 2026-27</span>
+                  <span>Apply For Admission 2026-27</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900/90 border border-slate-700 text-white hover:bg-slate-800 text-sm font-bold transition"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-bold transition backdrop-blur-md"
                 >
                   <GraduationCap className="w-4 h-4 text-blue-400" />
                   <span>Central ERP Portal</span>
                 </Link>
               </div>
 
-              <div className="pt-4 flex flex-wrap items-center gap-2.5 text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1.5 text-emerald-400 font-bold bg-slate-900/90 px-3 py-1 rounded-full border border-slate-800">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> UP-FBD-2026-SGM-089
+              <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                <span className="inline-flex items-center gap-1 text-emerald-400 font-bold bg-slate-900/90 px-3 py-1 rounded-full border border-slate-800">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 25+ Years of Excellence
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-slate-300 bg-slate-900/90 px-3 py-1 rounded-full border border-slate-800">
+                <span className="inline-flex items-center gap-1 text-slate-300 bg-slate-900/90 px-3 py-1 rounded-full border border-slate-800">
                   <MapPin className="w-3.5 h-3.5 text-amber-400" /> Shamsabad, Farrukhabad (209503)
                 </span>
               </div>
             </div>
 
             {/* Quick Admission Inquiry Widget */}
-            <div className="lg:col-span-5 bg-slate-900/95 border-2 border-blue-600/30 rounded-3xl p-7 shadow-2xl backdrop-blur-xl space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div className="lg:col-span-5 bg-slate-900/90 border border-blue-500/30 rounded-3xl p-6 sm:p-7 shadow-2xl backdrop-blur-xl space-y-5">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
-                    <img src="/logo.png" alt="SGM" className="w-full h-full object-contain" />
+                  <div className="w-11 h-11 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
+                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-white uppercase tracking-wider font-serif">
+                    <h3 className="text-xs sm:text-sm font-black text-white uppercase tracking-wider font-serif">
                       Online Admissions 2026-27
                     </h3>
-                    <p className="text-[10px] text-amber-400 font-bold">Nursery to Class 12 (Science / Arts)</p>
+                    <p className="text-[10px] text-amber-300 font-bold">Nursery to Class 12 (Science / Arts)</p>
                   </div>
                 </div>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-black px-3 py-1 rounded-full border border-emerald-500/30 uppercase">
-                  Active
+                <span className="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2.5 py-0.5 rounded-full border border-emerald-500/30 uppercase">
+                  Open
                 </span>
               </div>
 
-              <div className="space-y-3 text-xs text-slate-300">
-                <p className="leading-relaxed">
-                  Join Farrukhabad&apos;s leading intermediate college. Registrations open for academic session 2026-27.
+              <div className="space-y-2.5 text-xs text-slate-300">
+                <p className="leading-relaxed text-[11px] text-slate-300">
+                  Admissions open for academic session 2026-27. Submit an online inquiry for instant counseling.
                 </p>
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] font-semibold text-slate-200">
+                <div className="grid grid-cols-2 gap-2 pt-0.5">
+                  <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-[10px] font-semibold text-slate-200">
                     ✓ High School Board Batches
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] font-semibold text-slate-200">
+                  <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[10px] font-semibold text-slate-200">
                     ✓ Class 11 PCM / PCB / Arts
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] font-semibold text-slate-200">
+                  <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-[10px] font-semibold text-slate-200">
                     ✓ Digital Lab Facilities
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] font-semibold text-slate-200">
+                  <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-[10px] font-semibold text-slate-200">
                     ✓ School Bus Routes
                   </div>
                 </div>
@@ -212,7 +217,7 @@ export default function HomePage() {
 
               <Link
                 href="/admissions"
-                className="block w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-center font-black text-white text-xs shadow-lg shadow-blue-600/30 transition uppercase tracking-wider"
+                className="block w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-center font-black text-white text-xs shadow-lg shadow-blue-600/30 transition uppercase tracking-wider"
               >
                 Submit Admission Inquiry &rarr;
               </Link>
