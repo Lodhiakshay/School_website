@@ -9,13 +9,16 @@ import {
   Sparkles,
   ArrowRight,
   AlertCircle,
+  Lock,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
+import { useToast } from '../../components/ui/toast';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 
 export default function LoginPage() {
   const { login, quickLoginAs } = useAuth();
+  const { toast } = useToast();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,9 +41,13 @@ export default function LoginPage() {
     setIsLoading(true);
     setErrorMsg(null);
     try {
-      await login(identifier, password);
+      const user = await login(identifier, password);
+      const displayName = (user as any).firstName || user.name || 'User';
+      toast.success(`Welcome back, ${displayName}! Redirecting to your dashboard...`, 'Sign In Successful');
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Invalid credentials');
+      const msg = err.response?.data?.message || 'Invalid email or password. Please try again.';
+      setErrorMsg(msg);
+      toast.error(msg, 'Authentication Notice');
     } finally {
       setIsLoading(false);
     }
@@ -52,45 +59,59 @@ export default function LoginPage() {
     setIdentifier(email);
     setPassword(pass);
     try {
-      await quickLoginAs(email, pass);
+      const user = await quickLoginAs(email, pass);
+      const displayName = (user as any).firstName ? `${(user as any).firstName} ${(user as any).lastName || ''}` : user.name || user.role;
+      toast.success(`Logged in as ${user.role} (${displayName})`, 'Demo Access Granted');
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Quick login failed');
+      toast.error('Could not authenticate demo session.', 'Login Notice');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100">
-      <div className="p-6 max-w-7xl mx-auto w-full flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500/60 bg-white shadow-lg flex-shrink-0">
-            <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain p-0.5" />
+    <div className="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 font-sans">
+      {/* Top Header */}
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-lg flex-shrink-0">
+            <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <h1 className="text-sm font-black text-white tracking-wide uppercase font-serif">सरस्वती ज्ञान मन्दिर</h1>
-            <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Shamsabad, Farrukhabad (UP)</p>
+            <h1 className="text-xs sm:text-sm font-black text-white tracking-wide uppercase font-serif">
+              सरस्वती ज्ञान मन्दिर
+            </h1>
+            <p className="text-[9px] sm:text-[10px] text-amber-300 font-bold uppercase tracking-wider">
+              तमसो मा ज्योतिर्गमय • शमसाबाद
+            </p>
           </div>
         </Link>
-        <Link href="/" className="text-xs text-slate-400 hover:text-white transition font-bold">
-          &larr; Back to Public Website
+        <Link
+          href="/"
+          className="text-xs text-slate-400 hover:text-white transition font-bold bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10"
+        >
+          &larr; Back to Website
         </Link>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <div className="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-md space-y-6">
+      {/* Main Grid */}
+      <div className="max-w-6xl mx-auto px-4 py-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* Left Login Form Card */}
+        <div className="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl space-y-6">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-2">
-              <ShieldCheck className="w-3.5 h-3.5" /> Single Sign-On Portal • Sarswati ERP
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" /> Single Sign-On Portal • Sarswati ERP
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight font-serif">ERP Portal Sign In</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight font-serif">
+              ERP Portal Sign In
+            </h2>
             <p className="text-xs text-slate-400">
-              Enter your credentials or click any demo role on the right.
+              Enter your official credentials or click any demo role on the right.
             </p>
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-300 font-medium flex items-center gap-2">
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-xs text-rose-300 font-medium flex items-center gap-2 animate-in fade-in">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -115,7 +136,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               size="lg"
-              className="w-full mt-2 bg-blue-600 hover:bg-blue-700 font-extrabold shadow-lg shadow-blue-600/30"
+              className="w-full mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-extrabold shadow-lg shadow-blue-600/30"
               isLoading={isLoading}
               leftIcon={<LogIn className="w-4 h-4" />}
             >
@@ -124,12 +145,18 @@ export default function LoginPage() {
           </form>
         </div>
 
+        {/* Right 1-Click Instant Demo Login Grid */}
         <div className="lg:col-span-6 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
             <div className="flex items-center gap-2 text-white">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-black tracking-wide uppercase">1-Click Instant Demo Login</h3>
+              <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
+              <h3 className="text-xs sm:text-sm font-black tracking-wide uppercase">
+                1-Click Instant Demo Login
+              </h3>
             </div>
+            <span className="text-[10px] text-amber-400 font-bold bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
+              Live Testing Mode
+            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -139,24 +166,28 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => handleQuickLogin(acc.email, acc.pass)}
                 disabled={isLoading}
-                className="text-left p-3.5 rounded-2xl bg-slate-900 hover:bg-blue-900/30 border border-slate-800 hover:border-blue-500/50 transition group flex flex-col justify-between"
+                className="text-left p-3.5 rounded-2xl bg-slate-900/80 hover:bg-blue-900/30 border border-slate-800 hover:border-blue-500/50 transition-all duration-200 group flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-black text-white group-hover:text-blue-300 transition">
                       {acc.role}
                     </span>
-                    <ArrowRight className="w-3 h-3 text-slate-500 group-hover:text-blue-400 transition" />
+                    <ArrowRight className="w-3 h-3 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{acc.desc}</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1 font-medium">{acc.desc}</p>
                 </div>
-                <div className="mt-2 text-[10px] font-mono text-amber-400/80 truncate">
+                <div className="mt-2 text-[10px] font-mono text-amber-300/80 truncate">
                   {acc.email}
                 </div>
               </button>
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="p-4 text-center text-[10px] text-slate-500 border-t border-slate-900">
+        &copy; {new Date().getFullYear()} Sarswati Gyan Mandir Intermediate College • Shamsabad, Farrukhabad
       </div>
     </div>
   );

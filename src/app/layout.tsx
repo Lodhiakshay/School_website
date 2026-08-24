@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '../lib/auth-context';
 import { QueryProvider } from '../lib/query-provider';
+import { ToastProvider } from '../components/ui/toast';
 import { PwaRegister } from '../components/pwa/pwa-register';
 import { PwaInstallPrompt } from '../components/pwa/pwa-install-prompt';
 
@@ -46,9 +47,11 @@ export default function RootLayout({
       <body className="antialiased text-slate-900 bg-slate-50 min-h-screen">
         <QueryProvider>
           <AuthProvider>
-            <PwaRegister />
-            <PwaInstallPrompt />
-            {children}
+            <ToastProvider>
+              <PwaRegister />
+              <PwaInstallPrompt />
+              {children}
+            </ToastProvider>
           </AuthProvider>
         </QueryProvider>
       </body>

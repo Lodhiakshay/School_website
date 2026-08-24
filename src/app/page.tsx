@@ -114,7 +114,7 @@ export default function HomePage() {
       <PublicNavbar />
 
       {/* Hero Banner with Rich Campus Background & Luminous Lighting */}
-      <section className="relative bg-slate-950 text-white py-16 sm:py-24 lg:py-28 overflow-hidden">
+      <section className="relative bg-slate-950 text-white pt-4 pb-12 sm:pt-16 sm:pb-24 lg:py-28 overflow-hidden">
         {/* Background Image with Deep Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105 transition-transform duration-1000"
@@ -127,26 +127,26 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Hero Left Content */}
-            <div className="lg:col-span-7 space-y-5 text-left">
+            <div className="lg:col-span-7 space-y-4 text-left">
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 via-blue-500/20 to-transparent text-amber-300 border border-amber-400/30 px-3.5 py-1 rounded-full text-xs font-bold shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                <span>UP Board Affiliated • College Code: UP-FBD-2026-SGM-089</span>
+                <span>UP Board Affiliated (Nursery to Class 12) • Code: UP-FBD-2026-SGM-089</span>
               </div>
 
-              <div className="space-y-2">
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight font-serif">
-                  सरस्वती ज्ञान मन्दिर
-                  <span className="block text-xl sm:text-3xl lg:text-4xl text-sky-400 font-sans font-extrabold mt-1.5">
-                    इण्टर कॉलेज • शमसाबाद (फर्रुखाबाद)
+              <div className="space-y-1.5">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight font-serif">
+                  ज्ञान, संस्कार और
+                  <span className="block text-xl sm:text-3xl lg:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-300 to-indigo-200 font-sans font-extrabold mt-1">
+                    आधुनिक शिक्षा का उत्कृष्ट संगम
                   </span>
                 </h1>
-                <p className="text-xs sm:text-sm font-serif italic text-amber-300/90 font-medium">
-                  &ldquo;तमसो मा ज्योतिर्गमय — Lead Us From Darkness Unto Enlightenment&rdquo;
+                <p className="text-xs sm:text-sm text-slate-300 font-sans font-medium">
+                  Empowering future scholars with disciplined learning, scientific exploration, and holistic development in Farrukhabad since 1999.
                 </p>
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl font-medium">
-                Premier intermediate institution providing Vedic cultural values, advanced science laboratories (Physics, Chemistry, Biology), air-conditioned IT computing, and dedicated board examination coaching from Nursery to Class 12.
+              <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed max-w-2xl font-normal">
+                Featuring state-of-the-art Physics, Chemistry &amp; Biology laboratories, air-conditioned digital IT center, rich central library, sports grounds, and school bus routes across Shamsabad.
               </p>
 
               <div className="flex flex-wrap items-center gap-3.5 pt-1">
