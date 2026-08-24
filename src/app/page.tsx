@@ -219,14 +219,19 @@ export default function HomePage() {
       </section>
 
       {/* Stats Counter Ribbon */}
-      <section className="py-8 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="py-6 sm:py-8 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6">
           {stats.map((s, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition">
-              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 flex-shrink-0">{s.icon}</div>
-              <div>
-                <div className="text-xl font-black text-slate-900">{s.value}</div>
-                <div className="text-xs font-bold text-slate-500">{s.label}</div>
+            <div
+              key={idx}
+              className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-4 hover:shadow-md transition"
+            >
+              <div className="p-2 sm:p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex-shrink-0">
+                {s.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm sm:text-xl font-black text-slate-900 truncate">{s.value}</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-500 truncate">{s.label}</div>
               </div>
             </div>
           ))}

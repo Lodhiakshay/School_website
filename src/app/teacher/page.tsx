@@ -49,7 +49,7 @@ export default function TeacherDashboardPage() {
             </Button>
           </Link>
           <Link href="/teacher/marks">
-            <Button size="sm" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-bold">
+            <Button size="sm" className="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/40 font-bold shadow-sm">
               Enter Marks
             </Button>
           </Link>

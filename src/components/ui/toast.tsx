@@ -31,7 +31,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const newToast: Toast = { id, message, title, type };
     setToasts((prev) => [...prev, newToast]);
 
-    // Auto-dismiss after 4 seconds
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
@@ -52,8 +51,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Floating Toast Notification Stack */}
-      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-3">
+      {/* Floating Toast Notification Stack (Optimized for all displays & curved screens) */}
+      <div className="fixed top-3 inset-x-3 sm:inset-x-auto sm:right-6 sm:top-6 sm:max-w-sm z-[9999] flex flex-col gap-2.5 pointer-events-none">
         {toasts.map((t) => {
           const isSuccess = t.type === 'success';
           const isError = t.type === 'error';
@@ -62,7 +61,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return (
             <div
               key={t.id}
-              className={`pointer-events-auto flex items-start gap-3 p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-top-3 fade-in ${
+              className={`pointer-events-auto flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-top-3 fade-in ${
                 isSuccess
                   ? 'bg-slate-950/95 border-emerald-500/50 text-white'
                   : isError
@@ -92,7 +91,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
               <button
                 onClick={() => removeToast(t.id)}
-                className="p-1 text-slate-400 hover:text-white rounded-lg transition"
+                className="p-1 text-slate-400 hover:text-white rounded-lg transition flex-shrink-0"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
