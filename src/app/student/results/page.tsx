@@ -29,7 +29,7 @@ export default function StudentResultsPage() {
 
   return (
     <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Parent', 'Admin']}>
-      <div className="space-y-6">
+      <div className="space-y-6 pt-1">
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
@@ -74,8 +74,8 @@ export default function StudentResultsPage() {
           </div>
 
           {/* Student Demographics Table */}
-          <div className="p-6 sm:p-8 space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
+          <div className="p-5 sm:p-8 space-y-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
               <div>
                 <span className="text-slate-400 font-medium">Student Name:</span>
                 <p className="font-black text-slate-900 text-sm">Aarav Sharma</p>
@@ -111,35 +111,40 @@ export default function StudentResultsPage() {
               </div>
             </div>
 
-            {/* Subject Marks Table */}
-            <div className="border border-slate-300 rounded-2xl overflow-hidden shadow-sm">
-              <table className="w-full text-left text-xs">
+            {/* Mobile Scroll Hint */}
+            <div className="flex items-center justify-between text-[11px] text-slate-500 sm:hidden px-1">
+              <span>👉 Swipe table sideways to inspect all marks &amp; grades</span>
+            </div>
+
+            {/* Subject Marks Table with Horizontal Scroll */}
+            <div className="border border-slate-300 rounded-2xl overflow-x-auto shadow-sm">
+              <table className="w-full text-left text-xs min-w-[650px]">
                 <thead className="bg-[#002060] text-white font-bold uppercase text-[10px]">
                   <tr>
-                    <th className="p-3">Code</th>
-                    <th className="p-3">Subject Name</th>
-                    <th className="p-3 text-center">Theory (Max / Obt)</th>
-                    <th className="p-3 text-center">Practical (Max / Obt)</th>
-                    <th className="p-3 text-center">Total Marks</th>
-                    <th className="p-3 text-center">Grade</th>
+                    <th className="p-3.5">Code</th>
+                    <th className="p-3.5">Subject Name</th>
+                    <th className="p-3.5 text-center">Theory (Max / Obt)</th>
+                    <th className="p-3.5 text-center">Practical (Max / Obt)</th>
+                    <th className="p-3.5 text-center">Total Marks</th>
+                    <th className="p-3.5 text-center">Grade</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 font-medium">
                   {markEntries.map((m) => (
                     <tr key={m.code} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-blue-700">{m.code}</td>
-                      <td className="p-3 font-bold text-slate-900">{m.subject}</td>
-                      <td className="p-3 text-center font-mono">
+                      <td className="p-3.5 font-mono font-bold text-blue-700 whitespace-nowrap">{m.code}</td>
+                      <td className="p-3.5 font-bold text-slate-900">{m.subject}</td>
+                      <td className="p-3.5 text-center font-mono whitespace-nowrap">
                         {m.theoryObtained} / {m.theoryMax}
                       </td>
-                      <td className="p-3 text-center font-mono">
+                      <td className="p-3.5 text-center font-mono whitespace-nowrap">
                         {m.practicalMax > 0 ? `${m.practicalObtained} / ${m.practicalMax}` : '—'}
                       </td>
-                      <td className="p-3 text-center font-mono font-black text-slate-900">
+                      <td className="p-3.5 text-center font-mono font-black text-slate-900 whitespace-nowrap">
                         {m.totalObtained} / {m.totalMax}
                       </td>
-                      <td className="p-3 text-center">
-                        <span className="bg-emerald-100 text-emerald-800 font-black px-2.5 py-0.5 rounded-full text-[10px]">
+                      <td className="p-3.5 text-center whitespace-nowrap">
+                        <span className="bg-emerald-100 text-emerald-800 font-black px-2.5 py-1 rounded-full text-[10px]">
                           {m.grade}
                         </span>
                       </td>
@@ -147,16 +152,16 @@ export default function StudentResultsPage() {
                   ))}
                   {/* Grand Total Row */}
                   <tr className="bg-slate-100 font-black text-slate-900 text-sm border-t-2 border-slate-900">
-                    <td colSpan={2} className="p-3 uppercase">
+                    <td colSpan={2} className="p-3.5 uppercase">
                       Grand Total Marks
                     </td>
-                    <td colSpan={2} className="p-3 text-center text-blue-800 font-mono">
+                    <td colSpan={2} className="p-3.5 text-center text-blue-800 font-mono whitespace-nowrap">
                       Percentage: {percentage}%
                     </td>
-                    <td className="p-3 text-center text-emerald-700 font-mono">
+                    <td className="p-3.5 text-center text-emerald-700 font-mono whitespace-nowrap">
                       {totalObtained} / {totalMax}
                     </td>
-                    <td className="p-3 text-center text-emerald-700">PASS (FIRST DIV)</td>
+                    <td className="p-3.5 text-center text-emerald-700 whitespace-nowrap">PASS (FIRST DIV)</td>
                   </tr>
                 </tbody>
               </table>

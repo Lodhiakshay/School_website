@@ -144,8 +144,8 @@ export default function ResultsAdminPage() {
             </div>
 
             {/* Marks Table */}
-            <div className="border border-slate-300 rounded-2xl overflow-hidden">
-              <table className="w-full text-left text-xs">
+            <div className="border border-slate-300 rounded-2xl overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[550px]">
                 <thead className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase">
                   <tr>
                     <th className="p-2.5">Subject</th>

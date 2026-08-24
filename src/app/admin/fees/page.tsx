@@ -43,7 +43,7 @@ export default function FeesAdminPage() {
             <LoadingSpinner label="Loading fee ledgers and invoices..." />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[700px]">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-extrabold uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3.5">Invoice No</th>
