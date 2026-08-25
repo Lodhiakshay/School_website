@@ -31,7 +31,7 @@ export const PublicFooter: React.FC = () => {
           </h4>
           <ul className="space-y-2.5">
             <li><Link href="/about" className="hover:text-amber-400 transition">About Our Heritage</Link></li>
-            <li><Link href="/principal-message" className="hover:text-amber-400 transition">Principal Message</Link></li>
+            <li><Link href="/desk" className="hover:text-amber-400 transition">Principal &amp; Leadership Desk</Link></li>
             <li><Link href="/academics" className="hover:text-amber-400 transition">Academic Curriculum</Link></li>
             <li><Link href="/faculty" className="hover:text-amber-400 transition">Our Faculty &amp; Staff</Link></li>
             <li><Link href="/facilities" className="hover:text-amber-400 transition">Campus Facilities</Link></li>

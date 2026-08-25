@@ -365,7 +365,7 @@ export default function HomePage() {
               </p>
               <div className="pt-2">
                 <Link
-                  href="/principal-message"
+                  href="/desk"
                   className="inline-flex items-center gap-2 text-xs font-black text-amber-300 hover:text-amber-200 transition"
                 >
                   <span>Read Full Welcome Letter from Principal&apos;s Desk</span>
