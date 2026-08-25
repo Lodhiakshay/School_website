@@ -21,6 +21,7 @@ import {
   Mail,
   UserCheck,
   ChevronRight,
+  ArrowRight,
 } from 'lucide-react';
 
 export const PublicNavbar: React.FC = () => {
@@ -54,7 +55,7 @@ export const PublicNavbar: React.FC = () => {
   const navLinks = [
     { label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
     { label: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
-    { label: 'Desk', href: '/principal-message', icon: <UserCheck className="w-4 h-4" /> },
+    { label: 'Desk', href: '/desk', icon: <UserCheck className="w-4 h-4" /> },
     { label: 'Academics', href: '/academics', icon: <BookOpen className="w-4 h-4" /> },
     { label: 'Faculty', href: '/faculty', icon: <Users className="w-4 h-4" /> },
     { label: 'Facilities', href: '/facilities', icon: <Building2 className="w-4 h-4" /> },
@@ -72,44 +73,55 @@ export const PublicNavbar: React.FC = () => {
             : 'bg-slate-950 border-b border-slate-800/80 shadow-md'
         }`}
       >
-        {/* Top Notification Strip */}
-        <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-slate-300 py-1 px-4 text-xs border-b border-white/5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            {/* Desktop Left */}
+        {/* Sleek Top Notification & Contact Strip */}
+        <div className="bg-gradient-to-r from-[#000f28] via-[#001c44] to-[#000f28] text-slate-300 py-1.5 px-3 sm:px-6 text-xs border-b border-white/10 shadow-inner">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            {/* Desktop Left (Clickable Location & Phone) */}
             <div className="hidden sm:flex items-center gap-4 text-[11px] font-medium">
-              <span className="flex items-center gap-1.5 text-slate-300">
+              <a
+                href="https://maps.google.com/?q=Shamsabad+Farrukhabad+Uttar+Pradesh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-slate-300 hover:text-amber-300 transition"
+              >
                 <MapPin className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                Main Road, Shamsabad, Farrukhabad, UP (209503)
-              </span>
-              <span className="hidden md:flex items-center gap-1.5 text-slate-300">
+                <span>Main Road, Shamsabad, Farrukhabad (209503)</span>
+              </a>
+              <a
+                href="tel:+919451234567"
+                className="hidden md:flex items-center gap-1.5 text-slate-300 hover:text-emerald-400 font-mono transition"
+              >
                 <Phone className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                +91 9451234567
-              </span>
+                <span>+91 9451234567</span>
+              </a>
             </div>
 
-            {/* Mobile Left & Center */}
-            <div className="flex sm:hidden items-center justify-between w-full text-[11px]">
-              <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Admissions 2026-27
-              </span>
+            {/* Mobile Single-Line Compact View */}
+            <div className="flex sm:hidden items-center justify-between w-full text-[11px] font-bold">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span className="text-amber-300 font-serif">Admissions 2026-27</span>
+              </div>
               <Link
-                href="/admissions"
-                className="text-blue-300 hover:text-white font-extrabold underline whitespace-nowrap"
+                href="/admission"
+                className="inline-flex items-center gap-1 text-sky-300 hover:text-white font-black text-[11px] bg-blue-900/60 px-2.5 py-0.5 rounded-full border border-blue-400/30"
               >
-                Apply Online &rarr;
+                <span>Apply Now</span>
+                <ArrowRight className="w-3 h-3 text-amber-300" />
               </Link>
             </div>
 
-            {/* Desktop Right */}
+            {/* Desktop Right (Live Badge + Apply CTA) */}
             <div className="hidden sm:flex items-center gap-3 text-[11px]">
-              <span className="inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Admissions Open 2026-2027
+              <span className="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 px-3 py-0.5 rounded-full border border-amber-500/40 font-extrabold shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Admissions Open 2026-2027
               </span>
               <Link
-                href="/admissions"
-                className="text-blue-300 hover:text-white font-bold underline whitespace-nowrap"
+                href="/admission"
+                className="inline-flex items-center gap-1 text-sky-300 hover:text-white font-extrabold hover:underline whitespace-nowrap"
               >
-                Apply Online &rarr;
+                <span>Apply Online</span>
+                <ArrowRight className="w-3 h-3 text-amber-300" />
               </Link>
             </div>
           </div>
@@ -139,7 +151,7 @@ export const PublicNavbar: React.FC = () => {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = pathname === link.href || (link.href === '/desk' && pathname === '/principal-message');
               return (
                 <Link
                   key={link.href}
@@ -166,7 +178,7 @@ export const PublicNavbar: React.FC = () => {
               <span>ERP Portal</span>
             </Link>
             <Link
-              href="/admissions"
+              href="/admission"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md shadow-blue-600/30 whitespace-nowrap"
             >
               <Send className="w-3.5 h-3.5 flex-shrink-0" />
@@ -225,7 +237,7 @@ export const PublicNavbar: React.FC = () => {
         {/* Drawer Nav Links */}
         <div className="p-4 space-y-1.5 overflow-y-auto flex-1">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname === link.href || (link.href === '/desk' && pathname === '/principal-message');
             return (
               <Link
                 key={link.href}
@@ -258,7 +270,7 @@ export const PublicNavbar: React.FC = () => {
             <span>ERP Portal Login</span>
           </Link>
           <Link
-            href="/admissions"
+            href="/admission"
             onClick={() => setMobileMenuOpen(false)}
             className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black text-white bg-blue-600 hover:bg-blue-700 transition shadow-md shadow-blue-600/30"
           >
