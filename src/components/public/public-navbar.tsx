@@ -159,10 +159,10 @@ export const PublicNavbar: React.FC = () => {
         </div>
 
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-2 sm:py-2.5 flex items-center justify-between gap-1.5 sm:gap-4 overflow-hidden">
           {/* Brand Logo & Name */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all">
+          <Link href="/" className="flex items-center gap-2 group min-w-0 flex-1 max-w-[calc(100%-110px)] sm:max-w-none">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all">
               <img
                 src="/logo.png"
                 alt="सरस्वती ज्ञान मन्दिर"
@@ -170,11 +170,11 @@ export const PublicNavbar: React.FC = () => {
               />
             </div>
             <div className="flex flex-col min-w-0">
-              <h1 className="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-100 tracking-tight leading-tight uppercase font-serif whitespace-nowrap">
+              <h1 className="text-[11px] sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-100 tracking-tight leading-tight uppercase font-serif truncate">
                 सरस्वती ज्ञान मन्दिर
               </h1>
-              <p className="text-[9px] sm:text-[10px] text-sky-300 font-extrabold tracking-wider uppercase whitespace-nowrap">
-                SARSWATI GYAN MANDIR &bull; SHAMSABAD
+              <p className="text-[8px] sm:text-[10px] text-sky-300 font-extrabold tracking-wider uppercase truncate">
+                SHAMSABAD &bull; FARRUKHABAD
               </p>
             </div>
           </Link>
@@ -265,7 +265,7 @@ export const PublicNavbar: React.FC = () => {
           </div>
 
           {/* Mobile Right Controls: Perfectly Aligned Back Button + Hamburger Menu */}
-          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden flex-shrink-0">
             {pathname !== '/' && (
               <button
                 type="button"
@@ -277,19 +277,19 @@ export const PublicNavbar: React.FC = () => {
                   }
                 }}
                 aria-label="Go to previous page"
-                className="h-8 px-3.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-100 border border-slate-700/80 shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all text-xs font-bold"
+                className="h-7.5 px-2.5 sm:px-3.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-100 border border-slate-700/80 shadow-sm flex items-center justify-center gap-1 active:scale-95 transition-all text-[11px] sm:text-xs font-bold whitespace-nowrap"
               >
-                <ArrowLeft className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
-                <span className="leading-none tracking-wide text-white">Back</span>
+                <ArrowLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300 flex-shrink-0" />
+                <span className="leading-none text-white">Back</span>
               </button>
             )}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open Navigation Menu"
-              className="h-8 w-8 rounded-full text-slate-200 bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 transition flex items-center justify-center active:scale-95 shadow-sm"
+              className="h-7.5 w-7.5 sm:h-8 sm:w-8 rounded-full text-slate-200 bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 transition flex items-center justify-center active:scale-95 shadow-sm flex-shrink-0"
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
