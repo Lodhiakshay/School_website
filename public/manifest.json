@@ -1,7 +1,7 @@
 {
-  "name": "सरस्वती ज्ञान मन्दिर - Sarswati Gyan Mandir Intermediate College",
-  "short_name": "SGM ERP",
-  "description": "Official School ERP & Academic Portal for Sarswati Gyan Mandir, Shamsabad (Farrukhabad)",
+  "name": "सरस्वती ज्ञान मन्दिर इण्टर कॉलेज",
+  "short_name": "SGM College",
+  "description": "Official Academic & ERP Portal - Saraswati Gyan Mandir Intermediate College, Shamsabad, Farrukhabad (UP)",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
@@ -31,21 +31,27 @@
   ],
   "shortcuts": [
     {
-      "name": "ERP Portal",
-      "short_name": "ERP",
+      "name": "Central ERP Login",
+      "short_name": "ERP Login",
       "url": "/login",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Online Admission",
-      "short_name": "Admission",
+      "name": "Online Admissions",
+      "short_name": "Admissions",
       "url": "/admissions",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Class Timetable",
-      "short_name": "Timetable",
-      "url": "/student/timetable",
+      "name": "Student Downloads",
+      "short_name": "Downloads",
+      "url": "/downloads",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Faculty Careers",
+      "short_name": "Careers",
+      "url": "/careers",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]

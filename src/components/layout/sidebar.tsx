@@ -27,7 +27,6 @@ import {
   BookMarked,
   Receipt,
   UserCircle,
-  Briefcase,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -64,7 +63,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onCloseMob
               { label: 'Student SIS Directory', href: '/admin/students', icon: <GraduationCap className="w-4 h-4" /> },
               { label: 'Parents & Guardians', href: '/admin/parents', icon: <Users className="w-4 h-4" /> },
               { label: 'Faculty & Teachers', href: '/admin/teachers', icon: <UserCheck className="w-4 h-4" /> },
-              { label: 'Faculty Recruitment Desk', href: '/admin/careers', icon: <Briefcase className="w-4 h-4" /> },
               { label: 'User Roles & Access', href: '/admin/users', icon: <UserCircle className="w-4 h-4" /> },
             ],
           },
