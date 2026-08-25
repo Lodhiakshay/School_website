@@ -172,13 +172,13 @@ export default function GalleryPage() {
       {lightboxImage && (
         <div
           onClick={() => setLightboxImage(null)}
-          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl space-y-4 p-4"
+            className="max-w-4xl w-full max-h-[90vh] flex flex-col bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl p-4 my-auto"
           >
-            <div className="flex items-center justify-between px-2">
+            <div className="flex items-center justify-between px-2 pb-2 flex-shrink-0">
               <div>
                 <h3 className="text-sm font-bold text-white">{lightboxImage.title}</h3>
                 <p className="text-xs text-amber-400">{lightboxImage.date}</p>
@@ -190,7 +190,7 @@ export default function GalleryPage() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="relative h-[65vh] w-full rounded-2xl overflow-hidden bg-slate-950">
+            <div className="relative h-[60vh] w-full rounded-2xl overflow-hidden bg-slate-950 flex-1">
               <img src={lightboxImage.image} alt={lightboxImage.title} className="w-full h-full object-contain" />
             </div>
           </div>
