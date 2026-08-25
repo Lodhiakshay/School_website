@@ -36,6 +36,7 @@ export const PublicFooter: React.FC = () => {
             <li><Link href="/faculty" className="hover:text-amber-400 transition">Our Faculty &amp; Staff</Link></li>
             <li><Link href="/facilities" className="hover:text-amber-400 transition">Campus Facilities</Link></li>
             <li><Link href="/admissions" className="hover:text-amber-400 transition">Admissions 2026-27</Link></li>
+            <li><Link href="/downloads" className="hover:text-amber-400 transition">Mandatory Disclosures &amp; Downloads</Link></li>
             <li><Link href="/careers" className="hover:text-amber-400 transition font-semibold text-amber-300">Careers &amp; Recruitment</Link></li>
           </ul>
         </div>
