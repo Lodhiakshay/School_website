@@ -25,6 +25,7 @@ import {
   ChevronDown,
   ChevronRight,
   ArrowRight,
+  ArrowLeft,
 } from 'lucide-react';
 
 export const PublicNavbar: React.FC = () => {
@@ -263,14 +264,34 @@ export const PublicNavbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open Navigation Menu"
-            className="lg:hidden p-2 rounded-xl text-slate-200 bg-white/10 hover:bg-white/20 border border-white/15 transition flex-shrink-0"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          {/* Mobile Right Controls: Perfectly Aligned Back Button + Hamburger Menu */}
+          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
+            {pathname !== '/' && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== 'undefined' && window.history.length > 1) {
+                    window.history.back();
+                  } else {
+                    window.location.href = '/';
+                  }
+                }}
+                aria-label="Go to previous page"
+                className="h-8 px-3.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-100 border border-slate-700/80 shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all text-xs font-bold"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
+                <span className="leading-none tracking-wide text-white">Back</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open Navigation Menu"
+              className="h-8 w-8 rounded-full text-slate-200 bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 transition flex items-center justify-center active:scale-95 shadow-sm"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 
