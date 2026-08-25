@@ -263,36 +263,254 @@ export default function DownloadsPage() {
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
   const { toast } = useToast();
 
-  const handleDownload = (doc: DocumentItem) => {
-    // Generate and download institutional printable summary file
-    const fileData =
-      `========================================================================\n` +
-      `SARSWATI GYAN MANDIR INTERMEDIATE COLLEGE, SHAMSABAD, FARRUKHABAD (UP)\n` +
-      `AFFILIATION CODE: UP-FBD-2026-SGM-089 | RECOGNISED BY UP BOARD PRAYAGRAJ\n` +
-      `========================================================================\n\n` +
-      `OFFICIAL INSTITUTIONAL DOCUMENT REQUISITION\n\n` +
-      `Document Title: ${doc.title}\n` +
-      `Document Code:  ${doc.docCode}\n` +
-      `Category:       ${doc.categoryLabel}\n` +
-      `Issuing Body:   ${doc.authority}\n` +
-      `Status:         OFFICIALLY VERIFIED & VALIDATED (${doc.updatedDate})\n` +
-      `File Format:    ${doc.format} (${doc.fileSize})\n\n` +
-      `DESCRIPTION / SUMMARY:\n${doc.description}\n\n` +
-      `------------------------------------------------------------------------\n` +
-      `Downloaded from Official Institutional Portal (https://cru-pi.vercel.app/downloads)\n` +
-      `Sarswati Gyan Mandir Intermediate College, Shamsabad, Farrukhabad (UP)\n` +
-      `========================================================================\n`;
+  const handlePrintPdf = (doc: DocumentItem) => {
+    const printWindow = window.open('', '_blank', 'width=900,height=1000');
+    if (!printWindow) {
+      toast.error('Pop-up blocked. Please allow popups to save the PDF.', 'Action Required');
+      return;
+    }
 
-    const blob = new Blob([fileData], { type: 'text/plain;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${doc.docCode || 'SGM-DOC'}_${doc.id}.txt`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>${doc.title} - Saraswati Gyan Mandir</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 12mm;
+          }
+          * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          }
+          body {
+            margin: 0;
+            padding: 20px;
+            color: #0f172a;
+            background: #ffffff;
+            font-size: 13px;
+          }
+          .certificate-container {
+            border: 3px double #002060;
+            padding: 24px;
+            border-radius: 12px;
+            position: relative;
+            background: #ffffff;
+          }
+          .gold-inner-border {
+            border: 1px solid #f59e0b;
+            padding: 18px;
+            border-radius: 8px;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #002060;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+          }
+          .logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 8px;
+            display: block;
+            border-radius: 50%;
+            border: 2px solid #002060;
+            padding: 2px;
+          }
+          .school-hindi {
+            font-size: 20px;
+            font-weight: 900;
+            color: #002060;
+            margin: 0;
+            font-family: 'Georgia', serif;
+          }
+          .school-eng {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #92400e;
+            text-transform: uppercase;
+            margin: 3px 0;
+          }
+          .school-sub {
+            font-size: 10px;
+            color: #475569;
+            margin: 0;
+          }
+          .badge {
+            display: inline-block;
+            background: #002060;
+            color: #ffffff;
+            padding: 4px 14px;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 20px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .doc-heading {
+            font-size: 16px;
+            font-weight: 900;
+            color: #002060;
+            text-align: center;
+            margin: 18px 0 10px;
+            text-transform: uppercase;
+            font-family: 'Georgia', serif;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+          }
+          .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 12px;
+          }
+          .meta-table th, .meta-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            text-align: left;
+          }
+          .meta-table th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+            width: 32%;
+          }
+          .meta-table td {
+            color: #0f172a;
+          }
+          .desc-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #334155;
+          }
+          .signatures {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+          }
+          .sig-block {
+            text-align: center;
+            width: 180px;
+          }
+          .sig-line {
+            border-top: 1px solid #0f172a;
+            margin-bottom: 4px;
+          }
+          .seal-box {
+            width: 70px;
+            height: 70px;
+            border: 2px dashed #002060;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 8px;
+            font-weight: 800;
+            color: #002060;
+            text-transform: uppercase;
+            margin: 0 auto;
+          }
+          .footer-note {
+            text-align: center;
+            font-size: 9px;
+            color: #64748b;
+            margin-top: 24px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 8px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="certificate-container">
+          <div class="gold-inner-border">
+            <div class="header">
+              <img src="/logo.png" alt="SGM Logo" class="logo" />
+              <h1 class="school-hindi">सरस्वती ज्ञान मन्दिर इण्टर कॉलेज</h1>
+              <div class="school-eng">SARSWATI GYAN MANDIR INTERMEDIATE COLLEGE</div>
+              <div class="school-sub">SHAMSABAD, FARRUKHABAD, UTTAR PRADESH &bull; PIN: 209503</div>
+              <div class="badge">AFFILIATION CODE: UP-FBD-2026-SGM-089 &bull; UP BOARD PRAYAGRAJ</div>
+            </div>
 
-    toast.success(`Downloaded "${doc.title}" successfully.`, 'File Downloaded');
+            <div class="doc-heading">${doc.title}</div>
+
+            <table class="meta-table">
+              <tr>
+                <th>Document Classification:</th>
+                <td><strong>${doc.categoryLabel}</strong></td>
+              </tr>
+              <tr>
+                <th>Official Document Reference:</th>
+                <td><span style="font-family: monospace; font-weight: bold; color: #002060;">${doc.docCode}</span></td>
+              </tr>
+              <tr>
+                <th>Issuing / Regulating Body:</th>
+                <td>${doc.authority}</td>
+              </tr>
+              <tr>
+                <th>Validity & Standing:</th>
+                <td><span style="color: #047857; font-weight: bold;">&#10003; ${doc.updatedDate} (Verified Authentic)</span></td>
+              </tr>
+              <tr>
+                <th>File Format & Archive Size:</th>
+                <td>${doc.format} Document (${doc.fileSize})</td>
+              </tr>
+            </table>
+
+            <div class="desc-box">
+              <strong>Official Record Summary &amp; Legal Declaration:</strong><br />
+              ${doc.description}
+            </div>
+
+            <div class="signatures">
+              <div class="sig-block">
+                <div class="seal-box">OFFICIAL<br />SEAL</div>
+                <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Institutional Registry</div>
+              </div>
+              <div class="sig-block">
+                <div class="sig-line"></div>
+                <strong>Academic Director / Secretary</strong>
+                <div style="font-size: 10px; color: #64748b;">Managing Committee</div>
+              </div>
+              <div class="sig-block">
+                <div class="sig-line"></div>
+                <strong>Principal</strong>
+                <div style="font-size: 10px; color: #64748b;">Sarswati Gyan Mandir</div>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              This document is officially published and electronically verified from the central institutional portal.<br />
+              Sarswati Gyan Mandir Intermediate College, Shamsabad, Farrukhabad (UP) &bull; https://cru-pi.vercel.app/downloads
+            </div>
+          </div>
+        </div>
+        <script>
+          setTimeout(() => {
+            window.print();
+          }, 300);
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+
+    toast.success(`Prepared official PDF for "${doc.title}". Select "Save as PDF" in print dialog.`, 'PDF Ready');
   };
 
   const filteredDocs = documentsData.filter((doc) => {
@@ -324,7 +542,7 @@ export default function DownloadsPage() {
           </h1>
 
           <p className="text-xs sm:text-sm md:text-base text-blue-100 max-w-2xl mx-auto leading-relaxed">
-            Access statutory UP Board affiliation certificates, fire safety NOCs, class syllabi, academic calendars, fee schedules, and printable student admission forms.
+            Access statutory UP Board affiliation certificates, fire safety NOCs, class syllabi, academic calendars, fee schedules, and printable student admission forms in official stamped PDF format.
           </p>
         </div>
       </section>
@@ -432,11 +650,11 @@ export default function DownloadsPage() {
               <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
                 <Button
                   size="sm"
-                  className="flex-1 bg-[#002060] hover:bg-blue-900 font-bold text-xs"
-                  onClick={() => handleDownload(doc)}
+                  className="flex-1 bg-[#002060] hover:bg-blue-900 font-bold text-xs shadow-md"
+                  onClick={() => handlePrintPdf(doc)}
                   leftIcon={<Download className="w-3.5 h-3.5 text-amber-400" />}
                 >
-                  Download Official File
+                  Download Official PDF
                 </Button>
                 <Button
                   size="sm"
@@ -481,13 +699,13 @@ export default function DownloadsPage() {
         </div>
       </section>
 
-      {/* Document View Modal */}
+      {/* Document View & PDF Preview Modal */}
       {selectedDoc && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3 flex-shrink-0">
               <span className="text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
-                INSTITUTIONAL DOCUMENT DOSSIER
+                INSTITUTIONAL PDF PREVIEW &bull; OFFICIAL STAMPED
               </span>
               <button
                 onClick={() => setSelectedDoc(null)}
@@ -498,42 +716,52 @@ export default function DownloadsPage() {
             </div>
 
             <div className="overflow-y-auto flex-1 py-4 space-y-4 text-xs">
-              <div>
-                <span className="text-[10px] font-black uppercase text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full">
-                  {selectedDoc.categoryLabel}
-                </span>
-                <h3 className="text-lg font-black text-slate-900 font-serif mt-1">
+              {/* Formatted Certificate Box */}
+              <div className="border-2 border-[#002060] p-5 rounded-2xl bg-white space-y-4 shadow-sm">
+                <div className="text-center border-b-2 border-[#002060] pb-3 space-y-1">
+                  <div className="w-14 h-14 mx-auto rounded-full overflow-hidden border-2 border-[#002060] p-0.5 bg-white shadow">
+                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <h3 className="font-serif font-black text-base text-[#002060]">सरस्वती ज्ञान मन्दिर इण्टर कॉलेज</h3>
+                  <p className="text-[10px] uppercase tracking-wider font-extrabold text-amber-700">
+                    SARSWATI GYAN MANDIR INTERMEDIATE COLLEGE &bull; SHAMSABAD (FBD)
+                  </p>
+                  <span className="inline-block bg-[#002060] text-white text-[9px] font-black px-3 py-0.5 rounded-full uppercase">
+                    UP BOARD AFFILIATION CODE: UP-FBD-2026-SGM-089
+                  </span>
+                </div>
+
+                <div className="text-center font-serif font-black text-sm text-slate-900 uppercase border-b border-dashed border-slate-300 pb-2">
                   {selectedDoc.title}
-                </h3>
-                <p className="text-slate-500 text-[11px] font-mono mt-0.5">
-                  Format: {selectedDoc.format} &bull; File Size: {selectedDoc.fileSize}
-                </p>
-              </div>
+                </div>
 
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
-                <span className="font-bold text-slate-900 block">Certificate &amp; Regulatory Summary:</span>
-                <p className="text-slate-600 leading-relaxed">{selectedDoc.description}</p>
-              </div>
+                <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Reference Code:</span>
+                    <p className="font-mono font-bold text-blue-700">{selectedDoc.docCode}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Classification:</span>
+                    <p className="font-bold text-slate-800">{selectedDoc.categoryLabel}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Issuing Authority:</span>
+                    <p className="font-semibold text-slate-800 truncate">{selectedDoc.authority}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Status:</span>
+                    <p className="font-bold text-emerald-700">&#10003; {selectedDoc.updatedDate}</p>
+                  </div>
+                </div>
 
-              <div className="space-y-2 border border-slate-200 rounded-2xl p-4 bg-white">
-                <span className="font-bold text-slate-900 block">Verification Registry Data:</span>
-                <div className="space-y-2 text-slate-700 text-xs">
-                  <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-400">Document Identifier:</span>
-                    <span className="font-mono font-bold text-blue-700">{selectedDoc.docCode}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-400">Issuing Authority:</span>
-                    <span className="font-semibold text-slate-800 text-right">{selectedDoc.authority}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-400">Validity &amp; Term:</span>
-                    <span className="font-semibold text-emerald-700">{selectedDoc.updatedDate}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Status:</span>
-                    <span className="font-black text-emerald-600 uppercase">Verified Valid &amp; Authentic</span>
-                  </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-700 text-xs leading-relaxed">
+                  <strong>Regulatory Summary:</strong><br />
+                  {selectedDoc.description}
+                </div>
+
+                <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-[10px] text-slate-500">
+                  <span>Official Institutional Seal</span>
+                  <span className="font-bold text-slate-800">Principal Signature &amp; Stamp</span>
                 </div>
               </div>
             </div>
@@ -542,12 +770,13 @@ export default function DownloadsPage() {
               <Button
                 className="w-full bg-[#002060] hover:bg-blue-900 font-bold text-xs"
                 onClick={() => {
-                  handleDownload(selectedDoc);
+                  const current = selectedDoc;
                   setSelectedDoc(null);
+                  handlePrintPdf(current);
                 }}
-                leftIcon={<Download className="w-4 h-4 text-amber-400" />}
+                leftIcon={<Printer className="w-4 h-4 text-amber-400" />}
               >
-                Download Official Certificate File
+                Download / Save Official PDF
               </Button>
               <Button variant="outline" onClick={() => setSelectedDoc(null)}>
                 Close
@@ -561,4 +790,3 @@ export default function DownloadsPage() {
     </div>
   );
 }
-
