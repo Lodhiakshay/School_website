@@ -66,8 +66,8 @@ export default function AboutPage() {
       </section>
 
       {/* Interactive Sub-Navigation Tabs */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
-        <div className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center justify-center gap-2 overflow-x-auto">
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+        <div className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar">
           {[
             { id: 'heritage', label: 'Heritage & Journey', icon: <Building2 className="w-4 h-4" /> },
             { id: 'vision', label: 'Vision, Mission & Ethos', icon: <Target className="w-4 h-4" /> },
@@ -79,7 +79,7 @@ export default function AboutPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
                   isActive
                     ? 'bg-[#002060] text-white shadow-md scale-100 ring-2 ring-blue-400/30'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'

@@ -30,7 +30,7 @@ export default function LeadershipDeskPage() {
       name: 'Dr. Ramesh Kumar Sharma',
       qualification: 'M.Sc. (Physics), M.Ed., Ph.D. in Education',
       experience: '28+ Years of Academic Leadership',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80',
       shloka: 'तमसो मा ज्योतिर्गमय — Lead us from ignorance unto the light of wisdom.',
       title: 'Words of Inspiration & Academic Vision',
       paragraphs: [
@@ -101,22 +101,22 @@ export default function LeadershipDeskPage() {
         </div>
       </section>
 
-      {/* Interactive Leader Switcher Tabs */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
-        <div className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center justify-center gap-2 overflow-x-auto">
+      {/* Interactive Leader Switcher Tabs (Mobile Scroll & Curved Screen Safe) */}
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+        <div className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar">
           {leaders.map((leader) => {
             const isActive = activeLeader === leader.id;
             return (
               <button
                 key={leader.id}
                 onClick={() => setActiveLeader(leader.id)}
-                className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
                   isActive
                     ? 'bg-[#002060] text-white shadow-md scale-100 ring-2 ring-blue-400/30'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <UserCheck className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                <UserCheck className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
                 <span>{leader.role}</span>
               </button>
             );
@@ -125,7 +125,7 @@ export default function LeadershipDeskPage() {
       </section>
 
       {/* Active Letter Section */}
-      <section className="py-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <section className="py-10 sm:py-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 sm:p-12 shadow-xl space-y-8 relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           {/* Subtle Institutional Watermark */}
           <div className="absolute -right-16 -bottom-16 w-80 h-80 opacity-5 pointer-events-none">
@@ -133,16 +133,16 @@ export default function LeadershipDeskPage() {
           </div>
 
           {/* Letter Header Profile */}
-          <div className="flex flex-col sm:flex-row items-center gap-6 border-b-2 border-slate-100 pb-8">
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border-4 border-amber-400 shadow-xl bg-slate-100 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-6 border-b-2 border-slate-100 pb-8 text-center sm:text-left">
+            <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border-4 border-amber-400 shadow-xl bg-slate-100 flex-shrink-0 p-0.5">
               <img
                 src={current.image}
                 alt={current.name}
-                className="w-full h-full object-cover object-top"
+                className="w-full h-full object-cover object-top rounded-2xl"
               />
             </div>
-            <div className="space-y-1 text-center sm:text-left">
-              <span className="text-[10px] font-black text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            <div className="space-y-1">
+              <span className="inline-block text-[10px] font-black text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
                 {current.role}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-serif">
@@ -194,4 +194,3 @@ export default function LeadershipDeskPage() {
     </div>
   );
 }
-

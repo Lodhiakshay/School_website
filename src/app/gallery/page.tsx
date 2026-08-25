@@ -136,7 +136,7 @@ export default function GalleryPage() {
       </section>
 
       {/* Floating Category Filter Tabs */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+      <section className="max-w-6xl mx-auto px-3 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
         <div className="bg-white p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
           {[
             { id: 'all', label: 'All Photographs (12)', icon: <ImageIcon className="w-4 h-4" /> },
