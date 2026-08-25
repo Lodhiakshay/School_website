@@ -20,6 +20,7 @@ import {
   Calendar,
   Mail,
   UserCheck,
+  Briefcase,
   ChevronRight,
   ArrowRight,
 } from 'lucide-react';
@@ -61,6 +62,7 @@ export const PublicNavbar: React.FC = () => {
     { label: 'Facilities', href: '/facilities', icon: <Building2 className="w-4 h-4" /> },
     { label: 'Gallery', href: '/gallery', icon: <ImageIcon className="w-4 h-4" /> },
     { label: 'Events', href: '/events', icon: <Calendar className="w-4 h-4" /> },
+    { label: 'Careers', href: '/careers', icon: <Briefcase className="w-4 h-4" /> },
     { label: 'Contact', href: '/contact', icon: <Mail className="w-4 h-4" /> },
   ];
 
