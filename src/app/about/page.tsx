@@ -46,10 +46,10 @@ export default function AboutPage() {
       <PublicNavbar />
 
       {/* Hero Header */}
-      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white py-14 sm:py-20 px-4 sm:px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-        <div className="max-w-6xl mx-auto text-center space-y-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 pb-4">
           <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-amber-300" />
             <span>Institutional Heritage &bull; हमारी गौरवशाली परम्परा</span>
@@ -66,7 +66,7 @@ export default function AboutPage() {
       </section>
 
       {/* Interactive Sub-Navigation Tabs */}
-      <section className="max-w-5xl mx-auto px-3 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 -mt-10 sm:-mt-14 z-20 w-full">
         <div className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar">
           {[
             { id: 'heritage', label: 'Heritage & Journey', icon: <Building2 className="w-4 h-4" /> },

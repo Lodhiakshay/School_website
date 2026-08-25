@@ -87,10 +87,10 @@ export default function AdmissionsPublicPage() {
       <PublicNavbar />
 
       {/* Royal Hero Header */}
-      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white py-14 sm:py-20 px-4 sm:px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-        <div className="max-w-6xl mx-auto text-center space-y-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 pb-4">
           <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-amber-300" />
             <span>Admissions Open Session 2026-2027 &bull; ऑनलाइन प्रवेश प्रक्रिया</span>
@@ -107,7 +107,7 @@ export default function AdmissionsPublicPage() {
       </section>
 
       {/* Main Admission Section (Floating Layout & Curved Screen Safe) */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 z-20 w-full py-8 space-y-12">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 -mt-10 sm:-mt-14 z-20 w-full pb-16 space-y-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Procedure & Helplines */}
           <div className="lg:col-span-5 space-y-6">

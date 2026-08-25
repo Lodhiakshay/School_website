@@ -101,10 +101,10 @@ export default function ContactPage() {
       <PublicNavbar />
 
       {/* Hero Header Banner */}
-      <section className="bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white py-12 sm:py-16 px-4 sm:px-6 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-        <div className="max-w-6xl mx-auto text-center space-y-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 pb-4">
           <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <Sparkles className="w-4 h-4" />
             <span>सम्पर्क सूत्र &bull; Connect With Our Institution</span>
@@ -122,7 +122,7 @@ export default function ContactPage() {
       </section>
 
       {/* Quick Contact Info Cards */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-10 sm:-mt-14 z-20 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Address */}
           <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md hover:shadow-lg transition flex flex-col justify-between group">
