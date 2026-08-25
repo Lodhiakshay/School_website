@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
+import { Download, X, CheckCircle2 } from 'lucide-react';
+import { useToast } from '../ui/toast';
 
 export const PwaInstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if already in standalone PWA mode
@@ -30,22 +33,36 @@ export const PwaInstallPrompt: React.FC = () => {
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
       setShowPrompt(false);
+      setIsInstalling(false);
       setDeferredPrompt(null);
+      toast.success('SGM College App installed successfully to your device!', 'App Installed');
     });
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
     };
-  }, []);
+  }, [toast]);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setShowPrompt(false);
+    if (!deferredPrompt) {
+      toast.info('To install, tap browser menu (⋮) and select "Install app" or "Add to Home screen".', 'Install Guide');
+      return;
     }
-    setDeferredPrompt(null);
+
+    setIsInstalling(true);
+    try {
+      await deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice && choice.outcome === 'accepted') {
+        setShowPrompt(false);
+        toast.success('Adding SGM App to your Home Screen...', 'Installing');
+      }
+    } catch (err) {
+      console.warn('Install prompt error:', err);
+    } finally {
+      setIsInstalling(false);
+      setDeferredPrompt(null);
+    }
   };
 
   if (!showPrompt || isInstalled) return null;
@@ -56,7 +73,7 @@ export const PwaInstallPrompt: React.FC = () => {
       className="fixed bottom-3 right-3 left-3 sm:left-auto sm:right-6 z-50 max-w-sm bg-slate-950/95 text-white border border-amber-400/40 rounded-2xl p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-4 duration-300"
     >
       <div className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-1 shadow-md flex-shrink-0 flex items-center justify-center">
+        <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0 flex items-center justify-center">
           <img
             src="/icon-192.png"
             alt="SGM Logo"
@@ -74,10 +91,15 @@ export const PwaInstallPrompt: React.FC = () => {
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <button
             onClick={handleInstall}
-            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] shadow-md shadow-blue-600/30 flex items-center gap-1 transition"
+            disabled={isInstalling}
+            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] shadow-md shadow-blue-600/30 flex items-center gap-1 transition active:scale-95 disabled:opacity-50"
           >
-            <Download className="w-3 h-3" />
-            <span>Install</span>
+            {isInstalling ? (
+              <span className="animate-spin text-xs">⏳</span>
+            ) : (
+              <Download className="w-3 h-3 text-amber-300" />
+            )}
+            <span>{isInstalling ? 'Installing...' : 'Install'}</span>
           </button>
           <button
             onClick={() => setShowPrompt(false)}

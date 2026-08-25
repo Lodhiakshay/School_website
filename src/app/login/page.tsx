@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   AlertCircle,
   Lock,
 } from 'lucide-react';
@@ -88,9 +89,11 @@ export default function LoginPage() {
         </Link>
         <Link
           href="/"
-          className="text-[11px] sm:text-xs text-slate-300 hover:text-white transition font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full border border-white/15 whitespace-nowrap flex-shrink-0"
+          aria-label="Go to Homepage"
+          className="h-8 px-3.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-100 border border-slate-700/80 shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all text-xs font-bold whitespace-nowrap flex-shrink-0"
         >
-          &larr; Back
+          <ArrowLeft className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
+          <span className="leading-none tracking-wide text-white">Back</span>
         </Link>
       </div>
 
