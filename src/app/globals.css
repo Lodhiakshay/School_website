@@ -31,3 +31,28 @@ body {
   background: #94a3b8;
 }
 
+/* Prevent accidental text cursor/caret selection on UI headers, buttons, cards, and navigation */
+button,
+nav,
+header,
+.select-none,
+[role="button"],
+[role="tab"],
+.metric-card,
+.card-header {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
