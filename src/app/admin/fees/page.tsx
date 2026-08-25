@@ -455,9 +455,30 @@ export default function FeesAdminPage() {
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-between text-[9px] text-slate-400 border-t border-slate-100">
-                <span>Date: 25 August 2026</span>
-                <span className="font-bold text-slate-800">Authorized Accounts Cashier Seal</span>
+              <div className="pt-3 flex items-end justify-between text-xs border-t border-slate-200 mt-2">
+                {/* Approved Stamp */}
+                <div className="text-center">
+                  <img
+                    src="/images/stamps/approved-stamp.png"
+                    alt="Approved Stamp"
+                    className="w-28 h-10 object-contain transform -rotate-2 drop-shadow-sm"
+                  />
+                  <span className="text-[8px] font-mono font-bold text-blue-900 block mt-0.5">
+                    ACCOUNTS COUNTER 1
+                  </span>
+                </div>
+
+                {/* Registrar / Cashier Signature */}
+                <div className="text-center w-36">
+                  <img
+                    src="/images/stamps/registrar-signature.png"
+                    alt="Cashier Sig"
+                    className="w-28 h-12 object-contain mx-auto"
+                  />
+                  <span className="text-[9px] font-bold text-slate-700 block mt-0.5 uppercase">
+                    Accounts Cashier
+                  </span>
+                </div>
               </div>
             </div>
 

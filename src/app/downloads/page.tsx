@@ -474,20 +474,17 @@ export default function DownloadsPage() {
               ${doc.description}
             </div>
 
-            <div class="signatures">
-              <div class="sig-block">
-                <div class="seal-box">OFFICIAL<br />SEAL</div>
-                <div style="font-size: 10px; color: #64748b; margin-top: 4px;">Institutional Registry</div>
+            <div class="signatures" style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+              <div class="sig-block" style="text-align: center; width: 140px;">
+                <img src="/images/stamps/school-seal.png" alt="SGM Institutional Seal" style="width: 100px; height: 100px; object-fit: contain; transform: rotate(-5deg); display: block; margin: 0 auto;" />
+                <div style="font-size: 10px; color: #002060; font-weight: 800; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Institutional Emblem</div>
               </div>
-              <div class="sig-block">
-                <div class="sig-line"></div>
-                <strong>Academic Director / Secretary</strong>
-                <div style="font-size: 10px; color: #64748b;">Managing Committee</div>
+              <div class="sig-block" style="text-align: center; width: 140px;">
+                <img src="/images/stamps/principal-round-seal.png" alt="Principal SGM Seal" style="width: 95px; height: 95px; object-fit: contain; transform: rotate(3deg); display: block; margin: 0 auto;" />
+                <div style="font-size: 10px; color: #002060; font-weight: 800; margin-top: 2px; text-transform: uppercase;">Principal &amp; Center Seal</div>
               </div>
-              <div class="sig-block">
-                <div class="sig-line"></div>
-                <strong>Principal</strong>
-                <div style="font-size: 10px; color: #64748b;">Sarswati Gyan Mandir</div>
+              <div class="sig-block" style="text-align: center; width: 210px;">
+                <img src="/images/stamps/principal-signature.png" alt="Principal Signature & School Name" style="width: 190px; height: 100px; object-fit: contain; display: block; margin: 0 auto;" />
               </div>
             </div>
 
@@ -759,9 +756,39 @@ export default function DownloadsPage() {
                   {selectedDoc.description}
                 </div>
 
-                <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-[10px] text-slate-500">
-                  <span>Official Institutional Seal</span>
-                  <span className="font-bold text-slate-800">Principal Signature &amp; Stamp</span>
+                <div className="pt-4 flex items-end justify-between border-t border-slate-200 text-xs">
+                  {/* School Seal */}
+                  <div className="text-center">
+                    <img
+                      src="/images/stamps/school-seal.png"
+                      alt="School Seal"
+                      className="w-16 h-16 object-contain transform -rotate-6 mx-auto drop-shadow-sm"
+                    />
+                    <span className="text-[10px] font-black text-[#002060] block mt-1 uppercase tracking-tight">
+                      Official Seal
+                    </span>
+                  </div>
+
+                  {/* Principal Round Seal with School Name */}
+                  <div className="text-center hidden sm:block">
+                    <img
+                      src="/images/stamps/principal-round-seal.png"
+                      alt="Principal Round Seal"
+                      className="w-16 h-16 object-contain transform rotate-2 mx-auto drop-shadow-sm"
+                    />
+                    <span className="text-[9px] font-black text-[#002060] block mt-0.5 uppercase">
+                      Principal Seal
+                    </span>
+                  </div>
+
+                  {/* Principal Sig */}
+                  <div className="text-center">
+                    <img
+                      src="/images/stamps/principal-signature.png"
+                      alt="Principal Signature"
+                      className="w-28 h-14 object-contain mx-auto"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

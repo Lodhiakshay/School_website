@@ -584,9 +584,22 @@ export default function StudentsAdminPage() {
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-center justify-between text-[9px] text-slate-400 border-t border-slate-100">
-                  <span>Valid: 2026-2027</span>
-                  <span className="font-bold text-slate-700">Principal Signature</span>
+                <div className="pt-2 flex items-end justify-between text-[9px] text-slate-400 border-t border-slate-200">
+                  <div className="text-left space-y-0.5">
+                    <img
+                      src="/images/stamps/principal-round-seal.png"
+                      alt="Round Seal"
+                      className="w-10 h-10 object-contain drop-shadow-sm"
+                    />
+                    <span className="font-mono text-slate-600 text-[8px] block">Valid: 2026-27</span>
+                  </div>
+                  <div className="text-center">
+                    <img
+                      src="/images/stamps/principal-signature.png"
+                      alt="Principal Sig"
+                      className="w-24 h-12 object-contain mx-auto"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

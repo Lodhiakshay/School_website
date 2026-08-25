@@ -693,6 +693,42 @@ export default function ResultsAdminPage() {
                     <p className="text-xs font-black text-emerald-700">PASS (FIRST DIV)</p>
                   </div>
                 </div>
+
+                {/* Stamped Signatures Block */}
+                <div className="pt-4 flex items-end justify-between border-t-2 border-slate-200 text-xs mt-4">
+                  {/* Class Teacher / Registrar Sig */}
+                  <div className="text-center w-36">
+                    <img
+                      src="/images/stamps/registrar-signature.png"
+                      alt="Class Teacher Sig"
+                      className="w-28 h-12 object-contain mx-auto"
+                    />
+                    <span className="text-[9px] font-bold text-slate-700 block mt-0.5 uppercase">
+                      Class Incharge
+                    </span>
+                  </div>
+
+                  {/* Center Approved Stamp */}
+                  <div className="text-center">
+                    <img
+                      src="/images/stamps/approved-stamp.png"
+                      alt="Approved Stamp"
+                      className="w-28 h-10 object-contain transform rotate-1 mx-auto drop-shadow-sm"
+                    />
+                    <span className="text-[8px] font-bold text-emerald-800 block mt-0.5 uppercase">
+                      Exam Cell Verified
+                    </span>
+                  </div>
+
+                  {/* Principal Sig */}
+                  <div className="text-center w-40">
+                    <img
+                      src="/images/stamps/principal-signature.png"
+                      alt="Principal Signature"
+                      className="w-36 h-16 object-contain mx-auto"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
