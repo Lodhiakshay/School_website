@@ -3,7 +3,22 @@
 import React, { useState } from 'react';
 import { PublicNavbar } from '../../components/public/public-navbar';
 import { PublicFooter } from '../../components/public/public-footer';
-import { GraduationCap, Award, BookOpen, Mail, Phone, Search, Sparkles } from 'lucide-react';
+import {
+  GraduationCap,
+  Award,
+  BookOpen,
+  Mail,
+  Phone,
+  Search,
+  Sparkles,
+  FlaskConical,
+  Languages,
+  Laptop,
+  Trophy,
+  Palette,
+  CheckCircle2,
+  Users,
+} from 'lucide-react';
 
 export default function FacultyPage() {
   const [selectedDept, setSelectedDept] = useState('all');
@@ -43,7 +58,7 @@ export default function FacultyPage() {
       qual: 'M.Sc. (Botany), B.Ed.',
       exp: '16 Yrs Exp',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
-      subjects: ['Class 11 & 12 Biology', 'Genetics & Physiology'],
+      subjects: ['Class 11 & 12 Biology', 'Genetics & Human Physiology'],
     },
     {
       name: 'Smt. Geeta Dixit',
@@ -97,7 +112,7 @@ export default function FacultyPage() {
       qual: 'M.P.Ed., Certified NIS Athletics Coach',
       exp: '15 Yrs Exp',
       image: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80',
-      subjects: ['Athletics', 'Volleyball & Cricket'],
+      subjects: ['Athletics Track', 'Volleyball & Cricket'],
     },
     {
       name: 'Smt. Sunita Verma',
@@ -122,58 +137,61 @@ export default function FacultyPage() {
   const filtered = selectedDept === 'all' ? facultyMembers : facultyMembers.filter((f) => f.dept === selectedDept);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white font-sans">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-blue-600 selection:text-white">
       <PublicNavbar />
 
-      {/* Header Banner */}
-      <section className="relative bg-slate-950 text-white py-16 lg:py-24 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80')`,
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-blue-950/80" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-4">
-          <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-500/20 px-4 py-1.5 rounded-full border border-amber-400/40">
-            Our Educators &amp; Mentors
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight font-serif">
+      {/* Royal Hero Header */}
+      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white py-14 sm:py-20 px-4 sm:px-6 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+
+        <div className="max-w-6xl mx-auto text-center space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span>Our Educators &amp; Mentors &bull; समर्पित शिक्षकवृन्द</span>
+          </div>
+
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black font-serif tracking-tight text-white leading-tight">
             Distinguished Faculty &amp; Academic Staff
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-            Meet our team of 42+ highly qualified educators, laboratory scientists, and mentors dedicated to student success.
+
+          <p className="text-xs sm:text-sm md:text-base text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Meet our team of 42+ highly qualified educators, laboratory scientists, and mentors dedicated to student excellence in Uttar Pradesh.
           </p>
         </div>
       </section>
 
-      {/* Faculty Directory */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Department Filter Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5">
+      {/* Floating Department Filter Tabs */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 z-20 w-full">
+        <div className="bg-white p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
           {[
-            { id: 'all', label: 'All Faculty (42)' },
-            { id: 'science', label: 'Science & Labs' },
-            { id: 'humanities', label: 'Languages & Humanities' },
-            { id: 'technology', label: 'IT & Library' },
-            { id: 'sports', label: 'Sports & Athletics' },
-            { id: 'primary', label: 'Primary Wing' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setSelectedDept(tab.id)}
-              className={`px-5 py-2 rounded-2xl text-xs font-extrabold transition-all shadow-sm ${
-                selectedDept === tab.id
-                  ? 'bg-blue-700 text-white shadow-md shadow-blue-700/30'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+            { id: 'all', label: 'All Faculty (42)', icon: <Users className="w-4 h-4" /> },
+            { id: 'science', label: 'Science & Labs (4)', icon: <FlaskConical className="w-4 h-4" /> },
+            { id: 'humanities', label: 'Languages & Humanities (4)', icon: <Languages className="w-4 h-4" /> },
+            { id: 'technology', label: 'IT & Library (2)', icon: <Laptop className="w-4 h-4" /> },
+            { id: 'sports', label: 'Sports & Athletics', icon: <Trophy className="w-4 h-4" /> },
+            { id: 'primary', label: 'Primary Wing', icon: <Palette className="w-4 h-4" /> },
+          ].map((tab) => {
+            const isActive = selectedDept === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedDept(tab.id)}
+                className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
+                  isActive
+                    ? 'bg-[#002060] text-white shadow-md scale-100 ring-2 ring-blue-400/30'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <span className={isActive ? 'text-amber-400' : 'text-slate-400'}>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
+      </section>
 
-        {/* Faculty Grid */}
+      {/* Faculty Directory Grid */}
+      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filtered.map((fac, idx) => (
             <div
@@ -181,7 +199,7 @@ export default function FacultyPage() {
               className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                <div className="relative h-60 w-full overflow-hidden bg-slate-100">
+                <div className="relative h-64 w-full overflow-hidden bg-slate-100">
                   <img
                     src={fac.image}
                     alt={fac.name}
@@ -193,17 +211,17 @@ export default function FacultyPage() {
                 </div>
 
                 <div className="p-5 space-y-2">
-                  <h3 className="text-sm font-black text-slate-900 font-serif group-hover:text-blue-700 transition">
+                  <h3 className="text-sm font-black text-slate-900 font-serif group-hover:text-blue-700 transition leading-snug">
                     {fac.name}
                   </h3>
                   <p className="text-xs font-bold text-blue-700">{fac.role}</p>
-                  <p className="text-[11px] text-slate-500">{fac.qual}</p>
+                  <p className="text-[11px] text-slate-500 font-medium">{fac.qual}</p>
 
-                  <div className="pt-2 flex flex-wrap gap-1">
+                  <div className="pt-2 flex flex-wrap gap-1.5">
                     {fac.subjects.map((sub, sIdx) => (
                       <span
                         key={sIdx}
-                        className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-semibold"
+                        className="px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 text-[10px] font-bold border border-slate-200"
                       >
                         {sub}
                       </span>
