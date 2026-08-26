@@ -29,6 +29,7 @@ import {
   CreditCard,
   HelpCircle,
   Bus,
+  Check,
 } from 'lucide-react';
 import { useToast } from '../../components/ui/toast';
 import { Button } from '../../components/ui/button';
@@ -64,37 +65,37 @@ export default function SSSDPublicSchoolPage() {
     {
       title: '100% English Medium Ambience',
       desc: 'Immersive English language environment with daily phonics, spoken English clinics, and debate clubs from Kindergarten upwards.',
-      icon: <Languages className="w-6 h-6 text-emerald-600" />,
-      tag: 'Language Excellence',
+      icon: <Languages className="w-5 h-5 text-emerald-700" />,
+      tag: 'Spoken Fluency',
     },
     {
-      title: 'CBSE Curriculum & NCERT Alignment',
+      title: 'CBSE Pattern & NCERT Curriculum',
       desc: 'Holistic curriculum aligned with the latest National Education Policy (NEP 2020) and modern STEM learning modules.',
-      icon: <BookOpen className="w-6 h-6 text-blue-600" />,
+      icon: <BookOpen className="w-5 h-5 text-blue-700" />,
       tag: 'Academic Rigor',
     },
     {
-      title: 'Smart Interactive Classrooms',
-      desc: 'Every classroom is equipped with high-definition digital smart boards, visual 3D science models, and multimedia content.',
-      icon: <Laptop className="w-6 h-6 text-purple-600" />,
+      title: 'Smart Digital Classrooms',
+      desc: 'Every classroom is equipped with high-definition digital smart interactive boards, visual 3D science models, and audio aids.',
+      icon: <Laptop className="w-5 h-5 text-purple-700" />,
       tag: 'Digital Learning',
     },
     {
       title: 'Science & Robotics Corner',
       desc: 'Hands-on experiential labs for physics, chemistry, biology, and foundational coding for young innovators.',
-      icon: <Sparkles className="w-6 h-6 text-amber-600" />,
-      tag: 'Innovation',
+      icon: <Sparkles className="w-5 h-5 text-amber-700" />,
+      tag: 'STEM Innovation',
     },
     {
       title: 'Athletics & Physical Wellness',
-      desc: 'Spacious sports arena with synthetic courts for Badminton, Volleyball, Karate/Martial arts training, and Yoga sessions.',
-      icon: <Trophy className="w-6 h-6 text-rose-600" />,
+      desc: 'Spacious sports arena with synthetic courts for Badminton, Volleyball, Martial arts training, and daily Yoga sessions.',
+      icon: <Trophy className="w-5 h-5 text-rose-700" />,
       tag: 'Sports Academy',
     },
     {
-      title: 'Safe GPS-Tracked Transport',
+      title: 'Safe GPS-Tracked Transport Fleet',
       desc: 'Dedicated school van and bus fleet covering all sectors of Shamsabad, Farrukhabad, Kaimganj road, and rural suburbs.',
-      icon: <ShieldCheck className="w-6 h-6 text-teal-600" />,
+      icon: <Bus className="w-5 h-5 text-teal-700" />,
       tag: 'Safety & Security',
     },
   ];
@@ -116,7 +117,7 @@ export default function SSSDPublicSchoolPage() {
       stage: 'Middle & Secondary School',
       classes: 'Grade 6 to Grade 10',
       image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80',
-      highlights: ['NCERT Science & Math labs', 'Computer coding & Scratch/Python', 'Olympiad & competitive exam drills', 'Inter-school sports & debate fests'],
+      highlights: ['NCERT Science & Math practicals', 'Computer coding & Scratch/Python', 'Olympiad & competitive exam drills', 'Inter-school sports & debate fests'],
     },
   ];
 
@@ -135,97 +136,101 @@ export default function SSSDPublicSchoolPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-emerald-600 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-emerald-600 selection:text-white overflow-x-hidden">
       {/* SSSD Top Switcher Strip */}
-      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 text-slate-300 py-2 px-3 sm:px-6 text-xs border-b border-emerald-500/20">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-[11px] text-emerald-300 font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>English Medium Sister Campus &bull; Managed by Sarswati Educational Trust</span>
+      <div className="bg-gradient-to-r from-emerald-950 via-[#01271e] to-teal-950 text-slate-300 py-2 px-3 sm:px-6 text-xs border-b border-emerald-500/20 shadow-inner">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
+          {/* Left Text / Badge */}
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+            <span className="text-[10px] sm:text-xs font-bold text-emerald-300 truncate">
+              English Medium Sister Campus &bull; Managed by Sarswati Educational Trust
+            </span>
           </div>
 
+          {/* Right Switcher Pill */}
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full border border-white/15 transition shadow-sm"
+            className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-amber-300 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 sm:px-3 py-1 rounded-full border border-white/20 transition shadow-sm flex-shrink-0 whitespace-nowrap"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Visit Sarswati Gyan Mandir (Inter College)</span>
+            <ArrowLeft className="w-3 h-3 text-amber-400" />
+            <span>SGM Inter College</span>
           </Link>
         </div>
       </div>
 
       {/* SSSD Dedicated Navbar Header */}
-      <header className="w-full sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-emerald-500/20 shadow-xl shadow-slate-950/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-          {/* SSSD Brand Logo */}
-          <Link href="/sssd" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
+      <header className="w-full sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-emerald-500/30 shadow-xl shadow-slate-950/40">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-3 sm:gap-4">
+          {/* SSSD Brand Logo & Name */}
+          <Link href="/sssd" className="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-1">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
               <img
                 src="/images/sssd-logo.png"
                 alt="SSSD Public School Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-teal-100 uppercase font-serif tracking-tight">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-xs sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-teal-100 uppercase font-serif tracking-tight truncate">
                   SSSD Public School
                 </h1>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-black uppercase px-2 py-0.5 rounded-full hidden sm:inline-block font-mono">
+                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full hidden md:inline-block font-mono">
                   English Medium
                 </span>
               </div>
-              <p className="text-[9px] sm:text-[10px] text-amber-300 font-extrabold tracking-wider uppercase">
+              <p className="text-[8.5px] sm:text-[10px] text-amber-300 font-extrabold tracking-wider uppercase truncate">
                 SHAMSABAD &bull; FARRUKHABAD (UP)
               </p>
             </div>
           </Link>
 
-          {/* SSSD Action Buttons */}
-          <div className="flex items-center gap-3">
+          {/* Action Controls */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <a
               href="tel:+919451234567"
-              className="hidden md:flex items-center gap-1.5 text-xs text-slate-300 hover:text-emerald-300 font-mono font-bold"
+              className="hidden lg:flex items-center gap-1.5 text-xs text-slate-300 hover:text-emerald-300 font-mono font-bold"
             >
               <Phone className="w-3.5 h-3.5 text-emerald-400" />
               <span>+91 9451234567</span>
             </a>
             <Button
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 rounded-xl px-4 py-2"
+              size="sm"
+              className="h-8 sm:h-9 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md shadow-emerald-600/30 rounded-xl"
               onClick={() => setShowApplyModal(true)}
-              leftIcon={<Send className="w-3.5 h-3.5 text-amber-300" />}
+              leftIcon={<Send className="w-3 h-3 text-amber-300 flex-shrink-0" />}
             >
-              Online Admission 2026
+              <span>Apply Now</span>
             </Button>
           </div>
         </div>
       </header>
 
       {/* SSSD Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#042f2e] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+      <section className="relative bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#042f2e] text-white pt-12 sm:pt-20 pb-16 sm:pb-24 px-4 sm:px-6 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-        <div className="max-w-5xl mx-auto text-center space-y-6 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm shadow-inner">
-            <Sparkles className="w-4 h-4 text-amber-300" />
-            <span>Admissions Open for Session 2026-2027 &bull; Nursery to Grade 10</span>
+        <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 relative z-10">
+          <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-sm shadow-inner">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Admissions Open 2026-2027 &bull; Nursery to Grade 10</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-serif tracking-tight text-white leading-tight">
-            Nurturing Global Minds with <br className="hidden sm:inline" />
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-serif tracking-tight text-white leading-tight">
+            Nurturing Global Minds with <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-amber-200 to-teal-200">
               Modern English Medium Education
             </span>
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-emerald-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-emerald-100/90 max-w-2xl mx-auto leading-relaxed">
             Welcome to <strong>SSSD Public School (Shamsabad)</strong> &mdash; the premier co-educational English Medium wing of Sarswati Educational Trust, combining 21st-century digital classrooms, spoken English mastery, and cultural values.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 sm:pt-4">
             <Button
-              size="lg"
-              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs sm:text-sm shadow-xl rounded-2xl px-6 py-3.5"
+              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs sm:text-sm shadow-xl rounded-2xl px-5 sm:px-6 py-2.5 sm:py-3.5"
               onClick={() => setShowApplyModal(true)}
               leftIcon={<Send className="w-4 h-4" />}
             >
@@ -233,7 +238,7 @@ export default function SSSDPublicSchoolPage() {
             </Button>
             <Link
               href="/downloads"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-2xl border border-white/20 transition backdrop-blur-sm"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl border border-white/20 transition backdrop-blur-sm"
             >
               <FileDown className="w-4 h-4 text-emerald-300" />
               <span>Download Prospectus</span>
@@ -242,35 +247,35 @@ export default function SSSDPublicSchoolPage() {
         </div>
       </section>
 
-      {/* SSSD Quick Key Metrics */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-10 z-20 w-full">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl text-center space-y-1">
-            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Medium</span>
-            <p className="text-xl sm:text-2xl font-black text-emerald-700 font-serif">100% English</p>
+      {/* SSSD Key Metrics Grid */}
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 -mt-8 sm:-mt-10 z-20 w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl text-center space-y-0.5 sm:space-y-1">
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-wider">Medium</span>
+            <p className="text-base sm:text-2xl font-black text-emerald-700 font-serif">100% English</p>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl text-center space-y-1">
-            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Grades Offered</span>
-            <p className="text-xl sm:text-2xl font-black text-slate-900 font-serif">Nursery to 10th</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl text-center space-y-0.5 sm:space-y-1">
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-wider">Grades</span>
+            <p className="text-base sm:text-2xl font-black text-slate-900 font-serif">Nursery - 10th</p>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl text-center space-y-1">
-            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Student-Teacher</span>
-            <p className="text-xl sm:text-2xl font-black text-blue-700 font-mono">18 : 1</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl text-center space-y-0.5 sm:space-y-1">
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-wider">Ratio</span>
+            <p className="text-base sm:text-2xl font-black text-blue-700 font-mono">18 : 1</p>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl text-center space-y-1">
-            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Campus Safety</span>
-            <p className="text-xl sm:text-2xl font-black text-amber-600 font-serif">100% CCTV Safe</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl text-center space-y-0.5 sm:space-y-1">
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-wider">Security</span>
+            <p className="text-base sm:text-2xl font-black text-amber-600 font-serif">100% CCTV</p>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200">
+      {/* Why Choose SSSD Features Grid */}
+      <section className="py-16 sm:py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full border border-emerald-200">
             Why Choose SSSD Public School
           </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif">
+          <h2 className="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight font-serif">
             World-Class Amenities for Modern Learners
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -278,22 +283,22 @@ export default function SSSDPublicSchoolPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {sssdFeatures.map((feat, idx) => (
             <div
               key={idx}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all space-y-4 flex flex-col justify-between group"
+              className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all space-y-3 flex flex-col justify-between group"
             >
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform">
                     {feat.icon}
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
                     {feat.tag}
                   </span>
                 </div>
-                <h3 className="text-base font-black text-slate-900 font-serif">{feat.title}</h3>
+                <h3 className="text-sm sm:text-base font-black text-slate-900 font-serif">{feat.title}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">{feat.desc}</p>
               </div>
             </div>
@@ -302,13 +307,13 @@ export default function SSSDPublicSchoolPage() {
       </section>
 
       {/* Academic Stages at SSSD */}
-      <section className="py-20 bg-slate-100/70 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200">
+      <section className="py-16 sm:py-20 bg-slate-100/70 border-y border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full border border-emerald-200">
               Academic Curricula
             </span>
-            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif">
+            <h2 className="text-xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight font-serif">
               Developmental Learning Wings
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -323,7 +328,7 @@ export default function SSSDPublicSchoolPage() {
                 className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md flex flex-col justify-between hover:shadow-xl transition"
               >
                 <div>
-                  <div className="h-44 w-full relative overflow-hidden">
+                  <div className="h-40 sm:h-44 w-full relative overflow-hidden">
                     <img src={stg.image} alt={stg.stage} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                     <span className="absolute bottom-3 left-3 bg-emerald-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full shadow-md">
@@ -361,58 +366,85 @@ export default function SSSDPublicSchoolPage() {
         </div>
       </section>
 
-      {/* SSSD Transparent Fee Schedule Section */}
-      <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
+      {/* SSSD Fee Structure (100% Responsive: Mobile Cards + Desktop Table) */}
+      <section className="py-16 sm:py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1 rounded-full">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full">
             Transparent Fee Structure
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif">
+          <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
             Affordable Fee Schedules (2026-2027)
           </h2>
           <p className="text-xs text-slate-600">Quality English medium education with complete transparency and zero hidden charges.</p>
         </div>
 
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-emerald-50 text-emerald-950 font-extrabold uppercase tracking-wider text-[11px] border-b border-emerald-100">
-                <tr>
-                  <th className="px-6 py-4">Educational Wing</th>
-                  <th className="px-6 py-4">One-Time Registration</th>
-                  <th className="px-6 py-4">Monthly Tuition</th>
-                  <th className="px-6 py-4">Digital / Lab Fee</th>
+        {/* Mobile View: High-End Responsive Fee Cards (Zero Cut-Off) */}
+        <div className="grid grid-cols-1 gap-3 sm:hidden">
+          {feeSchedules.map((f, idx) => (
+            <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <h4 className="font-bold text-slate-900 text-xs font-serif">{f.wing}</h4>
+                <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                  Active
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="p-2 bg-slate-50 rounded-xl border border-slate-100">
+                  <span className="text-[9px] text-slate-400 uppercase font-bold block">One-Time</span>
+                  <span className="font-bold text-emerald-800 font-mono text-[11px]">{f.admission}</span>
+                </div>
+                <div className="p-2 bg-emerald-50/60 rounded-xl border border-emerald-100">
+                  <span className="text-[9px] text-emerald-700 uppercase font-bold block">Monthly</span>
+                  <span className="font-black text-slate-900 font-mono text-[11px]">{f.monthly}</span>
+                </div>
+                <div className="p-2 bg-slate-50 rounded-xl border border-slate-100">
+                  <span className="text-[9px] text-slate-400 uppercase font-bold block">Digital Lab</span>
+                  <span className="font-medium text-slate-700 font-mono text-[11px]">{f.lab}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View: Full Width Polished Table */}
+        <div className="hidden sm:block bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-emerald-50 text-emerald-950 font-extrabold uppercase tracking-wider text-[11px] border-b border-emerald-100">
+              <tr>
+                <th className="px-6 py-4">Educational Wing</th>
+                <th className="px-6 py-4">One-Time Registration</th>
+                <th className="px-6 py-4">Monthly Tuition</th>
+                <th className="px-6 py-4">Digital / Lab Fee</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 font-medium">
+              {feeSchedules.map((f, idx) => (
+                <tr key={idx} className="hover:bg-emerald-50/40 transition">
+                  <td className="px-6 py-4 font-bold text-slate-900">{f.wing}</td>
+                  <td className="px-6 py-4 text-emerald-800 font-mono font-bold">{f.admission}</td>
+                  <td className="px-6 py-4 text-slate-900 font-mono font-bold">{f.monthly}</td>
+                  <td className="px-6 py-4 text-slate-600 font-mono">{f.lab}</td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-medium">
-                {feeSchedules.map((f, idx) => (
-                  <tr key={idx} className="hover:bg-emerald-50/40 transition">
-                    <td className="px-6 py-4 font-bold text-slate-900">{f.wing}</td>
-                    <td className="px-6 py-4 text-emerald-800 font-mono font-bold">{f.admission}</td>
-                    <td className="px-6 py-4 text-slate-900 font-mono font-bold">{f.monthly}</td>
-                    <td className="px-6 py-4 text-slate-600 font-mono">{f.lab}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
       {/* SSSD Faculty Mentors */}
-      <section className="py-16 bg-slate-100/70 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <section className="py-16 sm:py-20 bg-slate-100/70 border-y border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1 rounded-full">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full">
               Expert Mentors
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-serif">
+            <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
               Our English Language Educators
             </h2>
             <p className="text-xs text-slate-600">Certified educators trained in modern phonics, interactive smart board teaching, and child psychology.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {facultyHighlights.map((fac, idx) => (
               <div key={idx} className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-lg font-serif">
@@ -434,16 +466,16 @@ export default function SSSDPublicSchoolPage() {
 
       {/* SSSD Management Trust Banner */}
       <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 rounded-3xl p-8 sm:p-12 text-white border border-emerald-500/30 shadow-2xl space-y-6">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 p-1 flex items-center justify-center font-black font-serif text-3xl shadow-xl flex-shrink-0">
-              <span>SGM</span>
+        <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 rounded-3xl p-6 sm:p-12 text-white border border-emerald-500/30 shadow-2xl space-y-6">
+          <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-center sm:text-left">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-xl flex-shrink-0">
+              <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
             </div>
-            <div className="space-y-1 text-center sm:text-left">
+            <div className="space-y-1">
               <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
                 Sarswati Educational Trust Legacy
               </span>
-              <h3 className="text-xl sm:text-2xl font-black font-serif text-white">
+              <h3 className="text-lg sm:text-2xl font-black font-serif text-white">
                 Two Premier Schools &bull; One Vision of Excellence
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -455,21 +487,21 @@ export default function SSSDPublicSchoolPage() {
       </section>
 
       {/* SSSD Footer */}
-      <footer className="bg-slate-950 text-slate-400 pt-12 pb-8 border-t border-emerald-500/20 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pb-8 border-b border-slate-800">
+      <footer className="bg-slate-950 text-slate-400 pt-10 pb-8 border-t border-emerald-500/20 text-xs">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pb-6 border-b border-slate-800">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
                 <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
               </div>
-              <div>
+              <div className="text-center sm:text-left">
                 <h4 className="text-sm font-black text-white font-serif">SSSD Public School</h4>
                 <p className="text-[10px] text-emerald-400 uppercase font-bold">English Medium Wing &bull; Shamsabad</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-xs font-bold text-slate-300">
+            <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 text-xs font-bold text-slate-300">
               <Link href="/" className="hover:text-amber-300 transition">
-                &larr; Sarswati Gyan Mandir (Main Site)
+                &larr; SGM Main Site
               </Link>
               <Link href="/downloads" className="hover:text-emerald-300 transition">
                 Downloads &amp; Forms
@@ -480,27 +512,27 @@ export default function SSSDPublicSchoolPage() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-slate-500">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] sm:text-[11px] text-slate-500 text-center sm:text-left">
             <p>&copy; 2026 SSSD Public School, Shamsabad (Farrukhabad, UP). All rights reserved.</p>
-            <p>Managed by Sarswati Shiksha Samiti &bull; Affiliated &bull; Co-Educational</p>
+            <p>Managed by Sarswati Shiksha Samiti &bull; Co-Educational</p>
           </div>
         </div>
       </footer>
 
       {/* SSSD Admission Inquiry Modal */}
       {showApplyModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-emerald-600 space-y-5 animate-in zoom-in-95 duration-200 my-auto">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border-2 border-emerald-600 space-y-4 sm:space-y-5 animate-in zoom-in-95 duration-200 my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
                   <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-slate-900 font-serif">
+                  <h3 className="text-xs sm:text-sm font-black text-slate-900 font-serif">
                     SSSD Public School Admission Inquiry
                   </h3>
-                  <p className="text-[10px] text-emerald-700 font-bold uppercase">Session 2026-2027 (English Medium)</p>
+                  <p className="text-[9px] sm:text-[10px] text-emerald-700 font-bold uppercase">Session 2026-2027 (English Medium)</p>
                 </div>
               </div>
               <button
@@ -515,19 +547,19 @@ export default function SSSDPublicSchoolPage() {
             </div>
 
             {submittedRef ? (
-              <div className="text-center py-6 space-y-4 animate-in zoom-in-90 duration-200">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md">
-                  <CheckCircle2 className="w-8 h-8" />
+              <div className="text-center py-5 space-y-3 animate-in zoom-in-90 duration-200">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md">
+                  <CheckCircle2 className="w-7 h-7" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-lg font-black text-slate-900 font-serif">Application Registered!</h4>
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 font-serif">Application Registered!</h4>
                   <p className="text-xs text-slate-600">
                     Your inquiry for <strong>{formData.studentName}</strong> has been submitted to SSSD Admission Office.
                   </p>
                 </div>
-                <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-center font-mono space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Your Inquiry Reference ID</span>
-                  <div className="text-xl font-black text-emerald-800 tracking-wider">{submittedRef}</div>
+                <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-center font-mono space-y-1">
+                  <span className="text-[9px] text-slate-500 uppercase font-bold">Your Inquiry Reference ID</span>
+                  <div className="text-lg font-black text-emerald-800 tracking-wider">{submittedRef}</div>
                 </div>
                 <Button
                   className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold text-xs"
@@ -541,7 +573,7 @@ export default function SSSDPublicSchoolPage() {
               </div>
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-3 text-xs">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block font-bold text-slate-700 mb-1">Student Full Name *</label>
                     <input
@@ -566,7 +598,7 @@ export default function SSSDPublicSchoolPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block font-bold text-slate-700 mb-1">Grade Applying For *</label>
                     <select
@@ -611,7 +643,7 @@ export default function SSSDPublicSchoolPage() {
                   />
                 </div>
 
-                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                <div className="flex gap-2 pt-2 border-t border-slate-100">
                   <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold text-xs">
                     Submit SSSD Admission Inquiry
                   </Button>
