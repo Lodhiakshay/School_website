@@ -366,68 +366,256 @@ export default function SSSDPublicSchoolPage() {
         </div>
       </section>
 
-      {/* SSSD Fee Structure (100% Responsive: Mobile Cards + Desktop Table) */}
-      <section className="py-16 sm:py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full">
+      {/* SSSD Fee Structure (Luxury 4-Tier Cards for Desktop & Mobile) */}
+      <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm">
             Transparent Fee Structure
           </span>
-          <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
-            Affordable Fee Schedules (2026-2027)
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 font-serif tracking-tight">
+            Affordable Fee Schedules &bull; Session 2026-2027
           </h2>
-          <p className="text-xs text-slate-600">Quality English medium education with complete transparency and zero hidden charges.</p>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl mx-auto">
+            Quality 100% English medium education with complete institutional transparency, zero hidden charges, and quarterly flexible installments.
+          </p>
         </div>
 
-        {/* Mobile View: High-End Responsive Fee Cards (Zero Cut-Off) */}
-        <div className="grid grid-cols-1 gap-3 sm:hidden">
-          {feeSchedules.map((f, idx) => (
-            <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                <h4 className="font-bold text-slate-900 text-xs font-serif">{f.wing}</h4>
-                <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                  Active
+        {/* 4-Tier Modern Pricing Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1: Pre-Primary */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+                  Pre-Primary Wing
                 </span>
+                <span className="text-[11px] font-bold text-slate-400">Play - UKG</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2 bg-slate-50 rounded-xl border border-slate-100">
-                  <span className="text-[9px] text-slate-400 uppercase font-bold block">One-Time</span>
-                  <span className="font-bold text-emerald-800 font-mono text-[11px]">{f.admission}</span>
-                </div>
-                <div className="p-2 bg-emerald-50/60 rounded-xl border border-emerald-100">
-                  <span className="text-[9px] text-emerald-700 uppercase font-bold block">Monthly</span>
-                  <span className="font-black text-slate-900 font-mono text-[11px]">{f.monthly}</span>
-                </div>
-                <div className="p-2 bg-slate-50 rounded-xl border border-slate-100">
-                  <span className="text-[9px] text-slate-400 uppercase font-bold block">Digital Lab</span>
-                  <span className="font-medium text-slate-700 font-mono text-[11px]">{f.lab}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Desktop View: Full Width Polished Table */}
-        <div className="hidden sm:block bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-emerald-50 text-emerald-950 font-extrabold uppercase tracking-wider text-[11px] border-b border-emerald-100">
-              <tr>
-                <th className="px-6 py-4">Educational Wing</th>
-                <th className="px-6 py-4">One-Time Registration</th>
-                <th className="px-6 py-4">Monthly Tuition</th>
-                <th className="px-6 py-4">Digital / Lab Fee</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-medium">
-              {feeSchedules.map((f, idx) => (
-                <tr key={idx} className="hover:bg-emerald-50/40 transition">
-                  <td className="px-6 py-4 font-bold text-slate-900">{f.wing}</td>
-                  <td className="px-6 py-4 text-emerald-800 font-mono font-bold">{f.admission}</td>
-                  <td className="px-6 py-4 text-slate-900 font-mono font-bold">{f.monthly}</td>
-                  <td className="px-6 py-4 text-slate-600 font-mono">{f.lab}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              <div>
+                <h3 className="font-serif font-black text-lg text-slate-900">Kindergarten</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Foundational Play-Way &amp; Phonics</p>
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 950</span>
+                  <span className="text-xs text-slate-500 font-medium">/ month</span>
+                </div>
+                <div className="text-[11px] text-emerald-700 font-bold">
+                  One-Time Registration: <span className="font-mono font-black">₹ 2,500</span>
+                </div>
+              </div>
+
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Montessori Learning &amp; Phonics</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Air-Conditioned Activity Hall</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Fine Motor Skill Exercises</span>
+                </li>
+                <li className="flex items-center gap-2 text-emerald-700 font-semibold">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Digital Lab: Included (Free)</span>
+                </li>
+              </ul>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              onClick={() => {
+                setFormData({ ...formData, grade: 'Playgroup / Nursery' });
+                setShowApplyModal(true);
+              }}
+            >
+              Inquire for Nursery &rarr;
+            </Button>
+          </div>
+
+          {/* Card 2: Primary Wing (Featured) */}
+          <div className="bg-gradient-to-b from-emerald-950 via-[#064e3b] to-teal-950 text-white rounded-3xl p-6 border-2 border-emerald-400/50 shadow-2xl flex flex-col justify-between space-y-6 relative overflow-hidden group transform lg:-translate-y-2">
+            <div className="absolute top-0 right-0 bg-amber-400 text-slate-950 text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl tracking-wider font-mono shadow-md">
+              Most Popular
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                  Primary Wing
+                </span>
+                <span className="text-[11px] font-bold text-emerald-200">Grades 1 to 5</span>
+              </div>
+
+              <div>
+                <h3 className="font-serif font-black text-lg text-white">Primary Foundation</h3>
+                <p className="text-xs text-emerald-200/80 mt-0.5">Spoken Fluency &amp; Math Skills</p>
+              </div>
+
+              <div className="p-4 bg-white/10 rounded-2xl border border-white/15 space-y-1 backdrop-blur-sm">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-black text-white font-mono">₹ 1,200</span>
+                  <span className="text-xs text-emerald-200 font-medium">/ month</span>
+                </div>
+                <div className="text-[11px] text-amber-300 font-bold">
+                  One-Time Registration: <span className="font-mono font-black">₹ 3,000</span>
+                </div>
+              </div>
+
+              <ul className="space-y-2 text-xs text-emerald-100">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <span>100% Spoken English Daily Clinics</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <span>Smart Interactive Classrooms</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <span>Mental Arithmetic &amp; Science</span>
+                </li>
+                <li className="flex items-center gap-2 text-amber-200 font-semibold">
+                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <span>Computer &amp; Lab Fee: ₹ 150 / mo</span>
+                </li>
+              </ul>
+            </div>
+
+            <Button
+              size="sm"
+              className="w-full text-xs font-black bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-lg shadow-amber-400/20 transition"
+              onClick={() => {
+                setFormData({ ...formData, grade: 'Class 1' });
+                setShowApplyModal(true);
+              }}
+            >
+              Inquire for Primary &rarr;
+            </Button>
+          </div>
+
+          {/* Card 3: Middle Wing */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                  Middle Wing
+                </span>
+                <span className="text-[11px] font-bold text-slate-400">Grades 6 to 8</span>
+              </div>
+
+              <div>
+                <h3 className="font-serif font-black text-lg text-slate-900">Middle School</h3>
+                <p className="text-xs text-slate-500 mt-0.5">NCERT Exploration &amp; Coding</p>
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 1,450</span>
+                  <span className="text-xs text-slate-500 font-medium">/ month</span>
+                </div>
+                <div className="text-[11px] text-emerald-700 font-bold">
+                  One-Time Registration: <span className="font-mono font-black">₹ 3,500</span>
+                </div>
+              </div>
+
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>NCERT Science &amp; Math Practicals</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Coding &amp; Scratch/Python Classes</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Sports Academy &amp; Martial Arts</span>
+                </li>
+                <li className="flex items-center gap-2 text-slate-800 font-semibold">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Science / STEM Lab: ₹ 200 / mo</span>
+                </li>
+              </ul>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              onClick={() => {
+                setFormData({ ...formData, grade: 'Class 6' });
+                setShowApplyModal(true);
+              }}
+            >
+              Inquire for Middle &rarr;
+            </Button>
+          </div>
+
+          {/* Card 4: High School */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">
+                  Secondary Wing
+                </span>
+                <span className="text-[11px] font-bold text-slate-400">Grades 9 &amp; 10</span>
+              </div>
+
+              <div>
+                <h3 className="font-serif font-black text-lg text-slate-900">High School</h3>
+                <p className="text-xs text-slate-500 mt-0.5">CBSE Exam Prep &amp; Olympiads</p>
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 1,750</span>
+                  <span className="text-xs text-slate-500 font-medium">/ month</span>
+                </div>
+                <div className="text-[11px] text-emerald-700 font-bold">
+                  One-Time Registration: <span className="font-mono font-black">₹ 4,000</span>
+                </div>
+              </div>
+
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>CBSE Board Mock Test Series</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Full Physics, Chem &amp; Bio Labs</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Olympiad &amp; NTSE Mentorship</span>
+                </li>
+                <li className="flex items-center gap-2 text-slate-800 font-semibold">
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Advanced AI Lab: ₹ 250 / mo</span>
+                </li>
+              </ul>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              onClick={() => {
+                setFormData({ ...formData, grade: 'Class 9' });
+                setShowApplyModal(true);
+              }}
+            >
+              Inquire for Class 9/10 &rarr;
+            </Button>
+          </div>
         </div>
       </section>
 

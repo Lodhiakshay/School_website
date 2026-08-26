@@ -1,7 +1,7 @@
 {
-  "name": "सरस्वती ज्ञान मन्दिर इण्टर कॉलेज",
-  "short_name": "SGM College",
-  "description": "Official Academic & ERP Portal - Saraswati Gyan Mandir Intermediate College, Shamsabad, Farrukhabad (UP)",
+  "name": "सरस्वती ज्ञान मन्दिर & SSSD Public School",
+  "short_name": "SGM & SSSD App",
+  "description": "Official Academic & SIS Portal - Saraswati Gyan Mandir Inter College & SSSD Public School (English Medium), Shamsabad, Farrukhabad (UP)",
   "start_url": "/",
   "id": "/",
   "display": "standalone",

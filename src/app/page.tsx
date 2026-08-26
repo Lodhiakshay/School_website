@@ -441,43 +441,104 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Principal Desk Letter */}
-      <section className="py-20 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden border border-blue-800/40 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            <div className="md:col-span-4 text-center space-y-3">
-              <div className="w-32 h-32 rounded-3xl overflow-hidden border-4 border-amber-400 mx-auto shadow-xl bg-white p-1">
-                <img
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
-                  alt="Principal Dr. Ramesh Kumar Sharma"
-                  className="w-full h-full object-cover rounded-2xl"
-                />
-              </div>
-              <div>
-                <h4 className="font-serif font-black text-base text-amber-300">
-                  Dr. Ramesh Kumar Sharma
-                </h4>
-                <p className="text-xs text-slate-300 font-medium">Principal &bull; M.Sc., M.Ed., Ph.D.</p>
-                <p className="text-[10px] text-amber-400 font-mono mt-0.5">25+ Years Academic Leadership</p>
-              </div>
+      {/* Principal Desk Leadership Showcase */}
+      <section className="py-20 bg-slate-100/60 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-[#001740] via-[#002060] to-[#021029] rounded-3xl p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border-2 border-amber-400/50">
+            {/* Background Glows & Watermark Seal */}
+            <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 right-4 w-64 h-64 opacity-5 pointer-events-none">
+              <img src="/images/stamps/principal-round-seal.png" alt="Watermark Seal" className="w-full h-full object-contain" />
             </div>
 
-            <div className="md:col-span-8 space-y-4">
-              <Quote className="w-8 h-8 text-amber-400 opacity-60" />
-              <h3 className="text-xl sm:text-2xl font-black font-serif text-white leading-tight">
-                &ldquo;Empowering Rural Youth with Modern Science, Moral Character &amp; Board Excellence&rdquo;
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                At Saraswati Gyan Mandir, we believe that education is not merely the acquisition of textbook knowledge, but the ignition of intellect, character building, and cultural roots. Our institution provides children from Shamsabad and Farrukhabad with the finest educational foundation.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/desk"
-                  className="inline-flex items-center gap-2 text-xs font-black text-amber-300 hover:text-amber-200 transition"
-                >
-                  <span>Read Full Welcome Letter from Principal&apos;s Desk</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+              {/* Left Column: Large Hero Portrait & Leadership Credentials */}
+              <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+                <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-full h-80 sm:h-96 md:h-[390px] rounded-3xl overflow-hidden border-4 border-amber-400/90 shadow-2xl bg-slate-900 group">
+                  <img
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85"
+                    alt="Principal Dr. Ramesh Kumar Sharma"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                  
+                  {/* Floating Experience Badge on Photo */}
+                  <div className="absolute top-3 left-3 bg-amber-400 text-blue-950 text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 flex items-center gap-1 font-mono">
+                    <span>★ 25+ Years Academic Leadership</span>
+                  </div>
+
+                  {/* Nameplate inside photo bottom */}
+                  <div className="absolute bottom-4 left-4 right-4 text-left">
+                    <h4 className="font-serif font-black text-lg sm:text-xl text-white drop-shadow-md">
+                      Dr. Ramesh Kumar Sharma
+                    </h4>
+                    <p className="text-xs text-amber-300 font-bold drop-shadow">
+                      Principal &bull; M.Sc., M.Ed., Ph.D.
+                    </p>
+                    <p className="text-[10px] text-slate-300 font-mono mt-0.5">
+                      Sarswati Gyan Mandir &amp; SSSD Group
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-slate-300 bg-white/5 border border-white/10 px-4 py-2 rounded-2xl w-full max-w-[320px] md:max-w-full justify-center md:justify-start">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="font-semibold text-[11px]">Academic Year 2026-27 Leadership</span>
+                </div>
+              </div>
+
+              {/* Right Column: Key Vision, 3 Pillars, and Message Excerpt */}
+              <div className="md:col-span-7 space-y-5">
+                {/* Header Tag */}
+                <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 text-xs font-black uppercase px-3.5 py-1.5 rounded-full border border-amber-400/40">
+                  <Quote className="w-3.5 h-3.5 text-amber-300" />
+                  <span>From The Principal&apos;s Desk</span>
+                </div>
+
+                {/* Main Quote Title */}
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-black font-serif text-white leading-snug">
+                  &ldquo;Empowering Rural Youth with Modern Science, Moral Character &amp; Board Excellence&rdquo;
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal">
+                  At Saraswati Gyan Mandir and our English-medium wing SSSD Public School, education is not merely the transmission of syllabus &mdash; it is the ignite of intellect, character building, cultural ethos, and competitive spirit. We are dedicated to providing students of Shamsabad and Farrukhabad with world-class facilities and nurturing mentorship.
+                </p>
+
+                {/* 3 Pillars Bento Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-amber-300 text-xs font-black">🎓 Board Toppers</div>
+                    <div className="text-[11px] text-slate-300">Consistent Top State &amp; District Ranks</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-emerald-300 text-xs font-black">🔬 Modern Labs</div>
+                    <div className="text-[11px] text-slate-300">Physics, Chem, Bio &amp; IT Practical Centers</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-blue-300 text-xs font-black">🕉️ Values &amp; Sports</div>
+                    <div className="text-[11px] text-slate-300">Sanskar, Discipline &amp; Physical Fitness</div>
+                  </div>
+                </div>
+
+                {/* Action & Stamped Signature */}
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/15">
+                  <Link
+                    href="/desk"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-blue-950 font-black text-xs shadow-lg shadow-amber-400/20 transition-all active:scale-95 group"
+                  >
+                    <span>Read Full Welcome Letter from Desk</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <div className="bg-white/90 p-1.5 px-3 rounded-xl border border-amber-300/60 flex items-center gap-2 self-start sm:self-auto shadow-md">
+                    <img
+                      src="/images/stamps/principal-signature.png"
+                      alt="Principal Signature"
+                      className="h-9 w-auto object-contain"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -36,7 +36,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu }) => {
   ];
 
   return (
-    <header className="h-14 sm:h-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 sm:px-8 flex items-center justify-between flex-shrink-0 z-20 shadow-sm sticky top-0">
+    <header className="h-14 sm:h-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 sm:px-8 flex items-center justify-between flex-shrink-0 z-10 shadow-sm sticky top-0">
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         {onToggleMobileMenu && (
           <button
