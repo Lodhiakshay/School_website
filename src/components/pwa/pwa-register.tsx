@@ -20,4 +20,3 @@ export const PwaRegister: React.FC = () => {
 
   return null;
 };
-

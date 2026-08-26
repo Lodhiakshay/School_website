@@ -144,7 +144,7 @@ export default function SSSDPublicSchoolPage() {
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
             <span className="text-[10px] sm:text-xs font-bold text-emerald-300 truncate">
-              English Medium Sister Campus &bull; Managed by Sarswati Educational Trust
+              100% English Medium Wing &bull; Managed by Sarswati Educational Trust
             </span>
           </div>
 

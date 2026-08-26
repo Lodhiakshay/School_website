@@ -345,7 +345,7 @@ export default function HomePage() {
             <div className="lg:col-span-8 space-y-4 relative z-10">
               <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Our English Medium Sister School &bull; सह-संस्था</span>
+                <span>100% English Medium Wing &bull; CBSE Pattern</span>
               </div>
 
               <div className="flex items-center gap-3.5">
@@ -367,7 +367,7 @@ export default function HomePage() {
               </div>
 
               <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl">
-                Seeking a dedicated <strong>100% English Medium</strong> learning environment with CBSE pattern curriculum, digital smart boards, and phonics labs? Discover our premier sister campus located right here in Shamsabad, Farrukhabad.
+                Seeking a dedicated <strong>100% English Medium</strong> learning environment with CBSE pattern curriculum, digital smart boards, and phonics labs? Discover our premier English-medium campus located right here in Shamsabad, Farrukhabad.
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs">
