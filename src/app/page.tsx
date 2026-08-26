@@ -14,6 +14,7 @@ import {
   Users,
   MapPin,
   Quote,
+  Languages,
 } from 'lucide-react';
 import { PublicNavbar } from '../components/public/public-navbar';
 import { PublicFooter } from '../components/public/public-footer';
@@ -330,6 +331,112 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Sister Institution: SSSD Public School (English Medium) Showcase */}
+      <section className="py-16 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-emerald-950 via-slate-950 to-teal-950 rounded-3xl p-6 sm:p-12 text-white border-2 border-emerald-500/30 shadow-2xl relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="lg:col-span-8 space-y-4 relative z-10">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>Our English Medium Sister School &bull; सह-संस्था</span>
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-xl flex-shrink-0">
+                  <img
+                    src="/images/sssd-logo.png"
+                    alt="SSSD Public School Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-2xl sm:text-4xl font-black font-serif text-white leading-tight">
+                    SSSD Public School
+                  </h2>
+                  <p className="text-[11px] sm:text-xs text-amber-300 font-extrabold uppercase tracking-wider">
+                    SHAMSABAD &bull; FARRUKHABAD (100% ENGLISH MEDIUM)
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl">
+                Seeking a dedicated <strong>100% English Medium</strong> learning environment with CBSE pattern curriculum, digital smart boards, and phonics labs? Discover our premier sister campus located right here in Shamsabad, Farrukhabad.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/10 space-y-0.5">
+                  <span className="font-bold text-amber-300 block">Nursery to 10th</span>
+                  <span className="text-[11px] text-slate-300">Co-Ed Schooling</span>
+                </div>
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/10 space-y-0.5">
+                  <span className="font-bold text-emerald-300 block">100% English</span>
+                  <span className="text-[11px] text-slate-300">Spoken &amp; Phonics</span>
+                </div>
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/10 space-y-0.5 col-span-2 sm:col-span-1">
+                  <span className="font-bold text-teal-300 block">Smart STEM Labs</span>
+                  <span className="text-[11px] text-slate-300">GPS Bus Fleet</span>
+                </div>
+              </div>
+
+              <div className="pt-3 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/sssd"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition active:scale-95"
+                >
+                  <span>Explore SSSD Public School Portal</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/sssd"
+                  className="inline-flex items-center gap-1.5 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-emerald-200 border border-white/15 text-xs font-bold transition"
+                >
+                  <span>Online Admission 2026</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Card / Visual */}
+            <div className="lg:col-span-4 relative z-10">
+              <div className="bg-slate-900/95 rounded-3xl p-5 sm:p-6 border border-emerald-500/40 shadow-2xl space-y-4 text-center overflow-hidden relative group">
+                <div className="h-44 sm:h-48 w-full rounded-2xl overflow-hidden relative shadow-inner border border-white/10">
+                  <img
+                    src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80"
+                    alt="SSSD Public School Smart Classroom"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
+                  <span className="absolute top-3 left-3 bg-emerald-500 text-slate-950 font-black text-[10px] uppercase px-3 py-1 rounded-full shadow-md font-mono">
+                    100% English Medium
+                  </span>
+                  <div className="absolute bottom-3 left-3 right-3 text-left">
+                    <h3 className="font-serif font-black text-sm text-white drop-shadow">SSSD Public School</h3>
+                    <p className="text-[10px] text-emerald-300 font-bold uppercase">Shamsabad, Farrukhabad</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1 text-left bg-white/5 p-3 rounded-xl border border-white/10 text-[11px] text-slate-300">
+                  <div className="flex items-center gap-1.5 text-emerald-300 font-bold">
+                    <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>CBSE Pattern &bull; Smart Phonics Labs</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400">Co-Educational Schooling with modern digital classrooms.</p>
+                </div>
+
+                <Link
+                  href="/sssd"
+                  className="block w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition"
+                >
+                  Visit SSSD Campus Portal &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
