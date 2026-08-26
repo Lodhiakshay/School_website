@@ -159,10 +159,10 @@ export const PublicNavbar: React.FC = () => {
         </div>
 
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2 sm:gap-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3 sm:gap-4 overflow-hidden">
           {/* Brand Logo & Name */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 max-w-[calc(100%-115px)] sm:max-w-none">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all">
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-1">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0 shadow-md group-hover:scale-105 transition-all">
               <img
                 src="/logo.png"
                 alt="सरस्वती ज्ञान मन्दिर"
@@ -173,7 +173,7 @@ export const PublicNavbar: React.FC = () => {
               <h1 className="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-100 tracking-tight leading-tight uppercase font-serif truncate">
                 सरस्वती ज्ञान मन्दिर
               </h1>
-              <p className="text-[8.5px] sm:text-[10px] text-amber-300 font-extrabold tracking-wider uppercase truncate">
+              <p className="text-[9px] sm:text-[10px] text-amber-300 font-extrabold tracking-wider uppercase truncate">
                 SHAMSABAD &bull; FARRUKHABAD
               </p>
             </div>
@@ -264,30 +264,13 @@ export const PublicNavbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Right Controls: Sleek Back Button + Premium Golden Hamburger */}
-          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
-            {pathname !== '/' && (
-              <button
-                type="button"
-                onClick={() => {
-                  if (typeof window !== 'undefined' && window.history.length > 1) {
-                    window.history.back();
-                  } else {
-                    window.location.href = '/';
-                  }
-                }}
-                aria-label="Go to previous page"
-                className="h-8 px-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-slate-100 border border-white/20 shadow-sm flex items-center justify-center gap-1 transition-all text-xs font-bold whitespace-nowrap"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
-                <span className="leading-none text-white">Back</span>
-              </button>
-            )}
+          {/* Mobile Right Controls: Premium Golden Hamburger */}
+          <div className="flex items-center lg:hidden flex-shrink-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open Navigation Menu"
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400/20 via-blue-600/20 to-indigo-700/30 hover:from-amber-400/30 hover:to-blue-600/40 text-amber-300 border border-amber-400/40 transition-all flex items-center justify-center active:scale-90 shadow-md flex-shrink-0"
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400/20 via-blue-600/20 to-indigo-700/30 hover:from-amber-400/30 hover:to-blue-600/40 text-amber-300 border border-amber-400/40 transition-all flex items-center justify-center active:scale-90 shadow-md flex-shrink-0"
             >
               <Menu className="w-5 h-5 text-amber-300" />
             </button>
