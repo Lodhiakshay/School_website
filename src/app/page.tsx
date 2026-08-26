@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { PublicNavbar } from '../components/public/public-navbar';
 import { PublicFooter } from '../components/public/public-footer';
+import { InfiniteCampusCarousel } from '../components/public/infinite-campus-carousel';
 
 export default function HomePage() {
   const stats = [
@@ -74,29 +75,6 @@ export default function HomePage() {
       title: 'Dedicated Transport Fleet',
       desc: 'GPS-tracked school buses covering Shamsabad, Farrukhabad, and surrounding rural routes.',
       image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80',
-    },
-  ];
-
-  const galleryHighlights = [
-    {
-      title: 'Annual Sports Meet 2026',
-      category: 'Athletics',
-      image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80',
-    },
-    {
-      title: 'District Science Exhibition',
-      category: 'Innovation',
-      image: 'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?auto=format&fit=crop&w=600&q=80',
-    },
-    {
-      title: 'Saraswati Puja & Cultural Fest',
-      category: 'Cultural',
-      image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80',
-    },
-    {
-      title: 'Republic Day Parade & Honors',
-      category: 'Celebration',
-      image: 'https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=600&q=80',
     },
   ];
 
@@ -545,50 +523,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Gallery Showcase */}
-      <section className="py-20 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-black uppercase tracking-widest text-blue-700 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-200">
-                Campus Memories
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight font-serif mt-2">
-                Life &amp; Celebrations at Saraswati Gyan Mandir
-              </h2>
-            </div>
-            <Link
-              href="/gallery"
-              className="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 hover:text-blue-700"
-            >
-              <span>Explore Complete Photo Gallery</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {galleryHighlights.map((g, idx) => (
-              <div
-                key={idx}
-                className="group h-64 rounded-3xl overflow-hidden relative shadow-md border border-slate-200"
-              >
-                <img
-                  src={g.image}
-                  alt={g.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 space-y-1">
-                  <span className="text-[9px] font-black uppercase bg-blue-600 text-white px-2 py-0.5 rounded-full">
-                    {g.category}
-                  </span>
-                  <h3 className="text-sm font-black text-white font-serif">{g.title}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 360° Infinite Interactive Campus Showcase */}
+      <InfiniteCampusCarousel />
 
       <PublicFooter />
     </div>
