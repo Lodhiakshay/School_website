@@ -433,7 +433,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
               {/* Left Column: Hero Portrait & Leadership Credentials */}
               <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-3">
-                <div className="relative w-full max-w-[260px] sm:max-w-[300px] md:max-w-full h-64 sm:h-80 md:h-[370px] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-slate-900 group">
+                <div className="relative w-full max-w-[260px] sm:max-w-[300px] md:max-w-full h-64 sm:h-80 md:h-[370px] rounded-3xl overflow-hidden border-4 border-amber-400/90 shadow-2xl shadow-amber-500/20 bg-slate-900 group">
                   <img
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85"
                     alt="Principal Dr. Ramesh Kumar Sharma"
