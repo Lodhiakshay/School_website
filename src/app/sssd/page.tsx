@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   GraduationCap,
@@ -34,6 +34,8 @@ import {
   Quote,
   Maximize2,
   Copy,
+  Calendar,
+  ChevronDown,
 } from 'lucide-react';
 import { useToast } from '../../components/ui/toast';
 import { Button } from '../../components/ui/button';
@@ -105,9 +107,192 @@ const sssdMoments: SSSDMoment[] = [
   },
 ];
 
+interface CustomSelectOption {
+  value: string;
+  label: string;
+  sublabel?: string;
+  icon?: string | React.ReactNode;
+}
+
+const timeSlotOptions: CustomSelectOption[] = [
+  {
+    value: 'Morning (09:00 AM - 11:00 AM)',
+    label: 'Morning Slot (09:00 AM - 11:00 AM)',
+    sublabel: 'Live classroom & lab inspection',
+    icon: '🌅',
+  },
+  {
+    value: 'Mid-Day (11:30 AM - 01:30 PM)',
+    label: 'Mid-Day Slot (11:30 AM - 01:30 PM)',
+    sublabel: 'Activity hub & lunch zone visit',
+    icon: '☀️',
+  },
+  {
+    value: 'Afternoon (02:00 PM - 03:30 PM)',
+    label: 'Afternoon Slot (02:00 PM - 03:30 PM)',
+    sublabel: 'Counselor talk & quiet tour',
+    icon: '🌇',
+  },
+];
+
+const facilityOptions: CustomSelectOption[] = [
+  {
+    value: '3D Smart Classrooms & Phonics Audio Studio',
+    label: '3D Smart Classrooms & Phonics',
+    sublabel: 'Touchscreen boards & audio lab',
+    icon: '🖥️',
+  },
+  {
+    value: 'Kindergarten Activity & Play-way Hub',
+    label: 'Kindergarten & Montessori Hub',
+    sublabel: 'Air-conditioned play learning',
+    icon: '🧸',
+  },
+  {
+    value: 'Robotics, Coding & STEM Lab',
+    label: 'Robotics, Coding & STEM Corner',
+    sublabel: 'Python, Scratch & science kits',
+    icon: '🤖',
+  },
+  {
+    value: 'Athletics Arena, Karate & Bus Fleet',
+    label: 'Athletics Arena, Karate & Fleet',
+    sublabel: 'Sports courts & GPS vans',
+    icon: '🏃',
+  },
+];
+
+const gradeOptions: CustomSelectOption[] = [
+  { value: 'Playgroup / Nursery', label: 'Playgroup / Nursery', sublabel: 'Foundational Play-Way (Age 3+)', icon: '👶' },
+  { value: 'LKG / UKG', label: 'LKG / UKG Kindergarten', sublabel: 'Phonics & Early Care (Age 4-5)', icon: '🎒' },
+  { value: 'Class 1', label: 'Class 1', sublabel: 'Primary Foundation Wing', icon: '📘' },
+  { value: 'Class 2', label: 'Class 2', sublabel: 'Primary Foundation Wing', icon: '📗' },
+  { value: 'Class 3', label: 'Class 3', sublabel: 'Primary Foundation Wing', icon: '📙' },
+  { value: 'Class 4', label: 'Class 4', sublabel: 'Primary Foundation Wing', icon: '📕' },
+  { value: 'Class 5', label: 'Class 5', sublabel: 'Primary Foundation Wing', icon: '📓' },
+  { value: 'Class 6', label: 'Class 6', sublabel: 'Middle Wing NCERT Science', icon: '🔬' },
+  { value: 'Class 7', label: 'Class 7', sublabel: 'Middle Wing NCERT Science', icon: '📐' },
+  { value: 'Class 8', label: 'Class 8', sublabel: 'Middle Wing NCERT & Coding', icon: '🧪' },
+  { value: 'Class 9', label: 'Class 9', sublabel: 'Secondary CBSE Board Prep', icon: '🏛️' },
+  { value: 'Class 10', label: 'Class 10', sublabel: 'Secondary CBSE Board Exam', icon: '🎓' },
+];
+
+function CustomSelect({
+  label,
+  value,
+  onChange,
+  options,
+  required = false,
+  direction = 'down',
+}: {
+  label?: string;
+  value: string;
+  onChange: (val: string) => void;
+  options: CustomSelectOption[];
+  required?: boolean;
+  direction?: 'down' | 'up';
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      {label && (
+        <label className="block font-bold text-slate-800 mb-1 text-xs">
+          {label} {required && <span className="text-rose-500">*</span>}
+        </label>
+      )}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full p-2.5 rounded-xl border text-xs font-semibold flex items-center justify-between transition text-left shadow-sm ${
+          isOpen
+            ? 'border-emerald-600 bg-white ring-2 ring-emerald-500/20'
+            : 'border-slate-300 bg-slate-50 hover:bg-white hover:border-emerald-400'
+        }`}
+      >
+        <span className="flex items-center gap-2 truncate text-slate-900 font-bold">
+          {selectedOption?.icon && (
+            <span className="text-base flex-shrink-0">{selectedOption.icon}</span>
+          )}
+          <span className="truncate">{selectedOption?.label || value}</span>
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-slate-500 flex-shrink-0 transition-transform duration-200 ${
+            isOpen ? 'rotate-180 text-emerald-600' : ''
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div
+          className={`absolute left-0 right-0 ${
+            direction === 'up' ? 'bottom-full mb-1.5' : 'top-full mt-1.5'
+          } z-[9999] bg-white border-2 border-emerald-500 rounded-2xl shadow-2xl p-1.5 space-y-1 max-h-60 overflow-y-auto`}
+          style={{ backgroundColor: '#ffffff' }}
+        >
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full p-2 rounded-xl text-left text-xs transition flex items-center justify-between gap-2.5 ${
+                  isSelected
+                    ? 'bg-emerald-600 text-white font-black shadow-md border border-emerald-700'
+                    : 'bg-slate-50 hover:bg-emerald-50 text-slate-900 hover:text-emerald-950 font-bold border border-slate-100 hover:border-emerald-200'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {opt.icon && <span className="text-base flex-shrink-0">{opt.icon}</span>}
+                  <div className="min-w-0 text-left">
+                    <div className={`font-bold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                      {opt.label}
+                    </div>
+                    {opt.sublabel && (
+                      <div
+                        className={`text-[10.5px] leading-tight ${
+                          isSelected ? 'text-emerald-100 font-medium' : 'text-slate-600 font-medium'
+                        }`}
+                      >
+                        {opt.sublabel}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {isSelected && <Check className="w-4 h-4 text-white flex-shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SSSDPublicSchoolPage() {
   const { toast } = useToast();
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [modalTab, setModalTab] = useState<'inquiry' | 'visit'>('inquiry');
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
   const [activePhoto, setActivePhoto] = useState<SSSDMoment | null>(null);
   const [copied, setCopied] = useState(false);
@@ -119,6 +304,16 @@ export default function SSSDPublicSchoolPage() {
     phone: '',
     email: '',
     address: 'Shamsabad, Farrukhabad',
+  });
+
+  const [visitData, setVisitData] = useState({
+    visitorName: '',
+    studentName: '',
+    grade: 'Class 1',
+    phone: '',
+    visitDate: '2026-08-28',
+    visitSlot: 'Morning (09:00 AM - 11:00 AM)',
+    interestedFacility: '3D Smart Classrooms & Phonics Audio Studio',
   });
 
   const handleCopyRef = () => {
@@ -140,6 +335,19 @@ export default function SSSDPublicSchoolPage() {
     const refCode = `SSSD-2026-${randomNum}`;
     setSubmittedRef(refCode);
     toast.success(`Application registered with Ref: ${refCode}`, 'Inquiry Received!');
+  };
+
+  const handleVisitSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!visitData.visitorName || !visitData.phone || !visitData.visitDate) {
+      toast.error('Please fill in your name, contact phone and preferred date.', 'Missing Info');
+      return;
+    }
+
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const refCode = `SSSD-TOUR-2026-${randomNum}`;
+    setSubmittedRef(refCode);
+    toast.success(`Campus Visit Slot Confirmed with Pass: ${refCode}`, 'Tour Scheduled!');
   };
 
   const sssdFeatures = [
@@ -248,7 +456,6 @@ export default function SSSDPublicSchoolPage() {
       {/* SSSD Top Switcher Strip */}
       <div className="bg-gradient-to-r from-emerald-950 via-[#01271e] to-teal-950 text-slate-300 py-2 px-3 sm:px-6 text-xs border-b border-emerald-500/20 shadow-inner">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
-          {/* Left Text / Badge */}
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
             <span className="text-[10px] sm:text-xs font-bold text-emerald-300 truncate">
@@ -256,7 +463,6 @@ export default function SSSDPublicSchoolPage() {
             </span>
           </div>
 
-          {/* Right Switcher Pill */}
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold text-amber-300 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full border border-white/20 transition shadow-sm flex-shrink-0 whitespace-nowrap"
@@ -272,7 +478,6 @@ export default function SSSDPublicSchoolPage() {
       {/* SSSD Dedicated Navbar Header */}
       <header className="w-full sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-emerald-500/30 shadow-xl shadow-slate-950/40">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-3 sm:gap-4">
-          {/* SSSD Brand Logo & Name */}
           <Link href="/sssd" className="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-1">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
               <img
@@ -296,10 +501,9 @@ export default function SSSDPublicSchoolPage() {
             </div>
           </Link>
 
-          {/* Action Controls */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <a
-              href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
+              href="https://wa.me/919451234567?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-bold transition shadow-sm"
@@ -310,7 +514,11 @@ export default function SSSDPublicSchoolPage() {
             <Button
               size="sm"
               className="h-8 sm:h-9 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md shadow-emerald-600/30 rounded-xl"
-              onClick={() => setShowApplyModal(true)}
+              onClick={() => {
+                setModalTab('inquiry');
+                setSubmittedRef(null);
+                setShowApplyModal(true);
+              }}
               leftIcon={<Send className="w-3 h-3 text-amber-300 flex-shrink-0" />}
             >
               <span>Apply Now</span>
@@ -343,13 +551,17 @@ export default function SSSDPublicSchoolPage() {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2 sm:pt-4">
             <Button
               className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs sm:text-sm shadow-xl rounded-2xl px-5 sm:px-6 py-2.5 sm:py-3.5"
-              onClick={() => setShowApplyModal(true)}
+              onClick={() => {
+                setModalTab('inquiry');
+                setSubmittedRef(null);
+                setShowApplyModal(true);
+              }}
               leftIcon={<Send className="w-4 h-4" />}
             >
               Apply for SSSD Admission
             </Button>
             <a
-              href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
+              href="https://wa.me/919451234567?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-emerald-900/60 hover:bg-emerald-800/80 text-emerald-200 font-bold text-xs sm:text-sm px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl border border-emerald-500/40 transition backdrop-blur-sm"
@@ -387,7 +599,6 @@ export default function SSSDPublicSchoolPage() {
       <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#011a14] rounded-3xl p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border-2 border-emerald-400/50">
-            {/* Background Glow & Seal Watermark */}
             <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-10 right-4 w-64 h-64 opacity-5 pointer-events-none">
@@ -395,7 +606,6 @@ export default function SSSDPublicSchoolPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-              {/* Left Column: Headmistress Hero Portrait with Gold Frame */}
               <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-3">
                 <div className="relative w-full max-w-[260px] sm:max-w-[300px] md:max-w-full h-64 sm:h-80 md:h-[370px] rounded-3xl overflow-hidden border-4 border-amber-400/90 shadow-2xl shadow-amber-500/20 bg-slate-900 group">
                   <img
@@ -405,12 +615,10 @@ export default function SSSDPublicSchoolPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
                   
-                  {/* Floating Experience Badge */}
                   <div className="absolute top-3 left-3 bg-amber-400 text-blue-950 text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 flex items-center gap-1 font-mono">
                     <span>★ 14+ Years English Leadership</span>
                   </div>
 
-                  {/* Nameplate inside photo bottom */}
                   <div className="absolute bottom-4 left-4 right-4 text-left">
                     <h4 className="font-serif font-black text-lg sm:text-xl text-white drop-shadow-md">
                       Mrs. Ananya Sen
@@ -425,7 +633,6 @@ export default function SSSDPublicSchoolPage() {
                 </div>
               </div>
 
-              {/* Right Column: Key Vision & 3 Pillars */}
               <div className="md:col-span-7 space-y-5">
                 <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 text-xs font-black uppercase px-3.5 py-1.5 rounded-full border border-amber-400/40">
                   <Quote className="w-3.5 h-3.5 text-amber-300" />
@@ -440,7 +647,6 @@ export default function SSSDPublicSchoolPage() {
                   At SSSD Public School, our mission is to eliminate English language hesitation among children in Shamsabad from an early age. With immersive spoken English activities, Cambridge phonics pedagogy, digital smart classrooms, and personalized mentorship, we prepare your child to excel globally with pride in our cultural heritage.
                 </p>
 
-                {/* 3 Pillars Bento Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
                   <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
                     <div className="text-amber-300 text-xs font-black">🗣️ Spoken Fluency</div>
@@ -456,10 +662,13 @@ export default function SSSDPublicSchoolPage() {
                   </div>
                 </div>
 
-                {/* Action & Stamped Signature */}
                 <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/15">
                   <Button
-                    onClick={() => setShowApplyModal(true)}
+                    onClick={() => {
+                      setModalTab('inquiry');
+                      setSubmittedRef(null);
+                      setShowApplyModal(true);
+                    }}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-blue-950 font-black text-xs shadow-lg shadow-amber-400/20 transition-all active:scale-95 group"
                   >
                     <span>Inquire for Admission 2026-27</span>
@@ -503,8 +712,12 @@ export default function SSSDPublicSchoolPage() {
             <Button
               size="sm"
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 rounded-xl whitespace-nowrap self-start md:self-auto"
-              onClick={() => setShowApplyModal(true)}
-              leftIcon={<Send className="w-3.5 h-3.5 text-amber-300" />}
+              onClick={() => {
+                setModalTab('visit');
+                setSubmittedRef(null);
+                setShowApplyModal(true);
+              }}
+              leftIcon={<Building2 className="w-3.5 h-3.5 text-amber-300" />}
             >
               Book a Campus Visit &rarr;
             </Button>
@@ -644,7 +857,9 @@ export default function SSSDPublicSchoolPage() {
                     size="sm"
                     className="w-full text-xs font-bold border-emerald-300 text-emerald-800 hover:bg-emerald-50"
                     onClick={() => {
+                      setModalTab('inquiry');
                       setFormData({ ...formData, grade: stg.classes.split(',')[0] });
+                      setSubmittedRef(null);
                       setShowApplyModal(true);
                     }}
                   >
@@ -714,7 +929,9 @@ export default function SSSDPublicSchoolPage() {
               size="sm"
               className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
+                setModalTab('inquiry');
                 setFormData({ ...formData, grade: 'Playgroup / Nursery' });
+                setSubmittedRef(null);
                 setShowApplyModal(true);
               }}
             >
@@ -765,7 +982,9 @@ export default function SSSDPublicSchoolPage() {
             <Button
               className="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs shadow-lg shadow-amber-400/20"
               onClick={() => {
+                setModalTab('inquiry');
                 setFormData({ ...formData, grade: 'Class 1' });
+                setSubmittedRef(null);
                 setShowApplyModal(true);
               }}
             >
@@ -815,7 +1034,9 @@ export default function SSSDPublicSchoolPage() {
               size="sm"
               className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
+                setModalTab('inquiry');
                 setFormData({ ...formData, grade: 'Class 6' });
+                setSubmittedRef(null);
                 setShowApplyModal(true);
               }}
             >
@@ -865,7 +1086,9 @@ export default function SSSDPublicSchoolPage() {
               size="sm"
               className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
+                setModalTab('inquiry');
                 setFormData({ ...formData, grade: 'Class 9' });
+                setSubmittedRef(null);
                 setShowApplyModal(true);
               }}
             >
@@ -897,7 +1120,6 @@ export default function SSSDPublicSchoolPage() {
                 className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
               >
                 <div>
-                  {/* Photo Header */}
                   <div className="relative h-60 sm:h-64 w-full overflow-hidden bg-slate-900">
                     <img
                       src={fac.image}
@@ -907,7 +1129,6 @@ export default function SSSDPublicSchoolPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-                    {/* Floating Exp Badge */}
                     <div className="absolute top-3 right-3 bg-slate-950/90 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md backdrop-blur-md font-mono">
                       ★ {fac.exp}
                     </div>
@@ -919,7 +1140,6 @@ export default function SSSDPublicSchoolPage() {
                     </div>
                   </div>
 
-                  {/* Card Content */}
                   <div className="p-5 space-y-2.5">
                     <div>
                       <h3 className="text-base font-black text-slate-900 font-serif group-hover:text-emerald-700 transition leading-snug">
@@ -932,7 +1152,6 @@ export default function SSSDPublicSchoolPage() {
                       <p className="line-clamp-2"><strong>Qual:</strong> {fac.qual}</p>
                     </div>
 
-                    {/* Specialization Tags */}
                     <div className="pt-1 flex flex-wrap gap-1.5">
                       {fac.tags.map((tag, tIdx) => (
                         <span
@@ -1056,6 +1275,8 @@ export default function SSSDPublicSchoolPage() {
                 <Button
                   onClick={() => {
                     setActivePhoto(null);
+                    setModalTab('inquiry');
+                    setSubmittedRef(null);
                     setShowApplyModal(true);
                   }}
                   className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
@@ -1075,20 +1296,23 @@ export default function SSSDPublicSchoolPage() {
         </div>
       )}
 
-      {/* SSSD Admission Inquiry Modal (Full screen blur z-[99999]) */}
+      {/* SSSD Admission & Campus Tour Dual-Modal (Full screen blur z-[99999]) */}
       {showApplyModal && (
         <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
           <div className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border-2 border-emerald-600 space-y-4 sm:space-y-5 animate-in zoom-in-95 duration-200 my-auto">
+            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
                   <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h3 className="text-xs sm:text-sm font-black text-slate-900 font-serif">
-                    SSSD Public School Admission Inquiry
+                    {modalTab === 'visit' ? 'Schedule Guided Campus Tour' : 'SSSD Public School Admission Inquiry'}
                   </h3>
-                  <p className="text-[9px] sm:text-[10px] text-emerald-700 font-bold uppercase">Session 2026-2027 (English Medium)</p>
+                  <p className="text-[9px] sm:text-[10px] text-emerald-700 font-bold uppercase">
+                    {modalTab === 'visit' ? '1-on-1 Counselor Walkthrough • Shamsabad' : 'Session 2026-2027 (100% English Medium)'}
+                  </p>
                 </div>
               </div>
               <button
@@ -1102,21 +1326,61 @@ export default function SSSDPublicSchoolPage() {
               </button>
             </div>
 
+            {/* Modal Tab Switcher */}
+            <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalTab('inquiry');
+                  setSubmittedRef(null);
+                }}
+                className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  modalTab === 'inquiry'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Admission Inquiry</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setModalTab('visit');
+                  setSubmittedRef(null);
+                }}
+                className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  modalTab === 'visit'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Book Campus Tour</span>
+              </button>
+            </div>
+
             {submittedRef ? (
-              <div className="text-center py-5 space-y-4 animate-in zoom-in-90 duration-200">
+              <div className="text-center py-4 space-y-4 animate-in zoom-in-90 duration-200">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md border-2 border-emerald-300">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-lg sm:text-xl font-black text-slate-900 font-serif">Application Registered!</h4>
+                  <h4 className="text-lg sm:text-xl font-black text-slate-900 font-serif">
+                    {modalTab === 'visit' ? 'Campus Tour Slot Confirmed!' : 'Application Registered!'}
+                  </h4>
                   <p className="text-xs text-slate-600">
-                    Your inquiry for <strong>{formData.studentName}</strong> has been logged at SSSD Admission Desk.
+                    {modalTab === 'visit'
+                      ? `Your guided campus visit for ${visitData.visitorName} is scheduled.`
+                      : `Your inquiry for ${formData.studentName} has been logged at SSSD Desk.`}
                   </p>
                 </div>
                 
                 {/* Copyable Ref Box */}
                 <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 text-center font-mono space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Official Inquiry Reference</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">
+                    {modalTab === 'visit' ? 'Visitor Pass Reference' : 'Official Inquiry Reference'}
+                  </span>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-xl font-black text-emerald-800 tracking-wider">{submittedRef}</span>
                     <button
@@ -1130,8 +1394,18 @@ export default function SSSDPublicSchoolPage() {
                 </div>
 
                 <div className="text-left bg-slate-50 p-3 rounded-xl text-xs text-slate-600 space-y-1">
-                  <p>✓ Admission counselor will connect on <strong>{formData.phone}</strong>.</p>
-                  <p>✓ Campus tour slots available Mon-Sat (08:30 AM - 03:00 PM).</p>
+                  {modalTab === 'visit' ? (
+                    <>
+                      <p>✓ <strong>Selected Date:</strong> {visitData.visitDate} ({visitData.visitSlot})</p>
+                      <p>✓ <strong>Reception:</strong> Please present this reference pass at Main Campus Gate.</p>
+                      <p>✓ <strong>Counselor Helpline:</strong> +91 9451234567</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>✓ Admission counselor will connect on <strong>{formData.phone}</strong>.</p>
+                      <p>✓ Campus tour slots available Mon-Sat (08:30 AM - 03:00 PM).</p>
+                    </>
+                  )}
                 </div>
 
                 <Button
@@ -1144,7 +1418,97 @@ export default function SSSDPublicSchoolPage() {
                   Done
                 </Button>
               </div>
+            ) : modalTab === 'visit' ? (
+              /* Dedicated Campus Tour Booking Form */
+              <form onSubmit={handleVisitSubmit} className="space-y-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Parent / Visitor Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Rajesh Sharma"
+                      value={visitData.visitorName}
+                      onChange={(e) => setVisitData({ ...visitData, visitorName: e.target.value })}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Contact Phone Number *</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. +91 9839000000"
+                      value={visitData.phone}
+                      onChange={(e) => setVisitData({ ...visitData, phone: e.target.value })}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Preferred Tour Date *</label>
+                    <input
+                      type="date"
+                      required
+                      value={visitData.visitDate}
+                      onChange={(e) => setVisitData({ ...visitData, visitDate: e.target.value })}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium text-xs"
+                    />
+                  </div>
+                  <div>
+                    <CustomSelect
+                      label="Preferred Time Window"
+                      required
+                      value={visitData.visitSlot}
+                      onChange={(val) => setVisitData({ ...visitData, visitSlot: val })}
+                      options={timeSlotOptions}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Student Name &amp; Target Grade</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Aarav Sharma (Class 1)"
+                      value={visitData.studentName}
+                      onChange={(e) => setVisitData({ ...visitData, studentName: e.target.value })}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium text-xs"
+                    />
+                  </div>
+                  <div>
+                    <CustomSelect
+                      label="Primary Area of Interest"
+                      value={visitData.interestedFacility}
+                      onChange={(val) => setVisitData({ ...visitData, interestedFacility: val })}
+                      options={facilityOptions}
+                      direction="up"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                  <Button
+                    type="submit"
+                    className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center"
+                  >
+                    Confirm Guided Campus Tour Slot
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowApplyModal(false)}
+                    className="px-4 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             ) : (
+              /* Standard Admission Inquiry Form */
               <form onSubmit={handleFormSubmit} className="space-y-3 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -1155,7 +1519,7 @@ export default function SSSDPublicSchoolPage() {
                       placeholder="e.g. Aarav Sharma"
                       value={formData.studentName}
                       onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium text-xs"
                     />
                   </div>
                   <div>
@@ -1166,32 +1530,20 @@ export default function SSSDPublicSchoolPage() {
                       placeholder="e.g. Rajesh Sharma"
                       value={formData.parentName}
                       onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium text-xs"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Grade Applying For *</label>
-                    <select
+                    <CustomSelect
+                      label="Grade Applying For"
+                      required
                       value={formData.grade}
-                      onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium"
-                    >
-                      <option value="Playgroup / Nursery">Playgroup / Nursery</option>
-                      <option value="LKG / UKG">LKG / UKG</option>
-                      <option value="Class 1">Class 1</option>
-                      <option value="Class 2">Class 2</option>
-                      <option value="Class 3">Class 3</option>
-                      <option value="Class 4">Class 4</option>
-                      <option value="Class 5">Class 5</option>
-                      <option value="Class 6">Class 6</option>
-                      <option value="Class 7">Class 7</option>
-                      <option value="Class 8">Class 8</option>
-                      <option value="Class 9">Class 9</option>
-                      <option value="Class 10">Class 10</option>
-                    </select>
+                      onChange={(val) => setFormData({ ...formData, grade: val })}
+                      options={gradeOptions}
+                    />
                   </div>
                   <div>
                     <label className="block font-bold text-slate-700 mb-1">Mobile Contact Phone *</label>
@@ -1201,7 +1553,7 @@ export default function SSSDPublicSchoolPage() {
                       placeholder="e.g. +91 9839000000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium font-mono"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 font-medium font-mono text-xs"
                     />
                   </div>
                 </div>
@@ -1212,15 +1564,23 @@ export default function SSSDPublicSchoolPage() {
                     type="text"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium text-xs"
                   />
                 </div>
 
-                <div className="flex gap-2 pt-2 border-t border-slate-100">
-                  <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold text-xs">
+                <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                  <Button
+                    type="submit"
+                    className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center"
+                  >
                     Submit SSSD Admission Inquiry
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setShowApplyModal(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowApplyModal(false)}
+                    className="px-4 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs"
+                  >
                     Cancel
                   </Button>
                 </div>

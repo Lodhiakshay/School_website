@@ -211,6 +211,30 @@ export default function AdmissionsPublicPage() {
                 </p>
               </div>
             </div>
+
+            {/* SSSD English Medium Wing Callout Card */}
+            <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-950 via-[#022c22] to-teal-950 text-white border-2 border-emerald-500/40 shadow-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-300 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/15">
+                  English Medium Wing
+                </span>
+                <div className="w-7 h-7 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
+                  <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+                </div>
+              </div>
+              <h4 className="text-sm font-black text-white font-serif">Looking for SSSD Public School?</h4>
+              <p className="text-xs text-emerald-100/90 leading-relaxed">
+                Apply for our 100% English Medium CBSE pattern campus (Nursery to 10th) with smart phonics and digital labs.
+              </p>
+              <div className="pt-1">
+                <Link
+                  href="/sssd"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-md transition active:scale-95"
+                >
+                  <span>Explore SSSD Admissions &rarr;</span>
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* Right: Online Application Form & Success Screen */}
