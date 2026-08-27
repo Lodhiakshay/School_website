@@ -1,22 +1,60 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Award, Printer, Download, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Button } from '../../../components/ui/button';
 import { useToast } from '../../../components/ui/toast';
+import { apiClient } from '../../../lib/api-client';
+
+const fallbackMarkEntries = [
+  { code: 'HIN-101', subject: 'Hindi (हिंदी साहित्य एवं व्याकरण)', theoryMax: 100, theoryObtained: 88, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 88, grade: 'A1' },
+  { code: 'ENG-102', subject: 'English (General & Literature)', theoryMax: 100, theoryObtained: 84, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 84, grade: 'A2' },
+  { code: 'MTH-103', subject: 'Mathematics (गणित)', theoryMax: 100, theoryObtained: 96, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 96, grade: 'A1' },
+  { code: 'SCI-104', subject: 'Science (Physics, Chemistry & Biology)', theoryMax: 70, theoryObtained: 65, practicalMax: 30, practicalObtained: 28, totalMax: 100, totalObtained: 93, grade: 'A1' },
+  { code: 'SST-105', subject: 'Social Science (सामाजिक विज्ञान)', theoryMax: 100, theoryObtained: 86, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 86, grade: 'A2' },
+  { code: 'SAN-106', subject: 'Sanskrit (संस्कृत)', theoryMax: 100, theoryObtained: 89, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 89, grade: 'A1' },
+];
 
 export default function StudentResultsPage() {
+  const [markEntries, setMarkEntries] = useState<any[]>(fallbackMarkEntries);
+  const [studentMeta, setStudentMeta] = useState<any>({ name: 'Aarav Sharma', roll: '10-A-01', adm: 'SGM-2026-1001' });
   const { toast } = useToast();
 
-  const markEntries = [
-    { code: 'HIN-101', subject: 'Hindi (हिंदी साहित्य एवं व्याकरण)', theoryMax: 100, theoryObtained: 88, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 88, grade: 'A1' },
-    { code: 'ENG-102', subject: 'English (General & Literature)', theoryMax: 100, theoryObtained: 84, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 84, grade: 'A2' },
-    { code: 'MTH-103', subject: 'Mathematics (गणित)', theoryMax: 100, theoryObtained: 96, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 96, grade: 'A1' },
-    { code: 'SCI-104', subject: 'Science (Physics, Chemistry & Biology)', theoryMax: 70, theoryObtained: 65, practicalMax: 30, practicalObtained: 28, totalMax: 100, totalObtained: 93, grade: 'A1' },
-    { code: 'SST-105', subject: 'Social Science (सामाजिक विज्ञान)', theoryMax: 100, theoryObtained: 86, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 86, grade: 'A2' },
-    { code: 'SAN-106', subject: 'Sanskrit (संस्कृत)', theoryMax: 100, theoryObtained: 89, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 89, grade: 'A1' },
-  ];
+  useEffect(() => {
+    async function loadResult() {
+      try {
+        const res = await apiClient.get('/results');
+        if (res.data?.data?.length) {
+          const first = res.data.data[0];
+          if (first.subjects?.length) {
+            const mapped = first.subjects.map((s: any) => ({
+              code: s.subjectCode || 'SUB',
+              subject: s.subjectName,
+              theoryMax: s.maxMarks || 100,
+              theoryObtained: s.theoryMarks || s.totalMarks,
+              practicalMax: s.practicalMarks ? 30 : 0,
+              practicalObtained: s.practicalMarks || 0,
+              totalMax: s.maxMarks || 100,
+              totalObtained: s.totalMarks,
+              grade: s.grade || 'A1',
+            }));
+            setMarkEntries(mapped);
+          }
+          if (first.studentId) {
+            setStudentMeta({
+              name: `${first.studentId.firstName} ${first.studentId.lastName || ''}`,
+              roll: first.studentId.studentId || '10-A-01',
+              adm: first.studentId.admissionNumber || 'SGM-2026-1001',
+            });
+          }
+        }
+      } catch (err) {
+        // Fallback gracefully
+      }
+    }
+    loadResult();
+  }, []);
 
   const totalMax = markEntries.reduce((acc, curr) => acc + curr.totalMax, 0);
   const totalObtained = markEntries.reduce((acc, curr) => acc + curr.totalObtained, 0);
@@ -191,28 +229,39 @@ export default function StudentResultsPage() {
             </div>
 
             {/* Signatures & Institutional Seal */}
-            <div className="pt-8 grid grid-cols-3 gap-6 text-center text-xs border-t border-slate-200">
+            <div className="pt-6 grid grid-cols-3 gap-6 text-center text-xs border-t border-slate-200">
               <div className="space-y-1">
-                <div className="h-10 border-b border-slate-300 font-serif italic text-slate-600 flex items-end justify-center pb-1">
-                  Dinesh Gupta
+                <div className="h-12 flex items-end justify-center pb-1">
+                  <span className="font-serif italic text-sm text-slate-800 font-bold border-b border-slate-400 px-4">
+                    Shri Dinesh Gupta
+                  </span>
                 </div>
                 <p className="font-bold text-slate-700">Class Teacher</p>
                 <p className="text-[10px] text-slate-400">Class 10-A Incharge</p>
               </div>
 
               <div className="space-y-1">
-                <div className="w-16 h-16 rounded-full border-2 border-dashed border-blue-600 mx-auto flex items-center justify-center text-[9px] font-mono text-blue-700 font-bold uppercase p-1 leading-tight">
-                  INSTITUTION SEAL
+                <div className="h-12 flex items-center justify-center">
+                  <img
+                    src="/images/stamps/principal-round-seal.png"
+                    alt="Official Round Seal Muhar"
+                    className="w-14 h-14 object-contain opacity-90"
+                  />
                 </div>
-                <p className="font-bold text-slate-700">Controller of Exams</p>
+                <p className="font-bold text-slate-700">Official Seal</p>
+                <p className="text-[10px] text-slate-400">SGM Shamsabad</p>
               </div>
 
               <div className="space-y-1">
-                <div className="h-10 border-b border-slate-300 font-serif italic text-slate-600 flex items-end justify-center pb-1">
-                  Dr. R.K. Sharma
+                <div className="h-12 flex items-center justify-center">
+                  <img
+                    src="/images/stamps/principal-signature.png"
+                    alt="Principal Digital Signature Stamp"
+                    className="h-10 max-w-[120px] object-contain filter contrast-125"
+                  />
                 </div>
                 <p className="font-bold text-slate-700">Principal</p>
-                <p className="text-[10px] text-slate-400">SGM Intermediate College</p>
+                <p className="text-[10px] text-slate-400">Dr. Ramesh Kumar Sharma</p>
               </div>
             </div>
           </div>

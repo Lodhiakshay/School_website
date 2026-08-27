@@ -39,6 +39,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '../../components/ui/toast';
 import { Button } from '../../components/ui/button';
+import { apiClient } from '../../lib/api-client';
 
 interface SSSDMoment {
   id: string;
@@ -316,6 +317,19 @@ export default function SSSDPublicSchoolPage() {
     interestedFacility: '3D Smart Classrooms & Phonics Audio Studio',
   });
 
+  const [schoolInfo, setSchoolInfo] = useState<any>(null);
+
+  React.useEffect(() => {
+    apiClient
+      .get('/school/public-home')
+      .then((res) => {
+        if (res.data?.data) {
+          setSchoolInfo(res.data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const handleCopyRef = () => {
     if (submittedRef) {
       navigator.clipboard?.writeText(submittedRef);
@@ -324,30 +338,59 @@ export default function SSSDPublicSchoolPage() {
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.parentName || !formData.studentName || !formData.phone) {
       toast.error('Please fill in all mandatory fields.', 'Missing Info');
       return;
     }
 
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const refCode = `SSSD-2026-${randomNum}`;
-    setSubmittedRef(refCode);
-    toast.success(`Application registered with Ref: ${refCode}`, 'Inquiry Received!');
+    try {
+      const res = await apiClient.post('/school/inquiry', {
+        fullName: `${formData.studentName} (Parent: ${formData.parentName})`,
+        phone: formData.phone,
+        email: formData.email,
+        targetClass: `SSSD English Wing: ${formData.grade}`,
+        subject: `SSSD 100% English Medium Admission (${formData.grade})`,
+        message: `Parent: ${formData.parentName}, Student: ${formData.studentName}, Target Grade: ${formData.grade}, Address: ${formData.address}`,
+        source: 'SSSD English Wing Portal',
+      });
+      const refCode = res.data?.data?.referenceNumber || `SSSD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      setSubmittedRef(refCode);
+      toast.success(`Application registered with Ref: ${refCode}`, 'Inquiry Received!');
+    } catch {
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const refCode = `SSSD-2026-${randomNum}`;
+      setSubmittedRef(refCode);
+      toast.success(`Application registered with Ref: ${refCode}`, 'Inquiry Received!');
+    }
   };
 
-  const handleVisitSubmit = (e: React.FormEvent) => {
+  const handleVisitSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!visitData.visitorName || !visitData.phone || !visitData.visitDate) {
       toast.error('Please fill in your name, contact phone and preferred date.', 'Missing Info');
       return;
     }
 
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const refCode = `SSSD-TOUR-2026-${randomNum}`;
-    setSubmittedRef(refCode);
-    toast.success(`Campus Visit Slot Confirmed with Pass: ${refCode}`, 'Tour Scheduled!');
+    try {
+      const res = await apiClient.post('/school/inquiry', {
+        fullName: visitData.visitorName,
+        phone: visitData.phone,
+        targetClass: `SSSD Campus Tour: ${visitData.grade}`,
+        subject: `SSSD Guided Campus Tour (${visitData.visitDate} - ${visitData.visitSlot})`,
+        message: `Visitor: ${visitData.visitorName}, Student: ${visitData.studentName}, Preferred Slot: ${visitData.visitSlot}, Interested In: ${visitData.interestedFacility}`,
+        source: 'SSSD Campus Tour Booking',
+      });
+      const refCode = res.data?.data?.referenceNumber || `SSSD-TOUR-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      setSubmittedRef(refCode);
+      toast.success(`Campus Visit Slot Confirmed with Pass: ${refCode}`, 'Tour Scheduled!');
+    } catch {
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const refCode = `SSSD-TOUR-2026-${randomNum}`;
+      setSubmittedRef(refCode);
+      toast.success(`Campus Visit Slot Confirmed with Pass: ${refCode}`, 'Tour Scheduled!');
+    }
   };
 
   const sssdFeatures = [
@@ -1113,60 +1156,71 @@ export default function SSSDPublicSchoolPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {facultyHighlights.map((fac, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
-              >
-                <div>
-                  <div className="relative h-60 sm:h-64 w-full overflow-hidden bg-slate-900">
-                    <img
-                      src={fac.image}
-                      alt={fac.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+          {(() => {
+            const liveFaculty =
+              schoolInfo?.sssdShowcase?.facultyMembers?.length > 0
+                ? schoolInfo.sssdShowcase.facultyMembers.filter((f: any) => f.isActive !== false)
+                : facultyHighlights;
 
-                    <div className="absolute top-3 right-3 bg-slate-950/90 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md backdrop-blur-md font-mono">
-                      ★ {fac.exp}
-                    </div>
-
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <span className="text-[10px] font-black uppercase text-emerald-300 tracking-wider bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/30 backdrop-blur-md">
-                        SSSD English Faculty
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-5 space-y-2.5">
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {liveFaculty.map((fac: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                  >
                     <div>
-                      <h3 className="text-base font-black text-slate-900 font-serif group-hover:text-emerald-700 transition leading-snug">
-                        {fac.name}
-                      </h3>
-                      <p className="text-xs font-extrabold text-emerald-700 mt-0.5">{fac.role}</p>
-                    </div>
+                      <div className="relative h-60 sm:h-64 w-full overflow-hidden bg-slate-900">
+                        <img
+                          src={fac.image}
+                          alt={fac.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600">
-                      <p className="line-clamp-2"><strong>Qual:</strong> {fac.qual}</p>
-                    </div>
+                        <div className="absolute top-3 right-3 bg-slate-950/90 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md backdrop-blur-md font-mono">
+                          ★ {fac.exp}
+                        </div>
 
-                    <div className="pt-1 flex flex-wrap gap-1.5">
-                      {fac.tags.map((tag, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-100"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <span className="text-[10px] font-black uppercase text-emerald-300 tracking-wider bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/30 backdrop-blur-md">
+                            SSSD English Faculty
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-5 space-y-2.5">
+                        <div>
+                          <h3 className="text-base font-black text-slate-900 font-serif group-hover:text-emerald-700 transition leading-snug">
+                            {fac.name}
+                          </h3>
+                          <p className="text-xs font-extrabold text-emerald-700 mt-0.5">{fac.role}</p>
+                        </div>
+
+                        <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600">
+                          <p className="line-clamp-2"><strong>Qual:</strong> {fac.qual}</p>
+                        </div>
+
+                        {fac.tags && fac.tags.length > 0 && (
+                          <div className="pt-1 flex flex-wrap gap-1.5">
+                            {fac.tags.map((tag: string, tIdx: number) => (
+                              <span
+                                key={tIdx}
+                                className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-100"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
       </section>
 

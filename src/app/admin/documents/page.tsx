@@ -12,263 +12,586 @@ import {
   Sparkles,
   Calendar,
   X,
+  Eye,
+  EyeOff,
+  Edit,
+  Trash2,
+  ExternalLink,
+  Check,
+  Globe,
+  Lock,
+  RefreshCw,
+  Award,
+  BookOpen,
+  FileCheck2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
+import { Modal } from '../../../components/ui/modal';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
 
-const fallbackDocs = [
-  {
-    _id: 'doc_01',
-    title: 'UP Board Recognition & Affiliation Order (Code: UP-FBD-2026-SGM-089)',
-    category: 'Statutory Affiliation',
-    fileName: 'UP_Board_Affiliation_Certificate_2026.pdf',
-    uploadedBy: 'Principal Office',
-    uploadDate: '10 Apr 2026',
-    fileSize: '2.4 MB',
-  },
-  {
-    _id: 'doc_02',
-    title: 'District Fire Safety & Building Structural Stability NOC',
-    category: 'Safety & Compliance',
-    fileName: 'Fire_Safety_NOC_Farrukhabad_2026.pdf',
-    uploadedBy: 'School Admin',
-    uploadDate: '15 May 2026',
-    fileSize: '1.8 MB',
-  },
-  {
-    _id: 'doc_03',
-    title: 'School Transport Commercial Permit & Fitness Certificates (All 4 Buses)',
-    category: 'Transport & Fleet',
-    fileName: 'Bus_Fleet_RTO_Permits_2026.pdf',
-    uploadedBy: 'Transport Incharge',
-    uploadDate: '01 Jun 2026',
-    fileSize: '4.1 MB',
-  },
-  {
-    _id: 'doc_04',
-    title: 'UP Board Class 10 & 12 Revised NCERT Syllabus Framework (2026-27)',
-    category: 'Academic Curricula',
-    fileName: 'UP_Board_Class10_12_Syllabus_2026.pdf',
-    uploadedBy: 'Academic Coordinator',
-    uploadDate: '20 Jun 2026',
-    fileSize: '5.6 MB',
-  },
-  {
-    _id: 'doc_05',
-    title: 'Institutional Society Registration & Land Deed Deeds (Shamsabad Campus)',
-    category: 'Institutional Trust',
-    fileName: 'Society_Registration_Trust_Deed.pdf',
-    uploadedBy: 'Management Board',
-    uploadDate: '12 Jan 2026',
-    fileSize: '3.2 MB',
-  },
+const CATEGORY_OPTIONS = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'disclosure', label: '🏛️ Statutory Disclosures & NOCs' },
+  { value: 'syllabus', label: '📚 Curricula & Board Syllabi' },
+  { value: 'calendar', label: '📅 Academic Calendars & Holidays' },
+  { value: 'date_sheet', label: '📊 Examination Date Sheets' },
+  { value: 'forms', label: '📝 Admission & TC Proformas' },
+  { value: 'circular', label: '📢 Official Circulars & Notices' },
+  { value: 'general', label: '📁 General Documents' },
 ];
 
 export default function DocumentsAdminPage() {
-  const [docs, setDocs] = useState<any[]>(fallbackDocs);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
   const { toast } = useToast();
+  const [docs, setDocs] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>({
+    total: 0,
+    active: 0,
+    isPublic: 0,
+    disclosures: 0,
+    syllabi: 0,
+    calendars: 0,
+    forms: 0,
+    totalDownloads: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [publicFilter, setPublicFilter] = useState('all');
 
-  const [newDoc, setNewDoc] = useState({
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<any | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
     title: '',
-    category: 'Safety & Compliance',
-    fileName: 'Document_File.pdf',
+    description: '',
+    category: 'disclosure',
+    docCode: '',
+    authority: '',
+    fileUrl: '',
+    fileName: 'Document.pdf',
+    fileSize: '1.5 MB',
+    format: 'PDF',
+    academicYear: '2026-2027',
+    isPublic: true,
+    isFeatured: false,
+    isActive: true,
+    displayOrder: 0,
   });
 
+  const fetchDocuments = async () => {
+    setIsLoading(true);
+    try {
+      const res = await apiClient.get('/documents', {
+        params: {
+          search: searchQuery || undefined,
+          category: categoryFilter !== 'all' ? categoryFilter : undefined,
+          isPublic: publicFilter !== 'all' ? publicFilter : undefined,
+        },
+      });
+      if (res.data?.data) {
+        setDocs(res.data.data);
+      }
+      if (res.data?.meta?.stats) {
+        setStats(res.data.meta.stats);
+      }
+    } catch {
+      toast.error('Failed to load documents vault.', 'Load Error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    apiClient
-      .get('/documents')
-      .then((res) => {
-        if (res.data?.data && res.data.data.length > 0) {
-          setDocs(res.data.data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    fetchDocuments();
+  }, [categoryFilter, publicFilter]);
 
-  const handleUploadDoc = (e: React.FormEvent) => {
-    e.preventDefault();
-    const created = {
-      _id: 'doc_' + Date.now(),
-      title: newDoc.title,
-      category: newDoc.category,
-      fileName: newDoc.fileName,
-      uploadedBy: 'Super Admin',
-      uploadDate: 'Today',
+  const openCreateModal = () => {
+    setEditingDoc(null);
+    setFormData({
+      title: '',
+      description: '',
+      category: 'disclosure',
+      docCode: `DOC-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
+      authority: 'Office of the Principal, Sarswati Gyan Mandir',
+      fileUrl: '/uploads/documents/Official_Document.pdf',
+      fileName: 'Official_Document.pdf',
       fileSize: '1.2 MB',
-    };
-    setDocs([created, ...docs]);
-    setShowAddModal(false);
-    toast.success(`Document "${created.title}" uploaded to encrypted vault!`, 'Document Secured');
+      format: 'PDF',
+      academicYear: '2026-2027',
+      isPublic: true,
+      isFeatured: false,
+      isActive: true,
+      displayOrder: docs.length + 1,
+    });
+    setIsModalOpen(true);
   };
 
-  const handleDownload = (fileName: string) => {
-    toast.success(`Downloading ${fileName}...`, 'Vault Download');
+  const openEditModal = (doc: any) => {
+    setEditingDoc(doc);
+    setFormData({
+      title: doc.title || '',
+      description: doc.description || '',
+      category: doc.category || 'disclosure',
+      docCode: doc.docCode || '',
+      authority: doc.authority || '',
+      fileUrl: doc.fileUrl || '',
+      fileName: doc.fileName || 'Document.pdf',
+      fileSize: doc.fileSize || '1.2 MB',
+      format: doc.format || 'PDF',
+      academicYear: doc.academicYear || '2026-2027',
+      isPublic: doc.isPublic !== undefined ? doc.isPublic : true,
+      isFeatured: doc.isFeatured || false,
+      isActive: doc.isActive !== undefined ? doc.isActive : true,
+      displayOrder: doc.displayOrder || 0,
+    });
+    setIsModalOpen(true);
   };
 
-  const filtered = docs.filter(
-    (d) =>
-      d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.fileName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.title || !formData.fileUrl) {
+      toast.error('Title and File URL are required.', 'Validation Error');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      if (editingDoc) {
+        const res = await apiClient.put(`/documents/${editingDoc._id}`, formData);
+        toast.success(`Updated "${formData.title}"`, 'Document Updated');
+        setDocs((prev) => prev.map((d) => (d._id === editingDoc._id ? res.data.data : d)));
+      } else {
+        const res = await apiClient.post('/documents', formData);
+        toast.success(`Published "${formData.title}" to vault`, 'Document Published');
+        setDocs((prev) => [res.data.data, ...prev]);
+        setStats((prev: any) => ({ ...prev, total: prev.total + 1 }));
+      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to save document.', 'Save Error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleTogglePublic = async (id: string, currentPublic: boolean, title: string) => {
+    try {
+      await apiClient.patch(`/documents/${id}/toggle-public`);
+      setDocs((prev) =>
+        prev.map((d) => (d._id === id ? { ...d, isPublic: !currentPublic } : d))
+      );
+      toast.success(
+        `"${title}" is now ${!currentPublic ? 'Publicly Visible on Downloads Hub' : 'Restricted to Admin Only'}`,
+        'Access Changed'
+      );
+    } catch {
+      toast.error('Failed to change access level.', 'Error');
+    }
+  };
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!confirm(`Are you sure you want to permanently remove "${title}" from the document vault?`)) return;
+
+    try {
+      await apiClient.delete(`/documents/${id}`);
+      setDocs((prev) => prev.filter((d) => d._id !== id));
+      toast.success(`"${title}" removed from vault.`, 'Deleted');
+      setStats((prev: any) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
+    } catch {
+      toast.error('Failed to delete document.', 'Delete Error');
+    }
+  };
+
+  const getCategoryBadge = (cat: string) => {
+    switch (cat) {
+      case 'disclosure':
+        return <Badge variant="warning">🏛️ Statutory Disclosure</Badge>;
+      case 'syllabus':
+        return <Badge variant="info">📚 Board Syllabus</Badge>;
+      case 'calendar':
+        return <Badge variant="purple">📅 Academic Calendar</Badge>;
+      case 'date_sheet':
+        return <Badge variant="danger">📊 Exam Date Sheet</Badge>;
+      case 'forms':
+        return <Badge variant="success">📝 Admission Proforma</Badge>;
+      case 'circular':
+        return <Badge variant="default">📢 Official Circular</Badge>;
+      default:
+        return <Badge variant="outline">📁 General</Badge>;
+    }
+  };
 
   return (
-    <PortalLayout allowedRoles={['SuperAdmin', 'Admin', 'Principal']}>
-      <div className="space-y-6">
+    <PortalLayout allowedRoles={['SuperAdmin', 'Admin', 'Principal', 'Teacher', 'Accountant']}>
+      <div className="space-y-6 pb-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
           <div>
-            <h1 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2 font-serif">
-              <FolderLock className="w-5 h-5 text-blue-600" /> Secure Institutional Document Vault
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-1 border border-blue-200">
+              <Sparkles className="w-3.5 h-3.5" /> Institutional Repository &bull; Compliance &amp; Syllabi Vault
+            </div>
+            <h1 className="text-lg sm:text-2xl font-black text-slate-900 font-serif">
+              Document Vault &amp; Public Downloads Hub
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Encrypted archive of UP Board affiliation orders, fire safety NOCs, society deeds, and statutory filings.
+              Upload statutory affiliation orders, fire safety NOCs, board examination syllabi, academic holiday calendars, and admission proformas.
             </p>
           </div>
-          <Button
-            size="sm"
-            className="bg-blue-600 hover:bg-blue-700 font-bold"
-            onClick={() => setShowAddModal(true)}
-            leftIcon={<Plus className="w-4 h-4" />}
-          >
-            Upload Vault Document
-          </Button>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchDocuments}
+              leftIcon={<RefreshCw className="w-4 h-4" />}
+            >
+              Refresh
+            </Button>
+            <Button
+              size="sm"
+              onClick={openCreateModal}
+              leftIcon={<Plus className="w-4 h-4" />}
+              className="bg-blue-600 hover:bg-blue-700 font-bold"
+            >
+              Upload Document / Circular
+            </Button>
+          </div>
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-          <input
-            type="text"
-            placeholder="Search document title or category..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          />
+        {/* Telemetry KPI Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+            <span className="text-[10px] uppercase font-bold text-slate-500 block">Total Documents</span>
+            <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{stats.total || docs.length}</span>
+            <span className="text-[10px] text-slate-400 block">All Files in Vault</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 shadow-sm space-y-1">
+            <span className="text-[10px] uppercase font-bold text-amber-800 block">Statutory Disclosures</span>
+            <span className="text-xl sm:text-2xl font-black text-amber-950 font-mono">{stats.disclosures || 0}</span>
+            <span className="text-[10px] text-amber-700 block">NOCs &amp; Affiliation</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 shadow-sm space-y-1">
+            <span className="text-[10px] uppercase font-bold text-blue-800 block">Board Syllabi</span>
+            <span className="text-xl sm:text-2xl font-black text-blue-950 font-mono">{stats.syllabi || 0}</span>
+            <span className="text-[10px] text-blue-700 block">NCERT &amp; Exam Blueprints</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/80 border border-purple-200 shadow-sm space-y-1">
+            <span className="text-[10px] uppercase font-bold text-purple-800 block">Calendars &amp; Dates</span>
+            <span className="text-xl sm:text-2xl font-black text-purple-950 font-mono">{stats.calendars || 0}</span>
+            <span className="text-[10px] text-purple-700 block">Routines &amp; Holidays</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 shadow-sm space-y-1 col-span-2 sm:col-span-1">
+            <span className="text-[10px] uppercase font-bold text-emerald-800 block">Total Downloads</span>
+            <span className="text-xl sm:text-2xl font-black text-emerald-950 font-mono">{stats.totalDownloads || 0}</span>
+            <span className="text-[10px] text-emerald-700 block">Public Download Clicks</span>
+          </div>
         </div>
 
-        {/* Documents Table Card */}
-        <Card className="border-slate-200 shadow-sm overflow-hidden">
-          <CardContent className="p-0">
+        {/* Search & Filter Toolbar */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <input
+                type="text"
+                placeholder="Search by document title, code (e.g. UP-FBD-2026), authority..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && fetchDocuments()}
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <select
+                className="p-2 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="p-2 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
+                value={publicFilter}
+                onChange={(e) => setPublicFilter(e.target.value)}
+              >
+                <option value="all">All Access</option>
+                <option value="true">Public (Downloads Hub)</option>
+                <option value="false">Internal (Staff Only)</option>
+              </select>
+
+              <Button size="sm" onClick={fetchDocuments}>
+                Filter
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Documents Table */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-700">
+              Showing {docs.length} Official Repository Documents
+            </span>
+          </div>
+
+          {isLoading ? (
+            <div className="p-12 text-center text-slate-500 space-y-2">
+              <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs font-bold">Loading document vault...</p>
+            </div>
+          ) : docs.length === 0 ? (
+            <div className="p-12 text-center text-slate-500 space-y-3">
+              <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                <FolderLock className="w-6 h-6" />
+              </div>
+              <p className="text-xs font-bold text-slate-700">No documents found in vault.</p>
+              <p className="text-[11px] text-slate-400">Click &ldquo;Upload Document / Circular&rdquo; above to publish files.</p>
+            </div>
+          ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px]">
+                <thead className="bg-slate-50 text-[11px] font-black uppercase text-slate-500 tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="p-3.5">Document Title</th>
-                    <th className="p-3.5">Compliance Category</th>
-                    <th className="p-3.5">File Name &amp; Size</th>
-                    <th className="p-3.5">Uploaded By</th>
-                    <th className="p-3.5">Upload Date</th>
-                    <th className="p-3.5 text-right">Secure Action</th>
+                    <th className="py-3.5 px-4">Document Title &amp; Authority</th>
+                    <th className="py-3.5 px-4">Category</th>
+                    <th className="py-3.5 px-4">Doc Code</th>
+                    <th className="py-3.5 px-4">Format / Size</th>
+                    <th className="py-3.5 px-4">Public Status</th>
+                    <th className="py-3.5 px-4">Downloads</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-                  {filtered.map((d) => (
-                    <tr key={d._id} className="hover:bg-slate-50 transition">
-                      <td className="p-3.5">
-                        <div className="font-bold text-slate-900 flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                          <span>{d.title}</span>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {docs.map((doc) => (
+                    <tr key={doc._id} className="hover:bg-slate-50/80 transition">
+                      <td className="py-3.5 px-4 max-w-sm">
+                        <div className="flex items-start gap-2.5">
+                          <div className="p-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex-shrink-0 mt-0.5">
+                            <FileText className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-900 block text-xs">{doc.title}</span>
+                            {doc.authority && (
+                              <span className="text-[10px] text-slate-500 block">{doc.authority}</span>
+                            )}
+                          </div>
                         </div>
                       </td>
-                      <td className="p-3.5">
-                        <Badge size="sm" variant="info">
-                          {d.category}
-                        </Badge>
+
+                      <td className="py-3.5 px-4">{getCategoryBadge(doc.category)}</td>
+
+                      <td className="py-3.5 px-4">
+                        <span className="font-mono font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 text-[11px]">
+                          {doc.docCode || 'N/A'}
+                        </span>
                       </td>
-                      <td className="p-3.5 font-mono text-[11px] text-slate-600">
-                        {d.fileName} <span className="text-slate-400">({d.fileSize})</span>
+
+                      <td className="py-3.5 px-4">
+                        <span className="font-bold text-slate-800 block text-xs">{doc.format || 'PDF'}</span>
+                        <span className="text-[10px] text-slate-400">{doc.fileSize || '1.2 MB'}</span>
                       </td>
-                      <td className="p-3.5 text-slate-600">{d.uploadedBy}</td>
-                      <td className="p-3.5 text-slate-500 font-mono text-[11px]">{d.uploadDate}</td>
-                      <td className="p-3.5 text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDownload(d.fileName)}
-                          leftIcon={<Download className="w-3.5 h-3.5 text-blue-600" />}
+
+                      <td className="py-3.5 px-4">
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePublic(doc._id, doc.isPublic, doc.title)}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition flex items-center gap-1 ${
+                            doc.isPublic ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
+                          }`}
+                          title="Click to toggle public downloads hub visibility"
                         >
-                          Download
-                        </Button>
+                          {doc.isPublic ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                          {doc.isPublic ? 'Public' : 'Internal'}
+                        </button>
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <span className="font-mono font-bold text-slate-800 flex items-center gap-1">
+                          <Download className="w-3 h-3 text-slate-400" /> {doc.downloadCount || 0}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <a
+                            href={doc.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition"
+                            title="Preview File"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => openEditModal(doc)}
+                            className="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 transition"
+                            title="Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(doc._id, doc.title)}
+                            className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 transition"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
       </div>
 
-      {/* Upload Document Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                <Plus className="w-4 h-4 text-blue-600" /> Upload Vault Document
-              </h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
-                <X className="w-4 h-4" />
-              </button>
+      {/* ========================================================================= */}
+      {/* ADD / EDIT DOCUMENT MODAL                                                 */}
+      {/* ========================================================================= */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingDoc ? `Edit: ${editingDoc.title}` : 'Publish New Official Document'}
+        description="Upload official statutory clearances, board syllabi, date-sheets, or admission forms to the repository."
+        maxWidth="xl"
+      >
+        <form onSubmit={handleSave} className="space-y-4 text-xs">
+          <Input
+            label="Document Title *"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            placeholder="e.g. UP Board Recognition & Permanent Affiliation Order"
+            required
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Document Category *</label>
+              <select
+                className="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              >
+                <option value="disclosure">🏛️ Statutory Disclosures &amp; NOCs</option>
+                <option value="syllabus">📚 Curricula &amp; Board Syllabi</option>
+                <option value="calendar">📅 Academic Calendars &amp; Holidays</option>
+                <option value="date_sheet">📊 Examination Date Sheets</option>
+                <option value="forms">📝 Admission &amp; TC Proformas</option>
+                <option value="circular">📢 Official Circulars &amp; Notices</option>
+                <option value="general">📁 General Documents</option>
+              </select>
             </div>
 
-            <form onSubmit={handleUploadDoc} className="space-y-3 text-xs">
-              <Input
-                label="Document Title *"
-                required
-                placeholder="e.g. Electricity Safety Audit 2026"
-                value={newDoc.title}
-                onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
-              />
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Compliance Category</label>
-                <select
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={newDoc.category}
-                  onChange={(e) => setNewDoc({ ...newDoc, category: e.target.value })}
-                >
-                  <option value="Statutory Affiliation">Statutory Affiliation</option>
-                  <option value="Safety & Compliance">Safety &amp; Compliance</option>
-                  <option value="Transport & Fleet">Transport &amp; Fleet</option>
-                  <option value="Academic Curricula">Academic Curricula</option>
-                  <option value="Institutional Trust">Institutional Trust</option>
-                </select>
-              </div>
-
-              <Input
-                label="File Name"
-                placeholder="e.g. Audit_NOC_2026.pdf"
-                value={newDoc.fileName}
-                onChange={(e) => setNewDoc({ ...newDoc, fileName: e.target.value })}
-              />
-
-              <div className="p-4 border-2 border-dashed border-slate-200 rounded-2xl text-center space-y-1 bg-slate-50">
-                <FolderLock className="w-6 h-6 text-slate-400 mx-auto" />
-                <p className="font-bold text-slate-700 text-xs">Drag &amp; drop PDF or click to browse</p>
-                <p className="text-[10px] text-slate-400">PDF, DOCX, ZIP up to 25MB</p>
-              </div>
-
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 font-bold">
-                  Secure in Vault
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
+            <Input
+              label="Issuing Authority"
+              value={formData.authority}
+              onChange={(e) => setFormData({ ...formData, authority: e.target.value })}
+              placeholder="e.g. Board of High School & Intermediate Education UP"
+            />
           </div>
-        </div>
-      )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Document Verification Code"
+              value={formData.docCode}
+              onChange={(e) => setFormData({ ...formData, docCode: e.target.value })}
+              placeholder="e.g. UP-FBD-2026-SGM-089"
+            />
+
+            <Input
+              label="Academic Session Year"
+              value={formData.academicYear}
+              onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+              placeholder="2026-2027"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="sm:col-span-2">
+              <Input
+                label="File URL / Download Link Path *"
+                value={formData.fileUrl}
+                onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                placeholder="/uploads/documents/filename.pdf or https://..."
+                required
+              />
+            </div>
+            <Input
+              label="File Size"
+              value={formData.fileSize}
+              onChange={(e) => setFormData({ ...formData, fileSize: e.target.value })}
+              placeholder="2.4 MB"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">
+              Document Summary / Legal Context
+            </label>
+            <textarea
+              rows={2}
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500"
+              placeholder="Provide a brief summary of the order, applicability, validity period, and directives..."
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+          </div>
+
+          {/* Visibility Switches */}
+          <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <div>
+              <span className="font-bold text-slate-900 block">Public Downloads Hub Visibility</span>
+              <span className="text-[10px] text-slate-400">Make this document available for public download on /downloads</span>
+            </div>
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+              checked={formData.isPublic}
+              onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 font-bold"
+              isLoading={isSaving}
+              leftIcon={<Check className="w-4 h-4" />}
+            >
+              {editingDoc ? 'Save Changes' : 'Publish Document'}
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </PortalLayout>
   );
 }

@@ -27,6 +27,7 @@ import {
   BookMarked,
   Receipt,
   UserCircle,
+  Image as ImageIcon,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -52,6 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onCloseMob
             items: [
               { label: 'Admin Dashboard', href: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
               { label: 'School Profile & CMS', href: '/admin/school-settings', icon: <Settings className="w-4 h-4" /> },
+              { label: 'Campus Media Gallery', href: '/admin/gallery', icon: <ImageIcon className="w-4 h-4" /> },
               { label: 'Academic Sessions', href: '/admin/academic-years', icon: <CalendarCheck className="w-4 h-4" /> },
               { label: 'Classes & Sections', href: '/admin/classes', icon: <Layers className="w-4 h-4" /> },
               { label: 'Subjects Catalog', href: '/admin/subjects', icon: <BookMarked className="w-4 h-4" /> },

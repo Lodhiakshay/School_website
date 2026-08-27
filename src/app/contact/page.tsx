@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   MapPin,
@@ -19,36 +19,86 @@ import {
   ShieldCheck,
   PhoneCall,
   UserCheck,
+  ChevronDown,
+  ChevronUp,
+  MessageCircle,
+  Printer,
+  Calendar,
+  ArrowRight,
+  ExternalLink,
 } from 'lucide-react';
 import { PublicNavbar } from '../../components/public/public-navbar';
 import { PublicFooter } from '../../components/public/public-footer';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Select } from '../../components/ui/select';
+import { useToast } from '../../components/ui/toast';
+import { apiClient } from '../../lib/api-client';
 
 export default function ContactPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<any | null>(null);
+  const [schoolInfo, setSchoolInfo] = useState<any>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
     subject: 'Admission Inquiry (Session 2026-27)',
-    targetClass: 'Class 10',
+    targetClass: 'Class 10 (High School)',
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    apiClient
+      .get('/school/public')
+      .then((res) => {
+        if (res.data?.data) {
+          setSchoolInfo(res.data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    if (!formData.fullName || !formData.phone || !formData.message) {
+      toast.error('Please enter your full name, phone number, and inquiry message.', 'Required Fields');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await apiClient.post('/school/inquiry', formData);
+      setSubmissionResult(res.data?.data || { referenceNumber: `INQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}` });
+      toast.success('Your inquiry has been logged in our campus portal.', 'Inquiry Submitted');
+    } catch {
+      // Fallback display
+      setSubmissionResult({
+        referenceNumber: `INQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+        ...formData,
+      });
+      toast.success('Inquiry received. Our desk officer will contact you.', 'Inquiry Received');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const helplinePhone = schoolInfo?.contact?.phone || '+91 9451234501';
+  const whatsappNumber = schoolInfo?.sssdShowcase?.whatsappNumber || '+919451234567';
+  const helplineEmail = schoolInfo?.contact?.email || 'principal@sarswati.edu';
+  const campusAddress = schoolInfo?.address
+    ? `${schoolInfo.address.street || 'Main Road, Near Bus Stand'}, ${schoolInfo.address.city || 'Shamsabad'}, ${schoolInfo.address.district || 'Farrukhabad'} - ${schoolInfo.address.pincode || '209503'}, ${schoolInfo.address.state || 'Uttar Pradesh'}`
+    : 'Main Road, Near Bus Stand, Shamsabad, Farrukhabad - 209503, Uttar Pradesh';
 
   const departmentContacts = [
     {
       title: "Principal's Secretarial Desk",
-      officer: 'Dr. Ramesh Kumar Sharma',
-      phone: '+91 9451234501',
-      email: 'principal@sarswati.edu',
+      officer: schoolInfo?.principalDesk?.name || 'Dr. Ramesh Kumar Sharma',
+      phone: helplinePhone,
+      email: helplineEmail,
       timings: '09:00 AM - 01:30 PM (Mon-Sat)',
       badge: 'Academic Head',
     },
@@ -56,7 +106,7 @@ export default function ContactPage() {
       title: 'Admissions & Counseling Wing',
       officer: 'Mrs. Pooja Verma (Dean Admissions)',
       phone: '+91 9451234509',
-      email: 'admission@sarswati.edu',
+      email: 'admissions@sarswati.edu',
       timings: '08:30 AM - 02:00 PM (Daily)',
       badge: 'New Admissions',
     },
@@ -64,7 +114,7 @@ export default function ContactPage() {
       title: 'Accounts, Bursar & Fee Counter',
       officer: 'Shri Manoj Mishra (Chief Accountant)',
       phone: '+91 9451234507',
-      email: 'accountant@sarswati.edu',
+      email: 'accounts@sarswati.edu',
       timings: '08:30 AM - 01:30 PM (Working Days)',
       badge: 'Fee Receipts',
     },
@@ -85,7 +135,7 @@ export default function ContactPage() {
     },
     {
       q: 'How do I apply for new admission for the 2026-27 academic session?',
-      a: 'Admissions are open for Nursery through Class 12 (Science PCM/PCB & Arts streams). You can apply online via the "Online Admission" portal or collect the physical prospectus directly from the school campus reception.',
+      a: 'Admissions are open for Nursery through Class 12 (Science PCM/PCB, Commerce & Arts streams). You can apply online via the "Online Admission" portal or collect the physical prospectus directly from the school campus reception.',
     },
     {
       q: 'Does the college provide school bus transportation in rural Farrukhabad?',
@@ -95,401 +145,409 @@ export default function ContactPage() {
       q: 'How can I obtain a Transfer Certificate (TC) or Character Certificate?',
       a: 'Applications for TC or Character Attestation can be submitted at the school clerk desk or generated electronically via the ERP Portal with clearance from fee and library departments.',
     },
+    {
+      q: 'Is there a separate English-medium wing on campus?',
+      a: 'Yes! SSSD Public School operates on campus as a dedicated 100% English Medium wing following CBSE patterns from Nursery to Class 8 with digital smart classrooms and phonics labs.',
+    },
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-blue-600 selection:text-white">
       <PublicNavbar />
 
-      {/* Hero Header Banner */}
-      <section className="bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 relative overflow-hidden">
+      {/* Royal Hero Header */}
+      <section className="relative bg-gradient-to-br from-[#001845] via-[#002060] to-[#023e8a] text-white pt-16 sm:pt-24 pb-20 sm:pb-28 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10 pb-4">
-          <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
-            <Sparkles className="w-4 h-4" />
-            <span>सम्पर्क सूत्र &bull; Connect With Our Institution</span>
+          <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span>Campus Reception &bull; सम्पर्क एवं परामर्श केंद्र</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-black font-serif tracking-tight text-white leading-tight">
-            Get In Touch With <br className="hidden sm:inline" />
-            <span className="text-amber-300">Sarswati Gyan Mandir</span>
+            Contact Us &amp; Campus Helpdesk
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-blue-100/90 max-w-2xl mx-auto leading-relaxed font-normal">
-            Have questions about admissions, academic curriculum, or campus visits? Our administrative desk and faculty are here to assist you.
+          <p className="text-xs sm:text-sm md:text-base text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Have questions about admissions, syllabus, bus routes, or school policies? Our administrative officers and counselors are here to assist you.
           </p>
         </div>
       </section>
 
-      {/* Quick Contact Info Cards */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-10 sm:-mt-14 z-20 w-full">
+      {/* Floating Fast Contact Telemetry Cards */}
+      <section className="max-w-6xl mx-auto px-3 sm:px-6 -mt-10 sm:-mt-14 z-20 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Address */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md hover:shadow-lg transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold group-hover:scale-110 transition">
-                <MapPin className="w-5 h-5" />
+          {/* Card 1: Direct Phone */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl space-y-2 flex flex-col justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-blue-50 text-blue-700 border border-blue-200">
+                <PhoneCall className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-sm text-slate-900">Campus Address</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Main Road, Near Bus Stand, Shamsabad, Farrukhabad, Uttar Pradesh &bull; PIN: 209503
-              </p>
+              <div>
+                <span className="text-[10px] font-black uppercase text-slate-400 block">General Helpline</span>
+                <span className="text-xs font-black text-slate-900">{helplinePhone}</span>
+              </div>
             </div>
-            <div className="pt-3 mt-3 border-t border-slate-100 text-[11px] font-semibold text-blue-600">
-              Landmark: Near Shamsabad Chowki
-            </div>
+            <a
+              href={`tel:${helplinePhone.replace(/[^0-9+]/g, '')}`}
+              className="text-xs font-bold text-blue-700 hover:underline flex items-center gap-1 pt-1"
+            >
+              Call Campus Office &rarr;
+            </a>
           </div>
 
-          {/* Card 2: Phone */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md hover:shadow-lg transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold group-hover:scale-110 transition">
-                <Phone className="w-5 h-5" />
+          {/* Card 2: WhatsApp Chat */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl space-y-2 flex flex-col justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <MessageCircle className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-sm text-slate-900">Phone Helplines</h3>
-              <div className="text-xs text-slate-700 space-y-1 font-mono">
-                <p className="font-bold">+91 9876543210</p>
-                <p className="font-bold">+91 9451234568</p>
+              <div>
+                <span className="text-[10px] font-black uppercase text-slate-400 block">WhatsApp Desk</span>
+                <span className="text-xs font-black text-slate-900">{whatsappNumber}</span>
               </div>
             </div>
-            <div className="pt-3 mt-3 border-t border-slate-100 text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Lines active 8 AM - 4 PM
-            </div>
+            <a
+              href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%2C%20I%20have%20an%20inquiry%20regarding%20Sarswati%20Gyan%20Mandir.`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1 pt-1"
+            >
+              Chat on WhatsApp &rarr;
+            </a>
           </div>
 
-          {/* Card 3: Email */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md hover:shadow-lg transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold group-hover:scale-110 transition">
+          {/* Card 3: Official Email */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl space-y-2 flex flex-col justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-purple-50 text-purple-700 border border-purple-200">
                 <Mail className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-sm text-slate-900">Official Inquiries</h3>
-              <div className="text-xs text-slate-700 space-y-1">
-                <p className="font-semibold text-blue-900 truncate">info@sarswati.edu</p>
-                <p className="font-semibold text-blue-900 truncate">admission@sarswati.edu</p>
+              <div>
+                <span className="text-[10px] font-black uppercase text-slate-400 block">Official Email</span>
+                <span className="text-xs font-black text-slate-900 truncate block max-w-[140px]">{helplineEmail}</span>
               </div>
             </div>
-            <div className="pt-3 mt-3 border-t border-slate-100 text-[11px] font-semibold text-indigo-600">
-              Response within 24 hours
-            </div>
+            <a
+              href={`mailto:${helplineEmail}`}
+              className="text-xs font-bold text-purple-700 hover:underline flex items-center gap-1 pt-1"
+            >
+              Send Official Mail &rarr;
+            </a>
           </div>
 
-          {/* Card 4: Office Hours */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md hover:shadow-lg transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold group-hover:scale-110 transition">
+          {/* Card 4: Office Timings */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xl space-y-2 flex flex-col justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
                 <Clock className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-sm text-slate-900">Visiting Hours</h3>
-              <div className="text-xs text-slate-600 space-y-0.5">
-                <p><strong className="text-slate-800">Mon - Sat:</strong> 08:00 AM - 02:30 PM</p>
-                <p><strong className="text-slate-800">Sunday:</strong> Closed (Academic Holiday)</p>
+              <div>
+                <span className="text-[10px] font-black uppercase text-slate-400 block">Visiting Hours</span>
+                <span className="text-xs font-black text-slate-900">08:00 AM - 02:30 PM</span>
               </div>
             </div>
-            <div className="pt-3 mt-3 border-t border-slate-100 text-[11px] font-semibold text-amber-700">
-              Principal Meet: 10 AM - 1 PM
-            </div>
+            <span className="text-[11px] text-slate-500 font-medium">Monday &ndash; Saturday</span>
           </div>
         </div>
       </section>
 
-      {/* Main Content Area: Interactive Form & Campus Map */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Interactive Contact & Inquiry Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md space-y-6">
+      {/* Main Interactive Contact Section */}
+      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Interactive Contact / Inquiry Form */}
+          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6">
             <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                Official Inquiry Portal
-              </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-serif mt-2">
-                Send Us An Official Message
+              <div className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-blue-200">
+                <Send className="w-3.5 h-3.5" /> 24/7 Digital Inquiry Box
+              </div>
+              <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
+                Send a Message or Admission Inquiry
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Fill out the form below and our admissions team or academic office will contact you promptly.
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                Fill out the form below. Your request will be instantly routed to the Dean of Admissions or Secretarial Office.
               </p>
             </div>
 
-            {formSubmitted ? (
-              <div className="p-8 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-center space-y-3 animate-in fade-in zoom-in-95">
-                <div className="w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
-                  <CheckCircle2 className="w-8 h-8" />
+            {submissionResult ? (
+              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 border border-emerald-200 space-y-4 animate-in zoom-in-95 duration-200 text-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-black tracking-wider text-emerald-800 block">
+                      Inquiry Logged Successfully
+                    </span>
+                    <h3 className="text-base font-black text-emerald-950 font-serif">
+                      Thank You, {formData.fullName}!
+                    </h3>
+                  </div>
                 </div>
-                <h3 className="text-lg font-black text-emerald-950 font-serif">Message Received Successfully!</h3>
-                <p className="text-xs text-emerald-800 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong>{formData.fullName}</strong>. Your inquiry regarding <em>"{formData.subject}"</em> has been registered with ticket reference <strong>#SGM-INQ-{Math.floor(1000 + Math.random() * 9000)}</strong>. Our school office will reach out to <strong>{formData.phone}</strong> shortly.
+
+                <div className="p-4 rounded-2xl bg-white border border-emerald-200 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-bold">Tracking Reference Code:</span>
+                    <span className="font-mono font-black text-blue-900 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
+                      {submissionResult.referenceNumber}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-bold">Registered Mobile:</span>
+                    <span className="font-bold text-slate-900">{formData.phone}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-bold">Target Stream / Class:</span>
+                    <span className="font-bold text-slate-900">{formData.targetClass}</span>
+                  </div>
+                </div>
+
+                <p className="text-emerald-900 leading-relaxed">
+                  Our academic counselor will review your request and call you back on <strong>{formData.phone}</strong> within 24 hours.
                 </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-3 border-emerald-400 text-emerald-800 hover:bg-emerald-100"
-                  onClick={() => {
-                    setFormSubmitted(false);
-                    setFormData({
-                      fullName: '',
-                      email: '',
-                      phone: '',
-                      subject: 'Admission Inquiry (Session 2026-27)',
-                      targetClass: 'Class 10',
-                      message: '',
-                    });
-                  }}
-                >
-                  Send Another Inquiry
-                </Button>
+
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <a
+                    href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20SGM%20Desk%2C%20I%20have%20submitted%20inquiry%20reference%20${submissionResult.referenceNumber}%20for%20${encodeURIComponent(formData.fullName)}.`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-md transition"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Quick WhatsApp Connect
+                  </a>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSubmissionResult(null);
+                      setFormData({
+                        fullName: '',
+                        email: '',
+                        phone: '',
+                        subject: 'Admission Inquiry (Session 2026-27)',
+                        targetClass: 'Class 10 (High School)',
+                        message: '',
+                      });
+                    }}
+                  >
+                    Submit Another Inquiry
+                  </Button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Rajesh Kumar Sharma"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
-                  </div>
+                  <Input
+                    label="Parent / Student Full Name *"
+                    placeholder="e.g. Rajesh Kumar Sharma"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
+                  />
 
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Mobile Contact Number *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+91 9876543210"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-bold text-slate-700 mb-1">Email Address</label>
-                    <input
-                      type="email"
-                      placeholder="name@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <Select
-                      label="Inquiry Category *"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      options={[
-                        { value: 'Admission Inquiry (Session 2026-27)', label: 'Admission Inquiry (Session 2026-27)' },
-                        { value: 'Fee Structure & Installments', label: 'Fee Structure & Installments' },
-                        { value: 'School Bus & Transport Route', label: 'School Bus & Transport Route' },
-                        { value: 'Transfer Certificate (TC) Request', label: 'Transfer Certificate (TC) Request' },
-                        { value: 'Academic Curriculum / Board Query', label: 'Academic Curriculum / Board Query' },
-                        { value: 'General Feedback or Complaint', label: 'General Feedback or Complaint' },
-                      ]}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Select
-                    label="Student Class (If applicable)"
-                    value={formData.targetClass}
-                    onChange={(e) => setFormData({ ...formData, targetClass: e.target.value })}
-                    options={[
-                      { value: 'Nursery - UKG', label: 'Primary Wing (Nursery - UKG)' },
-                      { value: 'Class 1 to 5', label: 'Primary School (Class 1 to 5)' },
-                      { value: 'Class 6 to 8', label: 'Middle School (Class 6 to 8)' },
-                      { value: 'Class 9', label: 'Class 9' },
-                      { value: 'Class 10', label: 'Class 10 (UP Board High School)' },
-                      { value: 'Class 11 - Science (PCM)', label: 'Class 11 - Science (PCM Stream)' },
-                      { value: 'Class 11 - Science (PCB)', label: 'Class 11 - Science (PCB Stream)' },
-                      { value: 'Class 12 - Science (PCM)', label: 'Class 12 - Science (PCM Stream)' },
-                      { value: 'Class 12 - Science (PCB)', label: 'Class 12 - Science (PCB Stream)' },
-                      { value: 'Class 11/12 - Arts / Humanities', label: 'Class 11/12 - Arts / Humanities' },
-                    ]}
+                  <Input
+                    label="Active Contact Mobile Number *"
+                    placeholder="e.g. +91 98765 43210"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
                   />
                 </div>
 
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Detailed Message / Question *</label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Write your specific query or information request here..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full p-3 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  ></textarea>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Email Address (Optional)"
+                    placeholder="e.g. rajesh@gmail.com"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Seeking Admission For *
+                    </label>
+                    <select
+                      className="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
+                      value={formData.targetClass}
+                      onChange={(e) => setFormData({ ...formData, targetClass: e.target.value })}
+                    >
+                      <option value="Nursery / Pre-Primary">Pre-Primary (Nursery, LKG, UKG)</option>
+                      <option value="Primary (Classes 1 to 5)">Primary Wing (Classes 1 to 5)</option>
+                      <option value="SSSD 100% English Medium">SSSD English Medium (Nursery - Class 8)</option>
+                      <option value="Middle School (Classes 6 to 8)">Middle School (Classes 6 to 8)</option>
+                      <option value="Class 9 (UP Board Foundation)">Class 9 (UP Board Foundation)</option>
+                      <option value="Class 10 (High School Board)">Class 10 (High School Board)</option>
+                      <option value="Class 11 - Science (PCM)">Class 11 - Science PCM (Maths &amp; Engg)</option>
+                      <option value="Class 11 - Science (PCB)">Class 11 - Science PCB (Bio &amp; Medical)</option>
+                      <option value="Class 11 - Commerce & Arts">Class 11 - Commerce &amp; Humanities</option>
+                      <option value="Class 12 - Board Exam Batch">Class 12 - Board Examination Batch</option>
+                    </select>
+                  </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-[#002060] hover:bg-[#001845] text-white py-3 font-bold text-sm shadow-md"
-                  leftIcon={<Send className="w-4 h-4 text-amber-400" />}
-                >
-                  Submit Official Inquiry
-                </Button>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Inquiry Subject Category *
+                  </label>
+                  <select
+                    className="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  >
+                    <option value="Admission Inquiry (Session 2026-27)">🎓 New Admission Inquiry (Session 2026-27)</option>
+                    <option value="School Bus & Route Availability">🚌 School Bus &amp; Route Availability</option>
+                    <option value="Fee Structure & Scholarship Criteria">💳 Fee Structure &amp; Fee Installments</option>
+                    <option value="Transfer Certificate (TC) Attestation">📄 Transfer Certificate (TC) Request</option>
+                    <option value="Campus Tour & Counseling Booking">🏛️ Campus Visit &amp; Principal Meeting</option>
+                    <option value="Other Institutional Inquiries">📋 Other General Inquiries</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Detailed Message / Questions *
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder="Tell us about the student's previous school, location in Farrukhabad, specific subject queries, or transport pickup location..."
+                    className="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <Button
+                    type="submit"
+                    className="w-full bg-[#002060] hover:bg-blue-900 text-white font-bold py-3 text-sm rounded-xl shadow-lg"
+                    isLoading={isSubmitting}
+                    rightIcon={<Send className="w-4 h-4" />}
+                  >
+                    Send Campus Inquiry Message
+                  </Button>
+                </div>
               </form>
             )}
           </div>
 
-          {/* Right Column: Campus Location & Connectivity Map */}
+          {/* Right Column: Physical Campus Details & Key Department Directory */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Visual Campus Map Card */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-md space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                  <Navigation className="w-4 h-4 text-blue-600" /> Campus Location &amp; Directions
-                </h3>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  Easy Access
-                </span>
+            {/* Campus Address Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="p-3 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200 flex-shrink-0">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-amber-800 tracking-wider block">
+                    Main Physical Campus
+                  </span>
+                  <h3 className="text-base font-black text-slate-900 font-serif">
+                    Sarswati Gyan Mandir Inter College
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    {campusAddress}
+                  </p>
+                </div>
               </div>
 
-              {/* Map Canvas Graphic */}
-              <div className="w-full h-48 bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 rounded-2xl border-2 border-slate-200 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden shadow-inner">
-                <div className="w-12 h-12 rounded-full bg-blue-900 text-amber-300 flex items-center justify-center shadow-lg mb-2">
-                  <Building2 className="w-6 h-6" />
-                </div>
-                <h4 className="font-serif font-black text-sm text-slate-900">सरस्वती ज्ञान मन्दिर इण्टर कॉलेज</h4>
-                <p className="text-[10px] text-slate-600 font-medium">Main Road, Near Bus Stand, Shamsabad (Farrukhabad)</p>
+              {/* Google Maps / Satellite Embed */}
+              <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100">
+                <iframe
+                  title="Campus Location Map"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14197.882177309908!2d79.43440039999999!3d27.5376378!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399e0df2327732a3%3A0xc3191ff2c68ffea4!2sShamsabad%2C%20Uttar%20Pradesh%20209503!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={false}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full object-cover"
+                ></iframe>
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-slate-500 font-medium">District: Farrukhabad (UP)</span>
                 <a
-                  href="https://maps.google.com/?q=Shamsabad+Farrukhabad+Uttar+Pradesh"
+                  href="https://maps.google.com/?q=Shamsabad,Farrukhabad,Uttar+Pradesh"
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700 transition shadow-sm"
+                  rel="noreferrer"
+                  className="text-blue-700 font-bold hover:underline flex items-center gap-1"
                 >
-                  <MapPin className="w-3 h-3 text-amber-300" /> Open in Google Maps
+                  <Navigation className="w-3.5 h-3.5" /> Open in Google Maps
                 </a>
               </div>
-
-              {/* Connectivity Highlights */}
-              <div className="space-y-2.5 text-xs text-slate-700">
-                <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Bus className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-slate-900">Bus Stand Connectivity</strong>
-                    <span className="text-slate-500 text-[11px]">Directly situated 200m from Shamsabad Main Bus Stop on the highway.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Navigation className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-slate-900">Railway Stations</strong>
-                    <span className="text-slate-500 text-[11px]">Farrukhabad Junction (24 km) &bull; Kaimganj Station (18 km).</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-slate-900">Safe Gated Campus</strong>
-                    <span className="text-slate-500 text-[11px]">24/7 CCTV surveillance, boundary walls, and dedicated security guards.</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Quick Action Admission Banner */}
-            <div className="bg-gradient-to-r from-blue-900 to-indigo-950 rounded-3xl p-6 text-white shadow-md space-y-3">
-              <div className="flex items-center gap-2 text-amber-300 font-bold text-xs uppercase tracking-wider">
-                <GraduationCap className="w-4 h-4" />
-                <span>Session 2026-27 Enrollment</span>
-              </div>
-              <h4 className="font-serif font-black text-base">Direct Online Admission Available</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Save time by submitting your child's registration and scholarship documents online through our portal.
-              </p>
-              <Link
-                href="/admission"
-                className="inline-block bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition shadow-sm font-sans"
-              >
-                Start Online Application &rarr;
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Administrative Department Helplines */}
-      <section className="bg-white py-12 border-y border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
-          <div className="text-center space-y-1">
-            <span className="text-[11px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-              Direct Helplines
-            </span>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-serif">
-              Administrative &amp; Department Contacts
-            </h2>
-            <p className="text-xs text-slate-500 max-w-xl mx-auto">
-              Direct access numbers for school officers during official hours.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {departmentContacts.map((dept, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-300 hover:bg-blue-50/40 transition space-y-3 flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                      {dept.badge}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-xs text-slate-900 leading-snug">{dept.title}</h3>
-                  <p className="text-[11px] font-semibold text-slate-700">{dept.officer}</p>
-                </div>
-
-                <div className="space-y-1 pt-2 border-t border-slate-200 text-xs">
-                  <div className="flex items-center gap-1.5 font-mono font-bold text-blue-700">
-                    <PhoneCall className="w-3.5 h-3.5" />
-                    <span>{dept.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500 truncate">
-                    <Mail className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{dept.email}</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 font-medium mt-1">{dept.timings}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Frequently Asked Questions (FAQ) */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full space-y-6">
-        <div className="text-center space-y-1">
-          <span className="text-[11px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-            Common Inquiries
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-serif">
-            Frequently Asked Questions
-          </h2>
-        </div>
-
-        <div className="space-y-3">
-          {faqs.map((faq, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-2">
-              <h3 className="font-bold text-xs sm:text-sm text-slate-900 flex items-start gap-2">
-                <HelpCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                <span>{faq.q}</span>
+            {/* Department Directory List */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-4">
+              <h3 className="text-sm font-black text-slate-900 font-serif uppercase tracking-wider flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-blue-600" /> Key Institutional Officers
               </h3>
-              <p className="text-xs text-slate-600 leading-relaxed pl-6">
-                {faq.a}
-              </p>
+
+              <div className="space-y-3">
+                {departmentContacts.map((dept, idx) => (
+                  <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-slate-900">{dept.title}</span>
+                      <span className="text-[9px] font-black uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                        {dept.badge}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-600">{dept.officer}</div>
+                    <div className="flex items-center justify-between text-[11px] pt-1 text-slate-500 border-t border-slate-200/60">
+                      <a href={`tel:${dept.phone}`} className="font-mono text-blue-700 font-bold hover:underline">
+                        {dept.phone}
+                      </a>
+                      <span>{dept.timings}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Interactive FAQ Section */}
+        <div className="bg-white rounded-3xl p-6 sm:p-12 border border-slate-200 shadow-xl space-y-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-amber-700 bg-amber-50 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-amber-200">
+              <HelpCircle className="w-3.5 h-3.5" /> Frequently Asked Questions
+            </div>
+            <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
+              Common Questions from Parents &amp; Scholars
+            </h2>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, fIdx) => {
+              const isOpen = openFaq === fIdx;
+              return (
+                <div
+                  key={fIdx}
+                  className="rounded-2xl border border-slate-200 overflow-hidden transition-all duration-200"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : fIdx)}
+                    className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 bg-slate-50/60 hover:bg-slate-100/80 transition"
+                  >
+                    <span className="font-bold text-slate-900 text-xs sm:text-sm font-serif">{faq.q}</span>
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-blue-700 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />}
+                  </button>
+                  {isOpen && (
+                    <div className="p-4 sm:p-5 pt-2 text-xs sm:text-sm text-slate-600 leading-relaxed bg-white border-t border-slate-100 animate-in fade-in duration-150">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

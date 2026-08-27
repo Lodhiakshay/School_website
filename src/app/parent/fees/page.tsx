@@ -9,6 +9,8 @@ import {
   Building2,
   Sparkles,
   X,
+  ShieldCheck,
+  Calendar,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
@@ -25,22 +27,34 @@ export default function ParentFeesPage() {
     {
       receiptNo: 'REC-2026-1001-Q1',
       studentName: 'Aarav Sharma (Class 10-A)',
+      admissionNo: 'SGM-2026-1001',
       term: 'Quarter 1 Tuition & Annual Development (Apr - Jun)',
       amount: '₹ 6,500',
       paidDate: '10 Apr 2026',
       mode: 'UPI / NetBanking',
       status: 'Paid',
       txnId: 'UPI-2026-9812401',
+      breakdown: [
+        { label: 'Tuition Fee (Quarter 1)', amount: '₹ 4,500' },
+        { label: 'Annual Development & IT Charge', amount: '₹ 1,200' },
+        { label: 'Composite Science Lab Apparatus', amount: '₹ 800' },
+      ],
     },
     {
       receiptNo: 'REC-2026-1001-Q2',
       studentName: 'Aarav Sharma (Class 10-A)',
+      admissionNo: 'SGM-2026-1001',
       term: 'Quarter 2 Tuition & Science Lab Fee (Jul - Sep)',
       amount: '₹ 5,800',
       paidDate: '08 Jul 2026',
       mode: 'Counter Cash POS',
       status: 'Paid',
       txnId: 'POS-CASH-8910',
+      breakdown: [
+        { label: 'Tuition Fee (Quarter 2)', amount: '₹ 4,500' },
+        { label: 'Quarterly Examination & Stationery', amount: '₹ 700' },
+        { label: 'Library & Reading Room Maintenance', amount: '₹ 600' },
+      ],
     },
   ];
 
@@ -48,22 +62,34 @@ export default function ParentFeesPage() {
     {
       receiptNo: 'REC-2026-0704-Q1',
       studentName: 'Ananya Sharma (Class 7-B)',
+      admissionNo: 'SGM-2026-0704',
       term: 'Quarter 1 Tuition & Activity Fee (Apr - Jun)',
       amount: '₹ 4,800',
       paidDate: '10 Apr 2026',
       mode: 'UPI / NetBanking',
       status: 'Paid',
       txnId: 'UPI-2026-7891234',
+      breakdown: [
+        { label: 'Tuition Fee (Quarter 1)', amount: '₹ 3,800' },
+        { label: 'Audio-Visual Activity & Arts', amount: '₹ 600' },
+        { label: 'Smart Classroom Infrastructure', amount: '₹ 400' },
+      ],
     },
     {
       receiptNo: 'REC-2026-0704-Q2',
       studentName: 'Ananya Sharma (Class 7-B)',
+      admissionNo: 'SGM-2026-0704',
       term: 'Quarter 2 Tuition & Library Fee (Jul - Sep)',
       amount: '₹ 4,500',
       paidDate: '08 Jul 2026',
       mode: 'Counter Cash POS',
       status: 'Paid',
       txnId: 'POS-CASH-9124',
+      breakdown: [
+        { label: 'Tuition Fee (Quarter 2)', amount: '₹ 3,800' },
+        { label: 'Library & Periodic Evaluation', amount: '₹ 400' },
+        { label: 'Junior Science Lab Kit', amount: '₹ 300' },
+      ],
     },
   ];
 
@@ -110,18 +136,19 @@ export default function ParentFeesPage() {
                 Ananya (Class 7)
               </button>
             </div>
+
             <Button
               size="sm"
               className="bg-blue-600 hover:bg-blue-700 font-bold"
               onClick={() => setSelectedReceipt(currentLedger[0])}
               leftIcon={<Printer className="w-4 h-4" />}
             >
-              Latest Receipt
+              Latest Stamped Receipt
             </Button>
           </div>
         </div>
 
-        {/* Current Settlement Banner */}
+        {/* Current Child Dues Clearance Banner */}
         <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black flex-shrink-0">
@@ -129,64 +156,64 @@ export default function ParentFeesPage() {
             </div>
             <div>
               <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">
-                Fee Status &bull; {currentChildName}
+                Clearance Status &bull; {currentChildName}
               </span>
               <h3 className="text-base font-black text-emerald-950 font-serif">
-                ₹ 0 Outstanding Dues
+                ₹ 0 Outstanding Dues for Q1 &amp; Q2
               </h3>
               <p className="text-xs text-emerald-700">
-                All term 1 and term 2 installments cleared and verified by Accounts Desk.
+                All term receipts stamped &bull; Next installment (Q3) payable by 10 Oct 2026
               </p>
             </div>
           </div>
-          <Badge size="md" variant="success" className="font-extrabold text-xs">
-            Fee Fully Cleared
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="success">Cleared</Badge>
+          </div>
         </div>
 
         {/* Ledger Table */}
         <Card className="border-slate-200 shadow-sm overflow-hidden">
           <CardHeader className="bg-slate-50 border-b border-slate-200 py-3.5 px-5 flex flex-row items-center justify-between">
             <CardTitle className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-blue-600" /> Payment History &bull; {currentChildName}
+              <CreditCard className="w-4 h-4 text-blue-600" /> Transaction Ledger for {currentChildName}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-white border-b border-slate-200 text-slate-500 uppercase font-bold text-[10px]">
+                <thead className="bg-slate-50 text-[11px] font-black uppercase text-slate-500 tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="p-3.5">Receipt Voucher</th>
-                    <th className="p-3.5">Term Description</th>
-                    <th className="p-3.5">Amount Paid</th>
-                    <th className="p-3.5">Payment Date &amp; Mode</th>
-                    <th className="p-3.5">Status</th>
-                    <th className="p-3.5 text-right">Official Receipt</th>
+                    <th className="py-3 px-4">Receipt No</th>
+                    <th className="py-3 px-4">Term &amp; Scope</th>
+                    <th className="py-3 px-4">Amount</th>
+                    <th className="py-3 px-4">Date Paid</th>
+                    <th className="py-3 px-4">Mode</th>
+                    <th className="py-3 px-4 text-right">Official Receipt</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-                  {currentLedger.map((f) => (
-                    <tr key={f.receiptNo} className="hover:bg-slate-50">
-                      <td className="p-3.5 font-mono font-bold text-blue-600">{f.receiptNo}</td>
-                      <td className="p-3.5 font-bold text-slate-900">{f.term}</td>
-                      <td className="p-3.5 font-mono font-black text-emerald-700 text-sm">{f.amount}</td>
-                      <td className="p-3.5">
-                        <div>{f.paidDate}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{f.mode}</div>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {currentLedger.map((f, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition">
+                      <td className="py-3.5 px-4 font-mono font-bold text-blue-900">{f.receiptNo}</td>
+                      <td className="py-3.5 px-4">
+                        <span className="font-bold text-slate-900 block">{f.term}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">Ref ID: {f.txnId}</span>
                       </td>
-                      <td className="p-3.5">
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-200">
-                          {f.status}
+                      <td className="py-3.5 px-4 font-black font-mono text-slate-900">{f.amount}</td>
+                      <td className="py-3.5 px-4">{f.paidDate}</td>
+                      <td className="py-3.5 px-4">
+                        <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-mono text-[10px]">
+                          {f.mode}
                         </span>
                       </td>
-                      <td className="p-3.5 text-right">
+                      <td className="py-3.5 px-4 text-right">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => setSelectedReceipt(f)}
                           leftIcon={<Printer className="w-3.5 h-3.5 text-slate-600" />}
                         >
-                          Print Voucher
+                          View Receipt
                         </Button>
                       </td>
                     </tr>
@@ -198,77 +225,104 @@ export default function ParentFeesPage() {
         </Card>
       </div>
 
-      {/* Official Receipt Modal */}
+      {/* Official Stamped Fee Receipt Modal */}
       {selectedReceipt && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900 my-auto">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <span className="text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
-                OFFICIAL PAYMENT VOUCHER
+              <span className="text-xs font-black uppercase tracking-wider text-blue-700 font-mono flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4" /> OFFICIAL INSTITUTIONAL PAYMENT VOUCHER
               </span>
               <button
                 onClick={() => setSelectedReceipt(null)}
                 className="text-slate-400 hover:text-slate-600 p-1"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4 text-xs">
+            {/* Printable Receipt Body */}
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-4 text-xs">
               <div className="text-center space-y-1 border-b border-slate-200 pb-3">
                 <h2 className="font-serif font-black text-base text-slate-900">
                   सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
                 </h2>
-                <p className="text-[11px] text-slate-600 font-medium">
-                  SHAMSABAD, FARRUKHABAD (UP) &bull; Affiliation: UP-FBD-2026-SGM-089
+                <p className="text-[10px] text-slate-600 font-medium">
+                  SHAMSABAD, FARRUKHABAD (UP) &bull; Affiliation Code: UP-FBD-2026-SGM-089
                 </p>
-                <div className="inline-block bg-emerald-600 text-white text-[10px] font-black uppercase px-3 py-0.5 rounded-full">
-                  FEE COLLECTION RECEIPT
+                <div className="inline-block bg-[#002060] text-white text-[10px] font-black uppercase px-3.5 py-0.5 rounded-full mt-1">
+                  OFFICIAL FEE RECEIPT VOUCHER
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div>
-                  <span className="text-slate-400">Receipt No:</span>
-                  <p className="font-mono font-bold text-slate-900">{selectedReceipt.receiptNo}</p>
+              <div className="grid grid-cols-2 gap-3 text-[11px]">
+                <div className="p-2 bg-white rounded-lg border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold">Voucher / Receipt No:</span>
+                  <p className="font-mono font-black text-blue-900">{selectedReceipt.receiptNo}</p>
                 </div>
-                <div>
-                  <span className="text-slate-400">Date Paid:</span>
+                <div className="p-2 bg-white rounded-lg border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold">Date Paid:</span>
                   <p className="font-bold text-slate-900">{selectedReceipt.paidDate}</p>
                 </div>
-                <div>
-                  <span className="text-slate-400">Student:</span>
+                <div className="p-2 bg-white rounded-lg border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold">Scholar Name:</span>
                   <p className="font-bold text-slate-900">{selectedReceipt.studentName}</p>
                 </div>
-                <div>
-                  <span className="text-slate-400">Payer / Father:</span>
-                  <p className="font-bold text-slate-900">Shri Rajesh Sharma</p>
+                <div className="p-2 bg-white rounded-lg border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold">Admission ID:</span>
+                  <p className="font-mono font-bold text-slate-900">{selectedReceipt.admissionNo || 'SGM-2026-1001'}</p>
                 </div>
               </div>
 
-              <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-slate-800">{selectedReceipt.term}</span>
-                  <p className="text-[10px] text-slate-400 font-mono">Txn: {selectedReceipt.txnId}</p>
-                </div>
-                <div className="text-right">
-                  <span className="font-mono font-black text-emerald-700 text-base">
-                    {selectedReceipt.amount}
-                  </span>
-                  <span className="block text-[10px] text-emerald-600 font-bold">● Cleared</span>
+              {/* Itemized Fee Breakdown */}
+              <div className="bg-white rounded-xl border border-slate-200 p-3 space-y-2">
+                <span className="text-[10px] font-black uppercase text-slate-500 block border-b border-slate-100 pb-1">
+                  Itemized Fee Components
+                </span>
+                {(selectedReceipt.breakdown || [
+                  { label: selectedReceipt.term, amount: selectedReceipt.amount },
+                ]).map((b: any, bIdx: number) => (
+                  <div key={bIdx} className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-700 font-medium">{b.label}</span>
+                    <span className="font-mono font-bold text-slate-900">{b.amount}</span>
+                  </div>
+                ))}
+                <div className="pt-2 border-t border-slate-200 flex items-center justify-between font-black text-xs">
+                  <span className="text-slate-900">Total Net Amount Cleared:</span>
+                  <span className="font-mono text-emerald-700 text-sm">{selectedReceipt.amount}</span>
                 </div>
               </div>
 
-              <div className="pt-4 flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-200">
-                <span>Computer Generated Official Voucher</span>
-                <span className="font-bold text-slate-700">Accounts Desk / Cashier Seal</span>
+              {/* Official Digital Stamps & Signatures */}
+              <div className="pt-3 flex items-end justify-between text-[10px] border-t border-slate-200">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/images/stamps/principal-round-seal.png"
+                    alt="Round Seal Muhar"
+                    className="w-12 h-12 object-contain opacity-90"
+                  />
+                  <div>
+                    <span className="font-bold text-slate-700 block">Institutional Seal</span>
+                    <span className="text-slate-400 text-[9px]">Shamsabad Farrukhabad</span>
+                  </div>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <img
+                    src="/images/stamps/principal-signature.png"
+                    alt="Accounts Officer Signature"
+                    className="h-8 max-w-[100px] object-contain ml-auto filter contrast-125"
+                  />
+                  <span className="font-bold text-slate-700 block">Accounts In-charge</span>
+                  <span className="text-[8px] text-slate-400 block font-mono">TXN: {selectedReceipt.txnId}</span>
+                </div>
               </div>
             </div>
 
             <div className="flex gap-2 pt-2">
               <Button
                 type="button"
-                className="w-full bg-blue-600 hover:bg-blue-700 font-bold"
+                className="w-full bg-[#002060] hover:bg-blue-900 font-bold"
                 onClick={handlePrintReceipt}
                 leftIcon={<Printer className="w-4 h-4" />}
               >

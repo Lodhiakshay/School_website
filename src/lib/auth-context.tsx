@@ -187,17 +187,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const quickLoginAs = async (email: string, pass: string): Promise<User> => {
-    const mockUser = mockUsersByEmail[email.toLowerCase()];
-    if (mockUser) {
-      const dummyToken = 'mock_demo_token_' + Date.now();
-      localStorage.setItem('sgm_access_token', dummyToken);
-      localStorage.setItem('sgm_refresh_token', dummyToken);
-      localStorage.setItem('sgm_user', JSON.stringify(mockUser));
-      setUser(mockUser);
-      setIsLoading(false);
-      redirectUser(mockUser.role);
-      return mockUser;
-    }
     return login(email, pass);
   };
 

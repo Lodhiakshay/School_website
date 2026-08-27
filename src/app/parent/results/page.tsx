@@ -208,6 +208,43 @@ export default function ParentResultsPage() {
                 <p className="font-black text-emerald-700 text-sm">Passed with Distinction</p>
               </div>
             </div>
+
+            {/* Signatures & Institutional Seal */}
+            <div className="pt-6 grid grid-cols-3 gap-6 text-center text-xs border-t border-slate-200">
+              <div className="space-y-1">
+                <div className="h-12 flex items-end justify-center pb-1">
+                  <span className="font-serif italic text-sm text-slate-800 font-bold border-b border-slate-400 px-4">
+                    {selectedChild === 'aarav' ? 'Shri Dinesh Gupta' : 'Mrs. Sunita Verma'}
+                  </span>
+                </div>
+                <p className="font-bold text-slate-700">Class Teacher</p>
+                <p className="text-[10px] text-slate-400">{currentClass} Incharge</p>
+              </div>
+
+              <div className="space-y-1">
+                <div className="h-12 flex items-center justify-center">
+                  <img
+                    src="/images/stamps/principal-round-seal.png"
+                    alt="Official Round Seal Muhar"
+                    className="w-14 h-14 object-contain opacity-90"
+                  />
+                </div>
+                <p className="font-bold text-slate-700">Official Seal</p>
+                <p className="text-[10px] text-slate-400">SGM Shamsabad</p>
+              </div>
+
+              <div className="space-y-1">
+                <div className="h-12 flex items-center justify-center">
+                  <img
+                    src="/images/stamps/principal-signature.png"
+                    alt="Principal Digital Signature Stamp"
+                    className="h-10 max-w-[120px] object-contain filter contrast-125"
+                  />
+                </div>
+                <p className="font-bold text-slate-700">Principal</p>
+                <p className="text-[10px] text-slate-400">Dr. Ramesh Kumar Sharma</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

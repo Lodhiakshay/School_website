@@ -1,6 +1,12 @@
 import axios, { AxiosError } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+export const DEFAULT_LIVE_API_URL = 'https://school-website-3ntz.onrender.com/api/v1';
+
+export const getApiBaseUrl = (): string => {
+  return process.env.NEXT_PUBLIC_API_URL || DEFAULT_LIVE_API_URL;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

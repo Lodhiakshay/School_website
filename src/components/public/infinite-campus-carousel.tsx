@@ -94,8 +94,38 @@ const campusMoments: CampusMoment[] = [
   },
 ];
 
-export const InfiniteCampusCarousel: React.FC = () => {
+interface InfiniteCampusCarouselProps {
+  items?: Array<{
+    id?: string;
+    _id?: string;
+    title: string;
+    category?: string;
+    categoryBadgeColor?: string;
+    desc?: string;
+    image: string;
+    badge?: string;
+    tag?: string;
+    isActive?: boolean;
+  }>;
+}
+
+export const InfiniteCampusCarousel: React.FC<InfiniteCampusCarouselProps> = ({ items }) => {
   const [activeItem, setActiveItem] = useState<CampusMoment | null>(null);
+
+  const displayMoments: CampusMoment[] =
+    items && items.length > 0
+      ? items
+          .filter((it) => it.isActive !== false)
+          .map((it, idx) => ({
+            id: it.id || it._id || `carousel-${idx}`,
+            title: it.title,
+            category: it.category || 'Campus Life',
+            categoryBadgeColor: it.categoryBadgeColor || 'bg-blue-600/90 text-white',
+            desc: it.desc || '',
+            image: it.image,
+            tag: it.badge || it.tag || 'Campus Focus',
+          }))
+      : campusMoments;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -106,7 +136,7 @@ export const InfiniteCampusCarousel: React.FC = () => {
   }, []);
 
   // Double array for continuous seamless infinite loop
-  const stream = [...campusMoments, ...campusMoments];
+  const stream = [...displayMoments, ...displayMoments];
 
   return (
     <section className="py-20 bg-slate-950 text-white relative overflow-hidden font-sans border-t border-b border-slate-800/80">

@@ -149,7 +149,16 @@ export default function TeachersAdminPage() {
       .get('/teachers')
       .then((res) => {
         if (res.data?.data && res.data.data.length > 0) {
-          setTeachers(res.data.data);
+          const mapped = res.data.data.map((t: any) => ({
+            ...t,
+            avatar:
+              t.photoUrl ||
+              t.avatar ||
+              (t.gender === 'female'
+                ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80'
+                : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'),
+          }));
+          setTeachers(mapped);
         }
       })
       .catch(() => {});
@@ -264,8 +273,24 @@ export default function TeachersAdminPage() {
             >
               <CardContent className="p-5 space-y-4">
                 <div className="flex items-start gap-3.5">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-sm">
-                    <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-sm relative">
+                    <img
+                      src={
+                        t.photoUrl ||
+                        t.avatar ||
+                        (t.gender === 'female'
+                          ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                          : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
+                      }
+                      alt={t.name}
+                      onError={(e: any) => {
+                        e.currentTarget.src =
+                          t.gender === 'female'
+                            ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                            : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
+                      }}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
@@ -341,10 +366,22 @@ export default function TeachersAdminPage() {
             </div>
 
             <div className="p-5 text-center space-y-4">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-blue-600 mx-auto shadow-md">
+              <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-blue-600 mx-auto shadow-md relative bg-slate-100">
                 <img
-                  src={activeTeacherModal.avatar}
+                  src={
+                    activeTeacherModal.photoUrl ||
+                    activeTeacherModal.avatar ||
+                    (activeTeacherModal.gender === 'female'
+                      ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                      : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
+                  }
                   alt={activeTeacherModal.name}
+                  onError={(e: any) => {
+                    e.currentTarget.src =
+                      activeTeacherModal.gender === 'female'
+                        ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
+                  }}
                   className="w-full h-full object-cover"
                 />
               </div>

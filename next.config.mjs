@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'images.unsplash.com', 'res.cloudinary.com'],
+    domains: ['localhost', 'images.unsplash.com', 'res.cloudinary.com', 'school-website-3ntz.onrender.com'],
   },
   eslint: {
     ignoreDuringBuilds: true,
