@@ -32,7 +32,7 @@ export default function SchoolSettingsPage() {
     establishedYear: '1999',
     principalName: 'Dr. Ramesh Kumar Sharma',
     principalQualifications: 'M.Sc., M.Ed., Ph.D.',
-    phone: '+91 9451234567',
+    phone: '+91 9876543210',
     email: 'principal@sarswati.edu',
     website: 'https://school-website-ecru-pi.vercel.app',
     address: 'Main Road, Near Bus Stand, Shamsabad, District Farrukhabad',

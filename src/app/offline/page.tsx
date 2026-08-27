@@ -35,11 +35,11 @@ export default function OfflinePage() {
             Retry Connection
           </Button>
           <a
-            href="tel:+919451234567"
+            href="tel:+919876543210"
             className="inline-flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-bold text-slate-300 hover:text-white"
           >
             <Phone className="w-4 h-4 text-emerald-400" />
-            <span>Call School Helpline: +91 9451234567</span>
+            <span>Call School Helpline: +91 9876543210</span>
           </a>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   GraduationCap,
@@ -30,14 +30,87 @@ import {
   HelpCircle,
   Bus,
   Check,
+  MessageCircle,
+  Quote,
+  Maximize2,
+  Copy,
 } from 'lucide-react';
 import { useToast } from '../../components/ui/toast';
 import { Button } from '../../components/ui/button';
+
+interface SSSDMoment {
+  id: string;
+  title: string;
+  category: string;
+  categoryBadge: string;
+  desc: string;
+  image: string;
+  tag?: string;
+}
+
+const sssdMoments: SSSDMoment[] = [
+  {
+    id: 'smart-class',
+    title: 'Interactive 3D Digital Smart Classrooms',
+    category: 'Digital NEP 2020',
+    categoryBadge: 'bg-emerald-600/90 text-white',
+    desc: 'Equipped with interactive touchscreen smart boards, 3D STEM visual learning tools, and multimedia audio modules.',
+    image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
+    tag: 'Smart Classroom',
+  },
+  {
+    id: 'phonics-lab',
+    title: 'Spoken English & Cambridge Phonics Studio',
+    category: 'Spoken Fluency',
+    categoryBadge: 'bg-blue-600/90 text-white',
+    desc: 'Dedicated acoustic audio lab enabling native English pronunciation, diction correction, and daily conversational drills.',
+    image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80',
+    tag: 'Audio Phonics',
+  },
+  {
+    id: 'kindergarten',
+    title: 'Montessori Kindergarten & Activity Hub',
+    category: 'Early Childhood',
+    categoryBadge: 'bg-amber-500 text-blue-950 font-black',
+    desc: 'Air-conditioned colorful play-way activity zone with cognitive puzzles, Montessori apparatus, and fine motor exercises.',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
+    tag: 'Play-Way Care',
+  },
+  {
+    id: 'stem-robotics',
+    title: 'Robotics, Coding & Innovation Corner',
+    category: 'STEM & AI',
+    categoryBadge: 'bg-purple-600/90 text-white',
+    desc: 'Hands-on electronic circuit boards, Scratch coding, and practical science model creation for young innovators.',
+    image: 'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?auto=format&fit=crop&w=800&q=80',
+    tag: 'Hands-on Labs',
+  },
+  {
+    id: 'sports-arena',
+    title: 'Outdoor Athletics Arena & Martial Arts',
+    category: 'Physical Wellness',
+    categoryBadge: 'bg-rose-600/90 text-white',
+    desc: 'Spacious campus arena for synthetic Badminton courts, Karate/Taekwondo training, Volleyball, and daily Yoga sessions.',
+    image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80',
+    tag: 'Karate & Yoga',
+  },
+  {
+    id: 'annual-day',
+    title: 'Annual English Drama & Cultural Showcase',
+    category: 'Creative Arts',
+    categoryBadge: 'bg-teal-600/90 text-white',
+    desc: 'English theatre plays, Western/classical dance, public speaking elocution, and student distinction honors.',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
+    tag: 'Annual Samaroh',
+  },
+];
 
 export default function SSSDPublicSchoolPage() {
   const { toast } = useToast();
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
+  const [activePhoto, setActivePhoto] = useState<SSSDMoment | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const [formData, setFormData] = useState({
     parentName: '',
@@ -47,6 +120,14 @@ export default function SSSDPublicSchoolPage() {
     email: '',
     address: 'Shamsabad, Farrukhabad',
   });
+
+  const handleCopyRef = () => {
+    if (submittedRef) {
+      navigator.clipboard?.writeText(submittedRef);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +146,11 @@ export default function SSSDPublicSchoolPage() {
     {
       title: '100% English Medium Ambience',
       desc: 'Immersive English language environment with daily phonics, spoken English clinics, and debate clubs from Kindergarten upwards.',
-      icon: <Languages className="w-5 h-5 text-emerald-700" />,
+      icon: (
+        <div className="w-5 h-5 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+          <img src="/images/sssd-logo.png" alt="SSSD" className="w-full h-full object-contain" />
+        </div>
+      ),
       tag: 'Spoken Fluency',
     },
     {
@@ -121,19 +206,42 @@ export default function SSSDPublicSchoolPage() {
     },
   ];
 
-  const feeSchedules = [
-    { wing: 'Pre-Primary (Nursery, LKG, UKG)', admission: '₹ 2,500', monthly: '₹ 950 / mo', lab: 'Included' },
-    { wing: 'Primary Wing (Classes 1 to 5)', admission: '₹ 3,000', monthly: '₹ 1,200 / mo', lab: '₹ 150 / mo' },
-    { wing: 'Middle Wing (Classes 6 to 8)', admission: '₹ 3,500', monthly: '₹ 1,450 / mo', lab: '₹ 200 / mo' },
-    { wing: 'High School (Classes 9 & 10)', admission: '₹ 4,000', monthly: '₹ 1,750 / mo', lab: '₹ 250 / mo' },
+  const facultyHighlights = [
+    {
+      name: 'Mrs. Ananya Sen',
+      role: 'Headmistress & Spoken English Lead',
+      exp: '14+ Yrs Exp',
+      qual: 'M.A. English (Gold Medalist), B.Ed.',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=85',
+      tags: ['Cambridge TKT', 'Phonics Studio', 'Debate Mentor'],
+    },
+    {
+      name: 'Mr. Vikramaditya Singh',
+      role: 'Senior Science & STEM Instructor',
+      exp: '10+ Yrs Exp',
+      qual: 'M.Sc. Physics, B.Ed., CTET Qualified',
+      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=85',
+      tags: ['Robotics STEM', 'NCERT Physics', 'Olympiad Drill'],
+    },
+    {
+      name: 'Ms. Deepika Saxena',
+      role: 'Primary Phonics & Mathematics Lead',
+      exp: '8+ Yrs Exp',
+      qual: 'B.Sc., D.El.Ed., Cambridge Certified',
+      image: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600&q=85',
+      tags: ['Montessori Care', 'Phonics Audio', 'Mental Maths'],
+    },
+    {
+      name: 'Mr. Rohit Kashyap',
+      role: 'Computer & AI Robotics Instructor',
+      exp: '7+ Yrs Exp',
+      qual: 'MCA, Certified Python Educator',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=85',
+      tags: ['Python & Scratch', 'Smart AI Lab', 'Cyber Safety'],
+    },
   ];
 
-  const facultyHighlights = [
-    { name: 'Mrs. Ananya Sen', role: 'Headmistress & Spoken English Lead', exp: '14 Yrs Exp', qual: 'M.A. English (Gold Medalist), B.Ed.' },
-    { name: 'Mr. Vikramaditya Singh', role: 'Senior Science & STEM Instructor', exp: '10 Yrs Exp', qual: 'M.Sc. Physics, B.Ed., CTET' },
-    { name: 'Ms. Deepika Saxena', role: 'Primary Phonics & Mathematics Lead', exp: '8 Yrs Exp', qual: 'B.Sc., D.El.Ed., Cambridge TKT' },
-    { name: 'Mr. Rohit Kashyap', role: 'Computer & AI Robotics Instructor', exp: '7 Yrs Exp', qual: 'MCA, Certified Python Educator' },
-  ];
+  const stream = [...sssdMoments, ...sssdMoments];
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-emerald-600 selection:text-white overflow-x-hidden">
@@ -141,7 +249,7 @@ export default function SSSDPublicSchoolPage() {
       <div className="bg-gradient-to-r from-emerald-950 via-[#01271e] to-teal-950 text-slate-300 py-2 px-3 sm:px-6 text-xs border-b border-emerald-500/20 shadow-inner">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           {/* Left Text / Badge */}
-          <div className="flex items-center gap-1.5 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
             <span className="text-[10px] sm:text-xs font-bold text-emerald-300 truncate">
               100% English Medium Wing &bull; Managed by Sarswati Educational Trust
@@ -151,10 +259,12 @@ export default function SSSDPublicSchoolPage() {
           {/* Right Switcher Pill */}
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-amber-300 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 sm:px-3 py-1 rounded-full border border-white/20 transition shadow-sm flex-shrink-0 whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold text-amber-300 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full border border-white/20 transition shadow-sm flex-shrink-0 whitespace-nowrap"
           >
-            <ArrowLeft className="w-3 h-3 text-amber-400" />
-            <span>SGM Inter College</span>
+            <div className="w-3.5 h-3.5 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 flex items-center justify-center">
+              <img src="/logo.png" alt="SGM" className="w-full h-full object-contain" />
+            </div>
+            <span>SGM Inter College &rarr;</span>
           </Link>
         </div>
       </div>
@@ -189,11 +299,13 @@ export default function SSSDPublicSchoolPage() {
           {/* Action Controls */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <a
-              href="tel:+919451234567"
-              className="hidden lg:flex items-center gap-1.5 text-xs text-slate-300 hover:text-emerald-300 font-mono font-bold"
+              href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 hover:text-white text-xs font-bold transition shadow-sm"
             >
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
-              <span>+91 9451234567</span>
+              <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+              <span>WhatsApp Counselor</span>
             </a>
             <Button
               size="sm"
@@ -236,13 +348,15 @@ export default function SSSDPublicSchoolPage() {
             >
               Apply for SSSD Admission
             </Button>
-            <Link
-              href="/downloads"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl border border-white/20 transition backdrop-blur-sm"
+            <a
+              href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20inquire%20about%20SSSD%20Public%20School%20English%20Medium%20Admissions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-900/60 hover:bg-emerald-800/80 text-emerald-200 font-bold text-xs sm:text-sm px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl border border-emerald-500/40 transition backdrop-blur-sm"
             >
-              <FileDown className="w-4 h-4 text-emerald-300" />
-              <span>Download Prospectus</span>
-            </Link>
+              <MessageCircle className="w-4 h-4 text-emerald-400" />
+              <span>WhatsApp Admission Counselor</span>
+            </a>
           </div>
         </div>
       </section>
@@ -265,6 +379,183 @@ export default function SSSDPublicSchoolPage() {
           <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl text-center space-y-0.5 sm:space-y-1">
             <span className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-wider">Security</span>
             <p className="text-base sm:text-2xl font-black text-amber-600 font-serif">100% CCTV</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SSSD Headmistress / Leadership Desk Card (Grand 7xl Container with Golden Frame) */}
+      <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#011a14] rounded-3xl p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border-2 border-emerald-400/50">
+            {/* Background Glow & Seal Watermark */}
+            <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 right-4 w-64 h-64 opacity-5 pointer-events-none">
+              <img src="/images/stamps/sssd-principal-round-seal.png" alt="SSSD Seal" className="w-full h-full object-contain" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+              {/* Left Column: Headmistress Hero Portrait with Gold Frame */}
+              <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-3">
+                <div className="relative w-full max-w-[260px] sm:max-w-[300px] md:max-w-full h-64 sm:h-80 md:h-[370px] rounded-3xl overflow-hidden border-4 border-amber-400/90 shadow-2xl shadow-amber-500/20 bg-slate-900 group">
+                  <img
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=85"
+                    alt="Headmistress Mrs. Ananya Sen"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                  
+                  {/* Floating Experience Badge */}
+                  <div className="absolute top-3 left-3 bg-amber-400 text-blue-950 text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 flex items-center gap-1 font-mono">
+                    <span>★ 14+ Years English Leadership</span>
+                  </div>
+
+                  {/* Nameplate inside photo bottom */}
+                  <div className="absolute bottom-4 left-4 right-4 text-left">
+                    <h4 className="font-serif font-black text-lg sm:text-xl text-white drop-shadow-md">
+                      Mrs. Ananya Sen
+                    </h4>
+                    <p className="text-xs text-amber-300 font-bold drop-shadow">
+                      Headmistress &bull; M.A. English (Gold Medalist), B.Ed.
+                    </p>
+                    <p className="text-[10px] text-emerald-300 font-mono mt-0.5">
+                      SSSD Public School (100% English Medium)
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Key Vision & 3 Pillars */}
+              <div className="md:col-span-7 space-y-5">
+                <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 text-xs font-black uppercase px-3.5 py-1.5 rounded-full border border-amber-400/40">
+                  <Quote className="w-3.5 h-3.5 text-amber-300" />
+                  <span>From The Headmistress&apos;s Desk</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-black font-serif text-white leading-snug">
+                  &ldquo;Empowering Confident Communicators, Critical Thinkers &amp; Cultured Leaders&rdquo;
+                </h3>
+
+                <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-normal">
+                  At SSSD Public School, our mission is to eliminate English language hesitation among children in Shamsabad from an early age. With immersive spoken English activities, Cambridge phonics pedagogy, digital smart classrooms, and personalized mentorship, we prepare your child to excel globally with pride in our cultural heritage.
+                </p>
+
+                {/* 3 Pillars Bento Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-amber-300 text-xs font-black">🗣️ Spoken Fluency</div>
+                    <div className="text-[11px] text-slate-200">Daily English clinics &amp; debate forums</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-emerald-300 text-xs font-black">🔬 Smart CBSE STEM</div>
+                    <div className="text-[11px] text-slate-200">Interactive 3D digital labs &amp; coding</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-teal-300 text-xs font-black">🕉️ Values &amp; Sports</div>
+                    <div className="text-[11px] text-slate-200">Sanskar, Yoga, Karate &amp; Athletics</div>
+                  </div>
+                </div>
+
+                {/* Action & Stamped Signature */}
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/15">
+                  <Button
+                    onClick={() => setShowApplyModal(true)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-blue-950 font-black text-xs shadow-lg shadow-amber-400/20 transition-all active:scale-95 group"
+                  >
+                    <span>Inquire for Admission 2026-27</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+
+                  <div className="bg-white/90 p-1.5 px-3 rounded-xl border border-amber-300/60 flex items-center gap-2 self-start sm:self-auto shadow-md">
+                    <img
+                      src="/images/stamps/sssd-principal-signature.png"
+                      alt="Headmistress Signature"
+                      className="h-9 w-auto object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SSSD 360° Infinite Campus Cinematic Showcase */}
+      <section className="py-16 sm:py-20 bg-slate-950 text-white relative overflow-hidden font-sans border-t border-b border-slate-800/80">
+        <div className="absolute top-1/2 -left-48 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -right-48 -translate-y-1/2 w-[500px] h-[500px] bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 bg-emerald-900/40 text-emerald-300 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/30 backdrop-blur-md">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>SSSD Campus Life &amp; Modern Classrooms</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black text-white font-serif tracking-tight">
+                Life &amp; Learning at SSSD Public School
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                Explore smart digital classrooms, phonics audio studio, kindergarten activity zones, and athletic arena.
+              </p>
+            </div>
+
+            <Button
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 rounded-xl whitespace-nowrap self-start md:self-auto"
+              onClick={() => setShowApplyModal(true)}
+              leftIcon={<Send className="w-3.5 h-3.5 text-amber-300" />}
+            >
+              Book a Campus Visit &rarr;
+            </Button>
+          </div>
+        </div>
+
+        {/* Single Grand Cinematic Stream */}
+        <div className="relative w-full overflow-hidden py-3">
+          <div className="absolute top-0 bottom-0 left-0 w-16 sm:w-36 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none" />
+          <div className="absolute top-0 bottom-0 right-0 w-16 sm:w-36 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none" />
+
+          <div className="flex gap-6 w-max animate-marquee-left hover:[animation-play-state:paused] active:[animation-play-state:paused]">
+            {stream.map((item, idx) => (
+              <div
+                key={`sssd-stream-${item.id}-${idx}`}
+                onClick={() => setActivePhoto(item)}
+                className="group relative w-80 sm:w-96 md:w-[420px] h-64 sm:h-72 md:h-80 rounded-3xl overflow-hidden cursor-pointer border-2 border-white/10 hover:border-emerald-400/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-emerald-500/20 flex-shrink-0 bg-slate-900"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/30 to-transparent" />
+
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                  <span className={`text-[11px] font-black uppercase px-3 py-1 rounded-full shadow-lg backdrop-blur-md ${item.categoryBadge}`}>
+                    {item.category}
+                  </span>
+                  {item.tag && (
+                    <span className="text-[11px] bg-slate-950/80 text-emerald-300 font-bold px-2.5 py-0.5 rounded-full border border-emerald-400/30 backdrop-blur-md">
+                      {item.tag}
+                    </span>
+                  )}
+                </div>
+
+                <div className="absolute bottom-4 left-4 right-4 space-y-1.5">
+                  <h3 className="text-base sm:text-lg font-black text-white font-serif drop-shadow-md group-hover:text-emerald-300 transition leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                    {item.desc}
+                  </p>
+                  <div className="pt-1 flex items-center gap-1.5 text-xs text-emerald-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Click to view full photo</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -366,7 +657,7 @@ export default function SSSDPublicSchoolPage() {
         </div>
       </section>
 
-      {/* SSSD Fee Structure (Luxury 4-Tier Cards for Desktop & Mobile) */}
+      {/* SSSD Fee Structure */}
       <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm">
@@ -380,9 +671,8 @@ export default function SSSDPublicSchoolPage() {
           </p>
         </div>
 
-        {/* 4-Tier Modern Pricing Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1: Pre-Primary */}
+          {/* Pre-Primary */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -391,12 +681,10 @@ export default function SSSDPublicSchoolPage() {
                 </span>
                 <span className="text-[11px] font-bold text-slate-400">Play - UKG</span>
               </div>
-
               <div>
                 <h3 className="font-serif font-black text-lg text-slate-900">Kindergarten</h3>
                 <p className="text-xs text-slate-500 mt-0.5">Foundational Play-Way &amp; Phonics</p>
               </div>
-
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 950</span>
@@ -406,7 +694,6 @@ export default function SSSDPublicSchoolPage() {
                   One-Time Registration: <span className="font-mono font-black">₹ 2,500</span>
                 </div>
               </div>
-
               <ul className="space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
@@ -416,21 +703,16 @@ export default function SSSDPublicSchoolPage() {
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Air-Conditioned Activity Hall</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Fine Motor Skill Exercises</span>
-                </li>
                 <li className="flex items-center gap-2 text-emerald-700 font-semibold">
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Digital Lab: Included (Free)</span>
                 </li>
               </ul>
             </div>
-
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
                 setFormData({ ...formData, grade: 'Playgroup / Nursery' });
                 setShowApplyModal(true);
@@ -440,58 +722,48 @@ export default function SSSDPublicSchoolPage() {
             </Button>
           </div>
 
-          {/* Card 2: Primary Wing (Featured) */}
+          {/* Primary */}
           <div className="bg-gradient-to-b from-emerald-950 via-[#064e3b] to-teal-950 text-white rounded-3xl p-6 border-2 border-emerald-400/50 shadow-2xl flex flex-col justify-between space-y-6 relative overflow-hidden group transform lg:-translate-y-2">
             <div className="absolute top-0 right-0 bg-amber-400 text-slate-950 text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl tracking-wider font-mono shadow-md">
               Most Popular
             </div>
-
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                  Primary Wing
+                  Primary Foundation
                 </span>
                 <span className="text-[11px] font-bold text-emerald-200">Grades 1 to 5</span>
               </div>
-
               <div>
-                <h3 className="font-serif font-black text-lg text-white">Primary Foundation</h3>
-                <p className="text-xs text-emerald-200/80 mt-0.5">Spoken Fluency &amp; Math Skills</p>
+                <h3 className="font-serif font-black text-lg text-white">Primary School</h3>
+                <p className="text-xs text-emerald-200 mt-0.5">English Fluency &amp; Math Foundation</p>
               </div>
-
-              <div className="p-4 bg-white/10 rounded-2xl border border-white/15 space-y-1 backdrop-blur-sm">
+              <div className="p-4 bg-white/10 rounded-2xl border border-white/15 space-y-1">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-black text-white font-mono">₹ 1,200</span>
-                  <span className="text-xs text-emerald-200 font-medium">/ month</span>
+                  <span className="text-2xl sm:text-3xl font-black text-amber-300 font-mono">₹ 1,200</span>
+                  <span className="text-xs text-emerald-100 font-medium">/ month</span>
                 </div>
-                <div className="text-[11px] text-amber-300 font-bold">
-                  One-Time Registration: <span className="font-mono font-black">₹ 3,000</span>
+                <div className="text-[11px] text-emerald-200 font-bold">
+                  One-Time Registration: <span className="font-mono font-black text-white">₹ 3,000</span>
                 </div>
               </div>
-
               <ul className="space-y-2 text-xs text-emerald-100">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                  <span>100% Spoken English Daily Clinics</span>
+                  <Check className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <span>Daily Spoken English Clinics</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                  <span>Smart Interactive Classrooms</span>
+                  <Check className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <span>Computer &amp; Digital Smart Board</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                  <span>Mental Arithmetic &amp; Science</span>
-                </li>
-                <li className="flex items-center gap-2 text-amber-200 font-semibold">
-                  <Check className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                  <span>Computer &amp; Lab Fee: ₹ 150 / mo</span>
+                <li className="flex items-center gap-2 text-amber-300 font-semibold">
+                  <Check className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <span>Phonics &amp; Science: Included</span>
                 </li>
               </ul>
             </div>
-
             <Button
-              size="sm"
-              className="w-full text-xs font-black bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-lg shadow-amber-400/20 transition"
+              className="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs shadow-lg shadow-amber-400/20"
               onClick={() => {
                 setFormData({ ...formData, grade: 'Class 1' });
                 setShowApplyModal(true);
@@ -501,7 +773,7 @@ export default function SSSDPublicSchoolPage() {
             </Button>
           </div>
 
-          {/* Card 3: Middle Wing */}
+          {/* Middle */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -510,12 +782,10 @@ export default function SSSDPublicSchoolPage() {
                 </span>
                 <span className="text-[11px] font-bold text-slate-400">Grades 6 to 8</span>
               </div>
-
               <div>
                 <h3 className="font-serif font-black text-lg text-slate-900">Middle School</h3>
                 <p className="text-xs text-slate-500 mt-0.5">NCERT Exploration &amp; Coding</p>
               </div>
-
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 1,450</span>
@@ -525,7 +795,6 @@ export default function SSSDPublicSchoolPage() {
                   One-Time Registration: <span className="font-mono font-black">₹ 3,500</span>
                 </div>
               </div>
-
               <ul className="space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
@@ -539,17 +808,12 @@ export default function SSSDPublicSchoolPage() {
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Sports Academy &amp; Martial Arts</span>
                 </li>
-                <li className="flex items-center gap-2 text-slate-800 font-semibold">
-                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Science / STEM Lab: ₹ 200 / mo</span>
-                </li>
               </ul>
             </div>
-
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
                 setFormData({ ...formData, grade: 'Class 6' });
                 setShowApplyModal(true);
@@ -559,7 +823,7 @@ export default function SSSDPublicSchoolPage() {
             </Button>
           </div>
 
-          {/* Card 4: High School */}
+          {/* High School */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-6 group">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -568,12 +832,10 @@ export default function SSSDPublicSchoolPage() {
                 </span>
                 <span className="text-[11px] font-bold text-slate-400">Grades 9 &amp; 10</span>
               </div>
-
               <div>
                 <h3 className="font-serif font-black text-lg text-slate-900">High School</h3>
                 <p className="text-xs text-slate-500 mt-0.5">CBSE Exam Prep &amp; Olympiads</p>
               </div>
-
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹ 1,750</span>
@@ -583,7 +845,6 @@ export default function SSSDPublicSchoolPage() {
                   One-Time Registration: <span className="font-mono font-black">₹ 4,000</span>
                 </div>
               </div>
-
               <ul className="space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
@@ -597,17 +858,12 @@ export default function SSSDPublicSchoolPage() {
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Olympiad &amp; NTSE Mentorship</span>
                 </li>
-                <li className="flex items-center gap-2 text-slate-800 font-semibold">
-                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Advanced AI Lab: ₹ 250 / mo</span>
-                </li>
               </ul>
             </div>
-
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition"
+              className="w-full text-xs font-bold border-slate-200 text-slate-800 hover:bg-emerald-50 hover:text-emerald-800"
               onClick={() => {
                 setFormData({ ...formData, grade: 'Class 9' });
                 setShowApplyModal(true);
@@ -620,31 +876,74 @@ export default function SSSDPublicSchoolPage() {
       </section>
 
       {/* SSSD Faculty Mentors */}
-      <section className="py-16 sm:py-20 bg-slate-100/70 border-y border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full">
+      <section className="py-16 sm:py-24 bg-slate-100/70 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200 shadow-sm">
               Expert Mentors
             </span>
-            <h2 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 font-serif tracking-tight">
               Our English Language Educators
             </h2>
-            <p className="text-xs text-slate-600">Certified educators trained in modern phonics, interactive smart board teaching, and child psychology.</p>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Certified educators trained in Cambridge phonics, interactive smart board pedagogy, STEM labs, and child psychology.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {facultyHighlights.map((fac, idx) => (
-              <div key={idx} className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-lg font-serif">
-                  {fac.name.charAt(4) || 'T'}
-                </div>
+              <div
+                key={idx}
+                className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+              >
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm font-serif">{fac.name}</h4>
-                  <p className="text-xs text-emerald-700 font-bold">{fac.role}</p>
-                </div>
-                <div className="pt-2 border-t border-slate-100 text-[11px] text-slate-500 space-y-0.5">
-                  <p><strong>Qual:</strong> {fac.qual}</p>
-                  <p><strong>Experience:</strong> {fac.exp}</p>
+                  {/* Photo Header */}
+                  <div className="relative h-60 sm:h-64 w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={fac.image}
+                      alt={fac.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+
+                    {/* Floating Exp Badge */}
+                    <div className="absolute top-3 right-3 bg-slate-950/90 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md backdrop-blur-md font-mono">
+                      ★ {fac.exp}
+                    </div>
+
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <span className="text-[10px] font-black uppercase text-emerald-300 tracking-wider bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/30 backdrop-blur-md">
+                        SSSD English Faculty
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-5 space-y-2.5">
+                    <div>
+                      <h3 className="text-base font-black text-slate-900 font-serif group-hover:text-emerald-700 transition leading-snug">
+                        {fac.name}
+                      </h3>
+                      <p className="text-xs font-extrabold text-emerald-700 mt-0.5">{fac.role}</p>
+                    </div>
+
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600">
+                      <p className="line-clamp-2"><strong>Qual:</strong> {fac.qual}</p>
+                    </div>
+
+                    {/* Specialization Tags */}
+                    <div className="pt-1 flex flex-wrap gap-1.5">
+                      {fac.tags.map((tag, tIdx) => (
+                        <span
+                          key={tIdx}
+                          className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-100"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -707,9 +1006,78 @@ export default function SSSDPublicSchoolPage() {
         </div>
       </footer>
 
-      {/* SSSD Admission Inquiry Modal */}
+      {/* SSSD Lightbox Modal */}
+      {activePhoto && (
+        <div
+          className="fixed inset-0 z-[99999] bg-slate-950/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setActivePhoto(null)}
+        >
+          <div
+            className="bg-slate-900 border-2 border-emerald-400/60 rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 relative my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative h-72 sm:h-96 w-full bg-slate-950">
+              <img
+                src={activePhoto.image}
+                alt={activePhoto.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40" />
+
+              <button
+                onClick={() => setActivePhoto(null)}
+                className="absolute top-4 right-4 p-2 rounded-2xl bg-slate-950/80 hover:bg-slate-800 text-white border border-white/20 transition shadow-lg"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="absolute top-4 left-4 flex items-center gap-2">
+                <span className={`text-xs font-bold uppercase px-3 py-1 rounded-full shadow-lg backdrop-blur-md ${activePhoto.categoryBadge}`}>
+                  {activePhoto.category}
+                </span>
+                {activePhoto.tag && (
+                  <span className="text-xs bg-slate-950/80 text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-400/40 backdrop-blur-md">
+                    {activePhoto.tag}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="p-6 pt-2 space-y-3">
+              <h3 className="text-xl sm:text-2xl font-bold font-serif text-white">
+                {activePhoto.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                {activePhoto.desc}
+              </p>
+
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-4">
+                <Button
+                  onClick={() => {
+                    setActivePhoto(null);
+                    setShowApplyModal(true);
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
+                >
+                  Apply for SSSD Admission 2026-27
+                </Button>
+
+                <button
+                  onClick={() => setActivePhoto(null)}
+                  className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition"
+                >
+                  Close &bull; Esc
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SSSD Admission Inquiry Modal (Full screen blur z-[99999]) */}
       {showApplyModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
           <div className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border-2 border-emerald-600 space-y-4 sm:space-y-5 animate-in zoom-in-95 duration-200 my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2.5">
@@ -735,20 +1103,37 @@ export default function SSSDPublicSchoolPage() {
             </div>
 
             {submittedRef ? (
-              <div className="text-center py-5 space-y-3 animate-in zoom-in-90 duration-200">
-                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md">
-                  <CheckCircle2 className="w-7 h-7" />
+              <div className="text-center py-5 space-y-4 animate-in zoom-in-90 duration-200">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md border-2 border-emerald-300">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-base sm:text-lg font-black text-slate-900 font-serif">Application Registered!</h4>
+                  <h4 className="text-lg sm:text-xl font-black text-slate-900 font-serif">Application Registered!</h4>
                   <p className="text-xs text-slate-600">
-                    Your inquiry for <strong>{formData.studentName}</strong> has been submitted to SSSD Admission Office.
+                    Your inquiry for <strong>{formData.studentName}</strong> has been logged at SSSD Admission Desk.
                   </p>
                 </div>
-                <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-center font-mono space-y-1">
-                  <span className="text-[9px] text-slate-500 uppercase font-bold">Your Inquiry Reference ID</span>
-                  <div className="text-lg font-black text-emerald-800 tracking-wider">{submittedRef}</div>
+                
+                {/* Copyable Ref Box */}
+                <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 text-center font-mono space-y-1">
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">Official Inquiry Reference</span>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-xl font-black text-emerald-800 tracking-wider">{submittedRef}</span>
+                    <button
+                      onClick={handleCopyRef}
+                      className="p-1.5 rounded-lg bg-white border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-1 shadow-sm"
+                    >
+                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copied ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
                 </div>
+
+                <div className="text-left bg-slate-50 p-3 rounded-xl text-xs text-slate-600 space-y-1">
+                  <p>✓ Admission counselor will connect on <strong>{formData.phone}</strong>.</p>
+                  <p>✓ Campus tour slots available Mon-Sat (08:30 AM - 03:00 PM).</p>
+                </div>
+
                 <Button
                   className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold text-xs"
                   onClick={() => {

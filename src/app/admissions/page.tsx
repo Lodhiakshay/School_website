@@ -199,7 +199,7 @@ export default function AdmissionsPublicPage() {
               <div className="space-y-2 text-xs text-slate-800 font-bold pt-1">
                 <p className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>+91 9451234567, +91 9451234568</span>
+                  <span>+91 9876543210, +91 9451234568</span>
                 </p>
                 <p className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
@@ -370,7 +370,7 @@ export default function AdmissionsPublicPage() {
                   <Input
                     label="Father's Mobile Number *"
                     required
-                    placeholder="e.g. +91 9451234567"
+                    placeholder="e.g. +91 9876543210"
                     value={formData.fatherPhone}
                     onChange={(e) => setFormData({ ...formData, fatherPhone: e.target.value })}
                   />

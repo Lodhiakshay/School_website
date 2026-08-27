@@ -65,7 +65,7 @@ export const PublicNavbar: React.FC = () => {
             </span>
             <span className="hidden sm:flex items-center gap-1.5 text-slate-300">
               <Phone className="w-3.5 h-3.5 text-emerald-400" />
-              +91 9451234567
+              +91 9876543210
             </span>
           </div>
           <div className="flex items-center gap-3 text-[11px]">

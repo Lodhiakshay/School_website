@@ -255,6 +255,45 @@ const documentsData: DocumentItem[] = [
     description:
       'Route selection form and safety undertaking for students utilizing institutional bus transport services across Farrukhabad.',
   },
+  {
+    id: 'sssd-cbse-prospectus',
+    title: 'SSSD Public School (100% English Medium) CBSE Prospectus 2026-27',
+    category: 'syllabus',
+    categoryLabel: 'Academic Curriculum',
+    fileSize: '3.6 MB',
+    format: 'PDF',
+    updatedDate: 'Session 2026-2027',
+    authority: 'Academic Directorate, SSSD Public School',
+    docCode: 'PROSP-SSSD-2026-CBSE',
+    description:
+      'Comprehensive institutional prospectus for SSSD English medium wing covering CBSE curriculum framework, STEM smart labs, and Montessori play-way pedagogy.',
+  },
+  {
+    id: 'sssd-phonics-guide',
+    title: 'SSSD Cambridge Phonics & Spoken English Foundation Guide',
+    category: 'syllabus',
+    categoryLabel: 'Academic Curriculum',
+    fileSize: '2.1 MB',
+    format: 'PDF',
+    updatedDate: 'Academic Year 2026-27',
+    authority: 'English & Phonics Department, SSSD',
+    docCode: 'SSSD-PHONICS-GUIDE-26',
+    description:
+      'Foundation guide on conversational English drills, phonetic sounds, vocabulary building, and digital audio studio modules.',
+  },
+  {
+    id: 'sssd-admission-form',
+    title: 'SSSD Public School Scholar Admission & Bus Enrolment Form',
+    category: 'forms',
+    categoryLabel: 'Forms & Circulars',
+    fileSize: '640 KB',
+    format: 'PDF',
+    updatedDate: 'Session 2026-27',
+    authority: 'SSSD Admission & Counseling Wing',
+    docCode: 'FORM-SSSD-ADM-2026',
+    description:
+      'Official printable admission registration form and document checklist for Nursery to Grade 10 English medium scholars.',
+  },
 ];
 
 export default function DownloadsPage() {

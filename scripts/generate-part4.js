@@ -218,7 +218,7 @@ export default function SchoolSettingsPage() {
       country: 'India',
     },
     contact: {
-      phone: '+91 9451234567',
+      phone: '+91 9876543210',
       email: 'info@sarswatigyanmandir.edu.in',
     },
     principal: {

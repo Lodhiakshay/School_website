@@ -83,7 +83,7 @@ export const PublicNavbar: React.FC = () => {
             </span>
             <span className="hidden sm:flex items-center gap-1">
               <Phone className="w-3.5 h-3.5 text-blue-400" />
-              +91 9451234567
+              +91 9876543210
             </span>
           </div>
           <div className="flex items-center gap-3 text-[11px]">
@@ -242,7 +242,7 @@ export const PublicFooter: React.FC = () => {
             </p>
             <p className="flex items-center gap-2.5 text-slate-300">
               <Phone className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <span>+91 9451234567</span>
+              <span>+91 9876543210</span>
             </p>
             <p className="flex items-center gap-2.5 text-slate-300">
               <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
@@ -844,7 +844,7 @@ export default function ContactPage() {
       <PublicNavbar />
       <section className="py-16 max-w-5xl mx-auto px-4 space-y-6">
         <h1 className="text-3xl font-bold text-slate-900">Contact Institution</h1>
-        <p className="text-xs sm:text-sm text-slate-600">Main Road, Near Bus Stand, Shamsabad, Farrukhabad, UP (209503). Phone: +91 9451234567.</p>
+        <p className="text-xs sm:text-sm text-slate-600">Main Road, Near Bus Stand, Shamsabad, Farrukhabad, UP (209503). Phone: +91 9876543210.</p>
       </section>
       <PublicFooter />
     </div>

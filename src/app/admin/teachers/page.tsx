@@ -463,7 +463,7 @@ export default function TeachersAdminPage() {
               <div className="grid grid-cols-2 gap-3">
                 <Input
                   label="Phone Number"
-                  placeholder="+91 9451234567"
+                  placeholder="+91 9876543210"
                   value={newTeacher.phone}
                   onChange={(e) => setNewTeacher({ ...newTeacher, phone: e.target.value })}
                 />

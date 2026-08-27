@@ -801,7 +801,7 @@ export default function StudentsAdminPage() {
                 <Input
                   label="Father Mobile *"
                   required
-                  placeholder="+91 9451234567"
+                  placeholder="+91 9876543210"
                   value={newStudent.fatherPhone}
                   onChange={(e) => setNewStudent({ ...newStudent, fatherPhone: e.target.value })}
                 />

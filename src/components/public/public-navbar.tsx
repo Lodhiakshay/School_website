@@ -138,11 +138,11 @@ export const PublicNavbar: React.FC = () => {
                 <span className="truncate">Main Road, Shamsabad, Farrukhabad (209503)</span>
               </a>
               <a
-                href="tel:+919451234567"
+                href="tel:+919876543210"
                 className="hidden md:flex items-center gap-1.5 text-slate-300 hover:text-emerald-400 font-mono transition flex-shrink-0"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                <span>+91 9451234567</span>
+                <span>+91 9876543210</span>
               </a>
             </div>
 
@@ -382,7 +382,7 @@ export const PublicNavbar: React.FC = () => {
 
           <div className="pt-2 text-[10px] text-slate-400 space-y-1 text-center font-medium">
             <p className="flex items-center justify-center gap-1 text-slate-300 font-bold">
-              <Phone className="w-3 h-3 text-emerald-400" /> Helpline: +91 9451234567
+              <Phone className="w-3 h-3 text-emerald-400" /> Helpline: +91 9876543210
             </p>
             <p>Main Road, Shamsabad (Farrukhabad) &bull; PIN: 209503</p>
           </div>

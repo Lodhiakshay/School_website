@@ -148,7 +148,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-bold text-sm text-slate-900">Phone Helplines</h3>
               <div className="text-xs text-slate-700 space-y-1 font-mono">
-                <p className="font-bold">+91 9451234567</p>
+                <p className="font-bold">+91 9876543210</p>
                 <p className="font-bold">+91 9451234568</p>
               </div>
             </div>
@@ -259,7 +259,7 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 9451234567"
+                      placeholder="+91 9876543210"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
