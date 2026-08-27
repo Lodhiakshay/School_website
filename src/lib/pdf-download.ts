@@ -135,8 +135,9 @@ export async function downloadElementAsImage(elementId: string, fileName: string
   stage.style.position = 'fixed';
   stage.style.left = '-99999px';
   stage.style.top = '0';
-  stage.style.width = '480px';
-  stage.style.maxWidth = '480px';
+  stage.style.width = '340px';
+  stage.style.minWidth = '340px';
+  stage.style.maxWidth = '340px';
   stage.style.background = '#ffffff';
   stage.style.padding = '0';
   stage.style.margin = '0';

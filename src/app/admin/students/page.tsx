@@ -576,34 +576,56 @@ export default function StudentsAdminPage() {
               </button>
             </div>
 
-            {/* ID Badge Card: Emerald Green Theme for SSSD & Royal Navy Theme for SGM */}
-            <div id="student-id-card-inner" className={`printable-document bg-white border-2 ${isSSSD ? 'border-emerald-700' : 'border-[#002060]'} rounded-2xl overflow-hidden shadow-md text-center font-sans`}>
-              {/* Header Banner */}
+            {/* ID Badge Card: Realistic CR80 Vertical PVC Smart Card */}
+            <div
+              id="student-id-card-inner"
+              className={`printable-document bg-white border-2 ${
+                isSSSD ? 'border-emerald-700' : 'border-[#002060]'
+              } rounded-3xl overflow-hidden shadow-2xl text-center font-sans max-w-[320px] mx-auto border-t-8 ${
+                isSSSD ? 'border-t-emerald-800' : 'border-t-[#002060]'
+              }`}
+            >
+              {/* Lanyard Punch Slot */}
+              <div className="pt-2 pb-1 bg-slate-100 flex items-center justify-center border-b border-slate-200">
+                <div className="w-12 h-2.5 rounded-full bg-slate-300 border border-slate-400 shadow-inner"></div>
+              </div>
+
+              {/* Institution Header Banner */}
               {isSSSD ? (
-                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-2.5 border-b-2 border-amber-400 flex items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
-                    <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-3 border-b-2 border-amber-400">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
+                      <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="font-serif font-black text-xs text-amber-300 leading-tight">SSSD PUBLIC SCHOOL</h3>
+                      <p className="text-[8px] uppercase tracking-wider text-emerald-200 font-bold">100% ENGLISH MEDIUM &bull; SHAMSABAD</p>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <h3 className="font-serif font-black text-xs text-amber-300 leading-tight">SSSD PUBLIC SCHOOL</h3>
-                    <p className="text-[8px] uppercase tracking-wider text-emerald-200 font-bold">100% ENGLISH MEDIUM &bull; SHAMSABAD</p>
+                  <div className="mt-1.5 bg-emerald-900/90 text-amber-300 text-[8px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-emerald-700 inline-block font-mono">
+                    STUDENT IDENTITY CARD &bull; 2026-2027
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#002060] text-white p-2.5 border-b-2 border-amber-400 flex items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0">
-                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white p-3 border-b-2 border-amber-400">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
+                      <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="font-serif font-black text-xs text-amber-300 leading-tight">सरस्वती ज्ञान मन्दिर</h3>
+                      <p className="text-[8px] uppercase tracking-wider text-slate-200 font-bold">INTERMEDIATE COLLEGE &bull; SHAMSABAD</p>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <h3 className="font-serif font-black text-xs text-amber-300 leading-tight">सरस्वती ज्ञान मन्दिर</h3>
-                    <p className="text-[8px] uppercase tracking-wider text-slate-200 font-bold">INTERMEDIATE COLLEGE &bull; SHAMSABAD</p>
+                  <div className="mt-1.5 bg-blue-950 text-amber-300 text-[8px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-blue-800 inline-block font-mono">
+                    STUDENT IDENTITY CARD &bull; 2026-2027
                   </div>
                 </div>
               )}
 
-              <div className="p-3 space-y-2.5">
-                {/* Scholar Avatar */}
-                <div className={`w-16 h-16 rounded-2xl border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-600 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-sm`}>
+              <div className="p-3.5 space-y-2.5 bg-gradient-to-b from-white to-slate-50">
+                {/* Scholar Portrait */}
+                <div className={`w-20 h-20 rounded-2xl border-3 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-md`}>
                   <img
                     src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80"
                     alt={activeStudent.firstName}
@@ -612,51 +634,65 @@ export default function StudentsAdminPage() {
                 </div>
 
                 <div>
-                  <h4 className="font-black text-sm text-slate-900 font-serif">
+                  <h4 className="font-black text-sm text-slate-950 font-serif tracking-wide uppercase">
                     {activeStudent.firstName} {activeStudent.lastName}
                   </h4>
-                  <span className={`inline-block text-[9px] font-black px-2 py-0.5 rounded-full mt-0.5 border ${
-                    isSSSD ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-blue-100 text-blue-800 border-blue-200'
+                  <span className={`inline-block text-[10px] font-black px-3 py-0.5 rounded-full mt-0.5 border shadow-sm ${
+                    isSSSD ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-blue-100 text-blue-900 border-blue-300'
                   }`}>
                     {activeStudent.currentClassId?.name} - Section {activeStudent.currentSectionId?.name}
                   </span>
                 </div>
 
-                <div className="bg-slate-50 p-2 rounded-xl border border-slate-200 text-left text-[11px] space-y-0.5">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Adm No:</span>
+                {/* Demographic Matrix */}
+                <div className="bg-white p-2.5 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5 shadow-sm">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-400 font-bold uppercase text-[9px]">Scholar / Adm:</span>
                     <span className={`font-mono font-black ${isSSSD ? 'text-emerald-700' : 'text-blue-700'}`}>{activeStudent.admissionNumber}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Roll No:</span>
-                    <span className="font-mono font-bold text-slate-900">{activeStudent.currentRollNumber}</span>
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-400 font-bold uppercase text-[9px]">Roll Number:</span>
+                    <span className="font-mono font-bold text-slate-900">#{activeStudent.currentRollNumber}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Parent:</span>
-                    <span className="font-semibold text-slate-800 truncate max-w-[170px]">{activeStudent.parentId?.fatherName}</span>
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-400 font-bold uppercase text-[9px]">Father / Guardian:</span>
+                    <span className="font-bold text-slate-800 truncate max-w-[150px]">{activeStudent.parentId?.fatherName}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Emergency:</span>
-                    <span className="font-mono text-slate-700 font-bold">{activeStudent.parentId?.fatherPhone}</span>
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-400 font-bold uppercase text-[9px]">Emergency Mobile:</span>
+                    <span className="font-mono text-slate-900 font-bold">{activeStudent.parentId?.fatherPhone}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-400 font-bold uppercase text-[9px]">Blood Group &bull; DOB:</span>
+                    <span className="font-mono font-bold text-rose-700">B+ &bull; 12-Aug-2010</span>
                   </div>
                 </div>
 
+                {/* Digital Barcode & Library Scan Strip */}
+                <div className="bg-slate-100 p-1.5 rounded-xl border border-slate-200 flex items-center justify-between px-2">
+                  <div className="font-mono font-black text-[9px] text-slate-600 tracking-widest">
+                    |||||| | |||| || ||| | |||
+                  </div>
+                  <span className="text-[8px] font-bold text-slate-500 uppercase font-mono">LIBRARY VERIFIED</span>
+                </div>
+
                 {/* Stamped Seals & Principal Signature */}
-                <div className="pt-1.5 flex items-end justify-between text-[8px] text-slate-400 border-t border-slate-200">
+                <div className="pt-2 flex items-end justify-between text-[8px] text-slate-400 border-t border-slate-200">
                   <div className="text-left space-y-0.5">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-round-seal.png' : '/images/stamps/principal-round-seal.png'}
                       alt="Principal Round Seal"
-                      className="w-10 h-10 object-contain drop-shadow-sm transform -rotate-3"
+                      className="w-11 h-11 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
                     />
-                    <span className={`font-mono text-[8px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-600'}`}>Valid: 2026-27</span>
+                    <span className={`font-mono text-[8px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-700'}`}>Valid: 2026-2027</span>
                   </div>
                   <div className="text-center">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-signature.png' : '/images/stamps/principal-signature.png'}
                       alt="Principal Signature"
-                      className="w-24 h-10 object-contain mx-auto"
+                      className="w-24 h-9 object-contain mx-auto filter contrast-150"
                     />
+                    <span className="text-[8px] font-bold text-slate-700 block uppercase">Principal Signature</span>
                   </div>
                 </div>
               </div>

@@ -368,31 +368,42 @@ export default function TeachersAdminPage() {
       {activeTeacherModal && (
         <ClientPortal>
           <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
-            <div className="bg-white rounded-2xl sm:rounded-3xl max-w-xs sm:max-w-sm w-full shadow-2xl overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200 my-auto">
-              {/* ID Card Wrapper for PDF Download */}
-              <div id="faculty-id-card-inner" className="printable-document bg-white">
-                {/* ID Card Front */}
-                <div className="bg-gradient-to-b from-[#002060] to-blue-900 text-white p-4 sm:p-5 text-center relative border-b-4 border-amber-400">
+            <div className="bg-white rounded-3xl max-w-[340px] w-full shadow-2xl overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200 my-auto">
+              {/* ID Card Wrapper for HD Image Export */}
+              <div
+                id="faculty-id-card-inner"
+                className="printable-document bg-white border-2 border-[#002060] rounded-3xl overflow-hidden shadow-2xl text-center font-sans border-t-8 border-t-[#002060]"
+              >
+                {/* Lanyard Punch Slot */}
+                <div className="pt-2 pb-1 bg-slate-100 flex items-center justify-center border-b border-slate-200 relative">
+                  <div className="w-12 h-2.5 rounded-full bg-slate-300 border border-slate-400 shadow-inner"></div>
                   <button
                     onClick={() => setActiveTeacherModal(null)}
-                    className="no-print absolute top-2.5 right-2.5 text-white/70 hover:text-white p-1 rounded-full bg-white/10"
+                    className="no-print absolute top-1 right-2 text-slate-400 hover:text-slate-700 p-1 rounded-full"
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-white p-0.5 mx-auto mb-1.5 sm:mb-2 border border-amber-400 shadow-md">
-                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                </div>
+
+                {/* ID Card Front Header */}
+                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white p-3.5 border-b-2 border-amber-400">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
+                      <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="font-serif font-black text-xs text-amber-300 leading-tight">सरस्वती ज्ञान मन्दिर</h3>
+                      <p className="text-[8px] uppercase tracking-wider text-slate-200 font-bold">INTERMEDIATE COLLEGE &bull; SHAMSABAD</p>
+                    </div>
                   </div>
-                  <h3 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300 font-serif">
-                    सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
-                  </h3>
-                  <p className="text-[9px] sm:text-[10px] text-slate-200">Shamsabad, Farrukhabad (UP) • Est. 1999</p>
-                  <div className="mt-1.5 sm:mt-2 inline-block bg-amber-400 text-slate-950 text-[9px] sm:text-[10px] font-black uppercase px-2.5 sm:px-3 py-0.5 rounded-full">
-                    FACULTY IDENTITY CARD
+                  <div className="mt-1.5 bg-blue-950 text-amber-300 text-[8px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-blue-800 inline-block font-mono">
+                    FACULTY IDENTITY CARD &bull; ACADEMIC STAFF
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-blue-600 mx-auto shadow-md relative bg-slate-100">
+                <div className="p-3.5 text-center space-y-2.5 bg-gradient-to-b from-white to-slate-50">
+                  {/* Faculty Portrait Photo */}
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-3 border-blue-700 mx-auto shadow-md relative bg-slate-100 p-0.5">
                     <img
                       src={
                         activeTeacherModal.photoUrl ||
@@ -408,34 +419,63 @@ export default function TeachersAdminPage() {
                             ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
                             : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
                       }}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
 
                   <div>
-                    <h4 className="text-sm sm:text-base font-black text-slate-900 truncate">{activeTeacherModal.name}</h4>
-                    <p className="text-[11px] sm:text-xs font-bold text-blue-700 truncate">{activeTeacherModal.designation}</p>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-bold mt-0.5">
-                      ID: {activeTeacherModal.employeeId}
-                    </p>
+                    <h4 className="text-sm font-black text-slate-950 font-serif tracking-wide uppercase">{activeTeacherModal.name}</h4>
+                    <p className="text-[11px] font-bold text-blue-900 mt-0.5">{activeTeacherModal.designation}</p>
+                    <span className="inline-block bg-blue-100 text-blue-900 font-mono font-bold text-[9px] px-2.5 py-0.5 rounded-full mt-1 border border-blue-200">
+                      EMP ID: {activeTeacherModal.employeeId}
+                    </span>
                   </div>
 
-                  <div className="bg-slate-50 p-2.5 sm:p-3 rounded-2xl text-left text-xs space-y-1.5 border border-slate-100">
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-slate-400 font-medium">Department:</span>
-                      <span className="font-bold text-slate-800 truncate">{activeTeacherModal.department}</span>
+                  {/* Demographic Matrix */}
+                  <div className="bg-white p-2.5 rounded-2xl text-left text-xs space-y-1.5 border border-slate-200 shadow-sm">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-400 font-bold uppercase text-[9px]">Department:</span>
+                      <span className="font-bold text-slate-800">{activeTeacherModal.department}</span>
                     </div>
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-slate-400 font-medium">Qualification:</span>
-                      <span className="font-bold text-slate-800 truncate">{activeTeacherModal.qualification}</span>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-400 font-bold uppercase text-[9px]">Qualification:</span>
+                      <span className="font-bold text-slate-800 truncate max-w-[170px]">{activeTeacherModal.qualification}</span>
                     </div>
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-slate-400 font-medium">Contact:</span>
-                      <span className="font-mono text-slate-800">{activeTeacherModal.phone}</span>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-400 font-bold uppercase text-[9px]">Official Phone:</span>
+                      <span className="font-mono font-bold text-slate-900">{activeTeacherModal.phone}</span>
                     </div>
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-slate-400 font-medium">Blood Group:</span>
-                      <span className="font-bold text-rose-600">B+</span>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-400 font-bold uppercase text-[9px]">Blood Group &bull; Status:</span>
+                      <span className="font-mono font-bold text-rose-700">B+ &bull; Regular Faculty</span>
+                    </div>
+                  </div>
+
+                  {/* Barcode & Security Strip */}
+                  <div className="bg-slate-100 p-1.5 rounded-xl border border-slate-200 flex items-center justify-between px-2">
+                    <div className="font-mono font-black text-[9px] text-slate-600 tracking-widest">
+                      |||||| | |||| || ||| | |||
+                    </div>
+                    <span className="text-[8px] font-bold text-slate-500 uppercase font-mono">STAFF BADGE</span>
+                  </div>
+
+                  {/* Stamped Seals & Principal Signature */}
+                  <div className="pt-2 flex items-end justify-between text-[8px] text-slate-400 border-t border-slate-200">
+                    <div className="text-left space-y-0.5">
+                      <img
+                        src="/images/stamps/principal-round-seal.png"
+                        alt="Round Seal"
+                        className="w-11 h-11 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
+                      />
+                      <span className="font-mono text-[8px] block font-bold text-slate-700">Valid: 2026-2027</span>
+                    </div>
+                    <div className="text-center">
+                      <img
+                        src="/images/stamps/principal-signature.png"
+                        alt="Principal Sig"
+                        className="w-24 h-9 object-contain mx-auto filter contrast-150"
+                      />
+                      <span className="text-[8px] font-bold text-slate-700 block uppercase">Head of Institution</span>
                     </div>
                   </div>
                 </div>
