@@ -11,6 +11,8 @@ import {
   Search,
   X,
   FileText,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
@@ -18,6 +20,7 @@ import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { Input } from '../../../components/ui/input';
 import { useToast } from '../../../components/ui/toast';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackCertificates = [
   {
@@ -75,7 +78,27 @@ export default function CertificatesAdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCert, setActiveCert] = useState<any | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
+
+  const handleDownloadCertPdf = async () => {
+    if (!activeCert) return;
+    setIsDownloading(true);
+    toast.success(`Exporting Certificate PDF for ${activeCert.studentName}...`, 'Preparing Download');
+    try {
+      const fileName = `Certificate_${activeCert.certificateNumber}_${activeCert.studentName.replace(/\s+/g, '_')}.pdf`;
+      const ok = await downloadElementAsPdf('certificate-preview-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'Certificate Downloaded');
+      } else {
+        printIsolatedDocument('certificate-preview-inner');
+      }
+    } catch {
+      printIsolatedDocument('certificate-preview-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const [newCert, setNewCert] = useState({
     studentName: '',
@@ -238,7 +261,7 @@ export default function CertificatesAdminPage() {
 
             {/* Scrollable Inner Certificate Body */}
             <div className="overflow-y-auto flex-1 py-4 space-y-4">
-              <div className="p-6 sm:p-8 bg-amber-50/40 border-4 border-double border-amber-900/50 rounded-2xl space-y-5 text-slate-900 text-xs shadow-inner font-serif">
+              <div id="certificate-preview-inner" className="printable-document p-6 sm:p-8 bg-amber-50/40 border-4 border-double border-amber-900/50 rounded-2xl space-y-5 text-slate-900 text-xs shadow-inner font-serif">
                 <div className="flex items-center justify-between border-b-2 border-amber-900/40 pb-3">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-900 bg-white shadow-md flex-shrink-0">
                     <img src="/logo.png" alt="SGM Crest" className="w-full h-full object-contain p-0.5" />
@@ -293,17 +316,26 @@ export default function CertificatesAdminPage() {
             </div>
 
             {/* Pinned Action Buttons */}
-            <div className="flex gap-2 pt-3 border-t border-slate-200 flex-shrink-0">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-3 border-t border-slate-200 flex-shrink-0">
               <Button
                 type="button"
-                className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                onClick={handleDownloadCertPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Exporting PDF...' : 'Download PDF Certificate'}
+              </Button>
+              <Button
+                type="button"
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-bold text-xs"
                 onClick={() => {
-                  window.print();
-                  toast.success('Generated printable Official Certificate.', 'Print Ready');
+                  printIsolatedDocument('certificate-preview-inner');
+                  toast.success('Sent Certificate to printer.', 'Print Isolated');
                 }}
                 leftIcon={<Printer className="w-4 h-4" />}
               >
-                Print Official Certificate
+                Print
               </Button>
               <Button type="button" variant="outline" onClick={() => setActiveCert(null)}>
                 Close

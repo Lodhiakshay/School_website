@@ -11,6 +11,8 @@ import {
   Building2,
   Calendar,
   X,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
@@ -19,6 +21,7 @@ import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackInvoices = [
   {
@@ -96,7 +99,27 @@ export default function AccountantCollectPage() {
   const [showPayModal, setShowPayModal] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [activeReceipt, setActiveReceipt] = useState<any | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
+
+  const handleDownloadReceiptPdf = async () => {
+    if (!activeReceipt) return;
+    setIsDownloading(true);
+    toast.success(`Exporting high-resolution PDF for ${activeReceipt.receiptNumber}...`, 'Preparing Download');
+    try {
+      const fileName = `Fee_Receipt_${activeReceipt.receiptNumber}_${activeReceipt.studentName.replace(/\s+/g, '_')}.pdf`;
+      const ok = await downloadElementAsPdf('accountant-fee-receipt-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'Receipt Download Ready');
+      } else {
+        printIsolatedDocument('accountant-fee-receipt-inner');
+      }
+    } catch {
+      printIsolatedDocument('accountant-fee-receipt-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const [payForm, setPayForm] = useState({
     amount: 3000,
@@ -385,7 +408,7 @@ export default function AccountantCollectPage() {
               </button>
             </div>
 
-            <div className="p-3.5 sm:p-5 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
+            <div id="accountant-fee-receipt-inner" className="printable-document p-3.5 sm:p-5 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
               <div className="text-center space-y-1 border-b border-slate-200 pb-2.5 sm:pb-3">
                 <h2 className="font-serif font-black text-sm sm:text-base text-slate-900">
                   सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
@@ -461,17 +484,26 @@ export default function AccountantCollectPage() {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1.5 sm:pt-2">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-1.5 sm:pt-2">
               <Button
                 type="button"
-                className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                onClick={handleDownloadReceiptPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Exporting PDF...' : 'Download PDF Voucher'}
+              </Button>
+              <Button
+                type="button"
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-bold text-xs"
                 onClick={() => {
-                  window.print();
-                  toast.success('Generated printable Stamped Receipt.', 'Print Ready');
+                  printIsolatedDocument('accountant-fee-receipt-inner');
+                  toast.success('Sent Stamped Receipt to printer.', 'Print Isolated');
                 }}
                 leftIcon={<Printer className="w-4 h-4" />}
               >
-                Print / Save PDF Receipt
+                Print
               </Button>
               <Button type="button" variant="outline" onClick={() => setShowReceiptModal(false)}>
                 Close

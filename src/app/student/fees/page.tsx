@@ -13,6 +13,7 @@ import {
   X,
   QrCode,
   ShieldCheck,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
@@ -20,6 +21,7 @@ import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackFeeLedger = [
   {
@@ -69,6 +71,7 @@ const fallbackFeeLedger = [
 export default function StudentFeesPage() {
   const [feeLedger, setFeeLedger] = useState<any[]>(fallbackFeeLedger);
   const [selectedReceipt, setSelectedReceipt] = useState<any | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -98,9 +101,28 @@ export default function StudentFeesPage() {
     loadStudentInvoices();
   }, []);
 
+  const handleDownloadReceiptPdf = async () => {
+    if (!selectedReceipt) return;
+    setIsDownloading(true);
+    toast.success(`Exporting high-resolution PDF for ${selectedReceipt.receiptNo}...`, 'Preparing Download');
+    try {
+      const fileName = `Fee_Receipt_${selectedReceipt.receiptNo}_Aarav_Sharma.pdf`;
+      const ok = await downloadElementAsPdf('student-fee-receipt-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'Receipt Download Ready');
+      } else {
+        printIsolatedDocument('student-fee-receipt-inner');
+      }
+    } catch {
+      printIsolatedDocument('student-fee-receipt-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handlePrintReceipt = () => {
-    window.print();
-    toast.success('Generated printable Official Fee Receipt PDF.', 'Receipt Ready');
+    printIsolatedDocument('student-fee-receipt-inner');
+    toast.success('Sent printable Fee Voucher to printer.', 'Print Isolated');
   };
 
   return (
@@ -235,7 +257,7 @@ export default function StudentFeesPage() {
             </div>
 
             {/* Printable Receipt Body */}
-            <div className="p-3.5 sm:p-6 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
+            <div id="student-fee-receipt-inner" className="printable-document p-3.5 sm:p-6 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
               <div className="text-center space-y-1 border-b border-slate-200 pb-2.5 sm:pb-3">
                 <h2 className="font-serif font-black text-sm sm:text-base text-slate-900">
                   सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
@@ -312,14 +334,23 @@ export default function StudentFeesPage() {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1.5 sm:pt-2">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-1.5 sm:pt-2">
               <Button
                 type="button"
-                className="w-full bg-[#002060] hover:bg-blue-900 font-bold text-xs"
+                className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                onClick={handleDownloadReceiptPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Exporting PDF...' : 'Download PDF Voucher'}
+              </Button>
+              <Button
+                type="button"
+                className="w-full sm:w-auto bg-[#002060] hover:bg-blue-900 font-bold text-xs"
                 onClick={handlePrintReceipt}
                 leftIcon={<Printer className="w-4 h-4" />}
               >
-                Print / Save PDF Receipt
+                Print
               </Button>
               <Button type="button" variant="outline" onClick={() => setSelectedReceipt(null)}>
                 Close

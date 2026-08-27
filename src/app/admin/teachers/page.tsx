@@ -15,6 +15,7 @@ import {
   X,
   Sparkles,
   ChevronDown,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -23,6 +24,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackTeachers = [
   {
@@ -132,7 +134,27 @@ export default function TeachersAdminPage() {
   const [activeTeacherModal, setActiveTeacherModal] = useState<any | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
+
+  const handleDownloadTeacherIdPdf = async () => {
+    if (!activeTeacherModal) return;
+    setIsDownloading(true);
+    toast.success(`Exporting Faculty ID Card PDF for ${activeTeacherModal.name}...`, 'Preparing Download');
+    try {
+      const fileName = `Faculty_ID_${activeTeacherModal.employeeId}_${activeTeacherModal.name.replace(/\s+/g, '_')}.pdf`;
+      const ok = await downloadElementAsPdf('faculty-id-card-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'ID Card Downloaded');
+      } else {
+        printIsolatedDocument('faculty-id-card-inner');
+      }
+    } catch {
+      printIsolatedDocument('faculty-id-card-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const [newTeacher, setNewTeacher] = useState({
     name: '',
@@ -345,89 +367,100 @@ export default function TeachersAdminPage() {
       {activeTeacherModal && (
         <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
           <div className="bg-white rounded-2xl sm:rounded-3xl max-w-xs sm:max-w-sm w-full shadow-2xl overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200 my-auto">
-            {/* ID Card Front */}
-            <div className="bg-gradient-to-b from-[#002060] to-blue-900 text-white p-4 sm:p-5 text-center relative border-b-4 border-amber-400">
-              <button
-                onClick={() => setActiveTeacherModal(null)}
-                className="absolute top-2.5 right-2.5 text-white/70 hover:text-white p-1 rounded-full bg-white/10"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-white p-0.5 mx-auto mb-1.5 sm:mb-2 border border-amber-400 shadow-md">
-                <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+            {/* ID Card Wrapper for PDF Download */}
+            <div id="faculty-id-card-inner" className="printable-document bg-white">
+              {/* ID Card Front */}
+              <div className="bg-gradient-to-b from-[#002060] to-blue-900 text-white p-4 sm:p-5 text-center relative border-b-4 border-amber-400">
+                <button
+                  onClick={() => setActiveTeacherModal(null)}
+                  className="no-print absolute top-2.5 right-2.5 text-white/70 hover:text-white p-1 rounded-full bg-white/10"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-white p-0.5 mx-auto mb-1.5 sm:mb-2 border border-amber-400 shadow-md">
+                  <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                </div>
+                <h3 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300 font-serif">
+                  सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
+                </h3>
+                <p className="text-[9px] sm:text-[10px] text-slate-200">Shamsabad, Farrukhabad (UP) • Est. 1999</p>
+                <div className="mt-1.5 sm:mt-2 inline-block bg-amber-400 text-slate-950 text-[9px] sm:text-[10px] font-black uppercase px-2.5 sm:px-3 py-0.5 rounded-full">
+                  FACULTY IDENTITY CARD
+                </div>
               </div>
-              <h3 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300 font-serif">
-                सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
-              </h3>
-              <p className="text-[9px] sm:text-[10px] text-slate-200">Shamsabad, Farrukhabad (UP) • Est. 1999</p>
-              <div className="mt-1.5 sm:mt-2 inline-block bg-amber-400 text-slate-950 text-[9px] sm:text-[10px] font-black uppercase px-2.5 sm:px-3 py-0.5 rounded-full">
-                FACULTY IDENTITY CARD
+
+              <div className="p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-blue-600 mx-auto shadow-md relative bg-slate-100">
+                  <img
+                    src={
+                      activeTeacherModal.photoUrl ||
+                      activeTeacherModal.avatar ||
+                      (activeTeacherModal.gender === 'female'
+                        ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
+                    }
+                    alt={activeTeacherModal.name}
+                    onError={(e: any) => {
+                      e.currentTarget.src =
+                        activeTeacherModal.gender === 'female'
+                          ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                          : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div>
+                  <h4 className="text-sm sm:text-base font-black text-slate-900 truncate">{activeTeacherModal.name}</h4>
+                  <p className="text-[11px] sm:text-xs font-bold text-blue-700 truncate">{activeTeacherModal.designation}</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-bold mt-0.5">
+                    ID: {activeTeacherModal.employeeId}
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-2.5 sm:p-3 rounded-2xl text-left text-xs space-y-1.5 border border-slate-100">
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-400 font-medium">Department:</span>
+                    <span className="font-bold text-slate-800 truncate">{activeTeacherModal.department}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-400 font-medium">Qualification:</span>
+                    <span className="font-bold text-slate-800 truncate">{activeTeacherModal.qualification}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-400 font-medium">Contact:</span>
+                    <span className="font-mono text-slate-800">{activeTeacherModal.phone}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-400 font-medium">Blood Group:</span>
+                    <span className="font-bold text-rose-600">B+</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-blue-600 mx-auto shadow-md relative bg-slate-100">
-                <img
-                  src={
-                    activeTeacherModal.photoUrl ||
-                    activeTeacherModal.avatar ||
-                    (activeTeacherModal.gender === 'female'
-                      ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                      : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
-                  }
-                  alt={activeTeacherModal.name}
-                  onError={(e: any) => {
-                    e.currentTarget.src =
-                      activeTeacherModal.gender === 'female'
-                        ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
-                  }}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div>
-                <h4 className="text-sm sm:text-base font-black text-slate-900 truncate">{activeTeacherModal.name}</h4>
-                <p className="text-[11px] sm:text-xs font-bold text-blue-700 truncate">{activeTeacherModal.designation}</p>
-                <p className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-bold mt-0.5">
-                  ID: {activeTeacherModal.employeeId}
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-2.5 sm:p-3 rounded-2xl text-left text-xs space-y-1.5 border border-slate-100">
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400 font-medium">Department:</span>
-                  <span className="font-bold text-slate-800 truncate">{activeTeacherModal.department}</span>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400 font-medium">Qualification:</span>
-                  <span className="font-bold text-slate-800 truncate">{activeTeacherModal.qualification}</span>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400 font-medium">Contact:</span>
-                  <span className="font-mono text-slate-800">{activeTeacherModal.phone}</span>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400 font-medium">Blood Group:</span>
-                  <span className="font-bold text-rose-600">B+</span>
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-1.5 sm:pt-2">
-                <Button
-                  className="w-full bg-blue-700 hover:bg-blue-800 font-bold text-xs"
-                  onClick={() => {
-                    window.print();
-                    toast.success('Print command sent for Faculty ID Card.', 'ID Card Ready');
-                  }}
-                  leftIcon={<Printer className="w-4 h-4" />}
-                >
-                  Print / Save PDF
-                </Button>
-                <Button variant="outline" onClick={() => setActiveTeacherModal(null)}>
-                  Close
-                </Button>
-              </div>
+            <div className="p-3 bg-slate-50 border-t border-slate-200 flex flex-wrap gap-2">
+              <Button
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                onClick={handleDownloadTeacherIdPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Saving...' : 'Download ID PDF'}
+              </Button>
+              <Button
+                className="bg-blue-700 hover:bg-blue-800 font-bold text-xs"
+                onClick={() => {
+                  printIsolatedDocument('faculty-id-card-inner');
+                  toast.success('Sent Faculty ID Card to printer.', 'Print Ready');
+                }}
+                leftIcon={<Printer className="w-4 h-4" />}
+              >
+                Print
+              </Button>
+              <Button variant="outline" onClick={() => setActiveTeacherModal(null)}>
+                Close
+              </Button>
             </div>
           </div>
         </div>

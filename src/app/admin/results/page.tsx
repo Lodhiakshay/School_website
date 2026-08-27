@@ -17,12 +17,14 @@ import {
   ListOrdered,
   Building2,
   Languages,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const sgmLedger = [
   {
@@ -156,10 +158,32 @@ export default function ResultsAdminPage() {
   const [selectedExam, setSelectedExam] = useState('Half-Yearly Examination 2026');
   const [selectedClass, setSelectedClass] = useState('Class 10 (Section A)');
   const [ledger, setLedger] = useState(sgmLedger);
-  const [activeResult, setActiveResult] = useState<any | null>(null);
+  const [activeResult, setActiveResult] = useState<any>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { toast } = useToast();
+
+  const handleDownloadReportCardPdf = async () => {
+    if (!activeResult) return;
+    setIsDownloading(true);
+    toast.success(`Exporting high-resolution PDF for ${activeResult.studentName}...`, 'Preparing Download');
+    try {
+      const campusTag = activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD' : 'SGM';
+      const fileName = `${campusTag}_Report_Card_${activeResult.studentName.replace(/\s+/g, '_')}_${selectedExam.replace(/\s+/g, '_')}.pdf`;
+      const ok = await downloadElementAsPdf('admin-report-card-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'PDF Download Ready');
+      } else {
+        printIsolatedDocument('admin-report-card-inner');
+      }
+    } catch {
+      printIsolatedDocument('admin-report-card-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const [uploadedPreview, setUploadedPreview] = useState<any[]>([]);
-  const { toast } = useToast();
 
   const handleCampusSwitch = (campus: 'sgm' | 'sssd') => {
     setSelectedCampus(campus);
@@ -440,7 +464,7 @@ export default function ResultsAdminPage() {
             </div>
 
             <div className="overflow-y-auto flex-1 py-3 sm:py-4 space-y-3 sm:space-y-4">
-              <div className="p-3.5 sm:p-6 bg-white border sm:border-2 border-slate-900 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-slate-900 text-xs shadow-inner">
+              <div id="admin-report-card-inner" className="printable-document p-3.5 sm:p-6 bg-white border sm:border-2 border-slate-900 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-slate-900 text-xs shadow-inner">
                 {/* Institution Header */}
                 <div className="flex items-center justify-between border-b-2 border-slate-900 pb-2.5 sm:pb-3 gap-2">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-amber-400 bg-white shadow-md flex-shrink-0">
@@ -478,78 +502,75 @@ export default function ResultsAdminPage() {
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Rank:</span>
-                    <p className="font-bold text-emerald-700 text-[11px] sm:text-xs">Rank #{activeResult.rank}</p>
+                    <p className="font-bold text-emerald-800 text-[11px] sm:text-xs">Rank #{activeResult.rank}</p>
                   </div>
                 </div>
 
-                {/* Mobile Swipe Table Hint */}
-                <div className="flex items-center justify-end text-[10px] text-slate-400 sm:hidden px-1">
-                  <span>Swipe to view all marks →</span>
-                </div>
-
-                <div className="border border-slate-300 rounded-xl overflow-x-auto shadow-sm">
+                {/* Subject Wise Scorecard Table */}
+                <div className="border border-slate-300 rounded-xl overflow-x-auto">
                   <table className="w-full text-left text-xs min-w-[420px] sm:min-w-[480px]">
-                    <thead className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase text-[9px] sm:text-[10px]">
+                    <thead className="bg-slate-900 text-white font-bold text-[9px] sm:text-[10px] uppercase">
                       <tr>
                         <th className="p-2 sm:p-2.5">Subject</th>
-                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Marks Scored</th>
-                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Max Marks</th>
-                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Grade</th>
+                        <th className="p-2 sm:p-2.5 text-center">Max Marks</th>
+                        <th className="p-2 sm:p-2.5 text-center">Marks Scored</th>
+                        <th className="p-2 sm:p-2.5 text-center">Grade</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 font-medium text-[11px] sm:text-xs">
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Mathematics (041)' : 'Mathematics (103)'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">Mathematics (गणित)</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.math}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.math >= 90 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.math >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Science & Technology (086)' : 'Science (104 - 70Th + 30Pr)'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">Science (विज्ञान)</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.science}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.science >= 90 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.science >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'English Communicative (101)' : 'Hindi Sahitya (101)'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">Hindi (हिंदी)</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.hindi}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.hindi >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.hindi >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Social Science (087)' : 'English Core (102)'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">English (अंग्रेजी)</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.english}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.english >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.english >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Computer & AI Robotics (165)' : 'Social Science (105)'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">Social Studies (सामाजिक विज्ञान)</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.sst}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.sst >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.sst >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Hindi Course (002)' : 'Sanskrit (106)'}</td>
-                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.sanskrit}</td>
+                        <td className="p-2 sm:p-2.5 font-bold">Sanskrit (संस्कृत)</td>
                         <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
-                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.sanskrit >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.sanskrit}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-bold text-emerald-700">{activeResult.sanskrit >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-xs">
-                  <div className="p-2 bg-blue-50 rounded-xl border border-blue-200">
-                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Percentage</span>
-                    <p className="text-xs sm:text-sm font-black text-blue-700">{activeResult.percentage}%</p>
+                {/* Summary Row */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-900 text-white p-2.5 sm:p-3 rounded-xl text-center text-xs">
+                  <div>
+                    <span className="text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold block">Percentage</span>
+                    <span className="font-mono font-black text-amber-300 text-xs sm:text-sm">{activeResult.percentage}%</span>
                   </div>
-                  <div className="p-2 bg-indigo-50 rounded-xl border border-indigo-200">
-                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Aggregate</span>
-                    <p className="text-xs sm:text-sm font-black text-indigo-700">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</p>
+                  <div>
+                    <span className="text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold block">Aggregate</span>
+                    <span className="font-mono font-black text-emerald-300 text-xs sm:text-sm">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</span>
                   </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl border border-emerald-200 col-span-2 sm:col-span-1 flex flex-col justify-center">
-                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Decision</span>
-                    <p className="text-[11px] sm:text-xs font-black text-emerald-700 leading-tight">{activeResult.decision}</p>
+                  <div className="col-span-2 sm:col-span-1 border-t sm:border-t-0 border-slate-700 pt-1.5 sm:pt-0">
+                    <span className="text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold block">Decision</span>
+                    <span className="font-black text-emerald-400 text-[10px] sm:text-xs block leading-tight">{activeResult.decision}</span>
                   </div>
                 </div>
 
@@ -588,17 +609,26 @@ export default function ResultsAdminPage() {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-2.5 sm:pt-3 border-t border-slate-200 flex-shrink-0">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-2.5 sm:pt-3 border-t border-slate-200 flex-shrink-0">
               <Button
                 type="button"
-                className={`w-full font-bold text-xs ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                className="w-full sm:w-auto flex-1 font-bold text-xs bg-emerald-600 hover:bg-emerald-700 shadow-md"
+                onClick={handleDownloadReportCardPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Exporting PDF...' : 'Download Official PDF'}
+              </Button>
+              <Button
+                type="button"
+                className={`w-full sm:w-auto font-bold text-xs ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-800 hover:bg-emerald-900' : 'bg-blue-600 hover:bg-blue-700'}`}
                 onClick={() => {
-                  window.print();
-                  toast.success(`Generated printable ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD' : 'SGM'} Report Card.`, 'Print Ready');
+                  printIsolatedDocument('admin-report-card-inner');
+                  toast.success(`Sent ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD' : 'SGM'} Report Card to printer.`, 'Print Isolated');
                 }}
                 leftIcon={<Printer className="w-4 h-4" />}
               >
-                Print / Save PDF
+                Print
               </Button>
               <Button type="button" variant="outline" onClick={() => setActiveResult(null)}>
                 Close

@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Award, Printer, User, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Award, Printer, User, Sparkles, CheckCircle2, Download, FileDown, Loader2 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Button } from '../../../components/ui/button';
 import { useToast } from '../../../components/ui/toast';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 export default function ParentResultsPage() {
   const [selectedChild, setSelectedChild] = useState<'aarav' | 'ananya'>('aarav');
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
   const aaravMarks = [
@@ -38,16 +40,34 @@ export default function ParentResultsPage() {
   const totalObtained = currentMarks.reduce((acc, curr) => acc + curr.totalObtained, 0);
   const percentage = ((totalObtained / totalMax) * 100).toFixed(2);
 
+  const handleDownloadPdf = async () => {
+    setIsDownloading(true);
+    toast.success(`Generating high-definition PDF for ${currentChildName}...`, 'Preparing Download');
+    try {
+      const fileName = `${currentChildName.replace(/\s+/g, '_')}_Official_Marksheet_2026.pdf`;
+      const ok = await downloadElementAsPdf('parent-marksheet-card', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'PDF Download Ready');
+      } else {
+        printIsolatedDocument('parent-marksheet-card');
+      }
+    } catch {
+      printIsolatedDocument('parent-marksheet-card');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handlePrint = () => {
-    window.print();
-    toast.success(`Generated official Marksheet for ${currentChildName}.`, 'Scorecard Ready');
+    printIsolatedDocument('parent-marksheet-card');
+    toast.success(`Sent clean printable Marksheet for ${currentChildName} to printer.`, 'Print Isolated');
   };
 
   return (
     <PortalLayout allowedRoles={['Parent', 'SuperAdmin', 'Admin', 'Principal']}>
       <div className="space-y-6 pt-1">
         {/* Header Ribbon & Child Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h1 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2 font-serif">
               <Award className="w-5 h-5 text-blue-600" /> Child Academic Scorecard
@@ -57,7 +77,7 @@ export default function ParentResultsPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-1 border border-slate-200">
               <button
                 type="button"
@@ -83,7 +103,16 @@ export default function ParentResultsPage() {
               </button>
             </div>
             <Button
-              className="bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+              leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              onClick={handleDownloadPdf}
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'Exporting PDF...' : 'Download PDF'}
+            </Button>
+            <Button
+              variant="outline"
+              className="font-bold text-xs"
               leftIcon={<Printer className="w-4 h-4" />}
               onClick={handlePrint}
             >
@@ -93,7 +122,7 @@ export default function ParentResultsPage() {
         </div>
 
         {/* Printable Marksheet Card */}
-        <div className="bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+        <div id="parent-marksheet-card" className="printable-document bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
           {/* Header */}
           <div className="bg-[#002060] text-white p-4 sm:p-8 text-center relative border-b-4 border-amber-400">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">

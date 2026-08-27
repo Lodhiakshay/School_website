@@ -11,16 +11,20 @@ import {
   X,
   ShieldCheck,
   Calendar,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 export default function ParentFeesPage() {
   const [selectedChild, setSelectedChild] = useState<'aarav' | 'ananya'>('aarav');
   const [selectedReceipt, setSelectedReceipt] = useState<any | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
   const aaravLedger = [
@@ -96,9 +100,28 @@ export default function ParentFeesPage() {
   const currentLedger = selectedChild === 'aarav' ? aaravLedger : ananyaLedger;
   const currentChildName = selectedChild === 'aarav' ? 'Aarav Sharma' : 'Ananya Sharma';
 
+  const handleDownloadReceiptPdf = async () => {
+    if (!selectedReceipt) return;
+    setIsDownloading(true);
+    toast.success(`Exporting high-resolution PDF for ${selectedReceipt.receiptNo}...`, 'Preparing Download');
+    try {
+      const fileName = `Fee_Receipt_${selectedReceipt.receiptNo}_${(selectedReceipt.studentName || currentChildName).replace(/\s+/g, '_')}.pdf`;
+      const ok = await downloadElementAsPdf('parent-fee-receipt-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'Receipt Download Ready');
+      } else {
+        printIsolatedDocument('parent-fee-receipt-inner');
+      }
+    } catch {
+      printIsolatedDocument('parent-fee-receipt-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handlePrintReceipt = () => {
-    window.print();
-    toast.success(`Generated printable Official Fee Receipt for ${currentChildName}.`, 'Receipt Ready');
+    printIsolatedDocument('parent-fee-receipt-inner');
+    toast.success(`Sent printable Fee Voucher for ${currentChildName} to printer.`, 'Print Isolated');
   };
 
   return (
@@ -172,48 +195,59 @@ export default function ParentFeesPage() {
         </div>
 
         {/* Ledger Table */}
-        <Card className="border-slate-200 shadow-sm overflow-hidden">
+        <Card className="border-slate-200 shadow-sm overflow-hidden bg-white">
           <CardHeader className="bg-slate-50 border-b border-slate-200 py-3.5 px-5 flex flex-row items-center justify-between">
-            <CardTitle className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-blue-600" /> Transaction Ledger for {currentChildName}
-            </CardTitle>
+            <div>
+              <CardTitle className="text-sm font-black text-slate-900 font-serif">
+                Fee Receipts &amp; Payment Ledger ({currentChildName})
+              </CardTitle>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Click "Download PDF Voucher" or "View Voucher" to export official stamped receipts.
+              </p>
+            </div>
+            <Badge variant="outline" className="text-xs bg-white text-emerald-700 font-bold">
+              Account Status: Clear
+            </Badge>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-[11px] font-black uppercase text-slate-500 tracking-wider border-b border-slate-200">
+              <table className="w-full text-left text-xs min-w-[650px]">
+                <thead className="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] border-b border-slate-200">
                   <tr>
-                    <th className="py-3 px-4">Receipt No</th>
-                    <th className="py-3 px-4">Term &amp; Scope</th>
-                    <th className="py-3 px-4">Amount</th>
-                    <th className="py-3 px-4">Date Paid</th>
-                    <th className="py-3 px-4">Mode</th>
-                    <th className="py-3 px-4 text-right">Official Receipt</th>
+                    <th className="p-3.5">Receipt #</th>
+                    <th className="p-3.5">Fee Installment</th>
+                    <th className="p-3.5">Date Paid</th>
+                    <th className="p-3.5">Mode</th>
+                    <th className="p-3.5">Amount</th>
+                    <th className="p-3.5">Status</th>
+                    <th className="p-3.5 text-right">Official Receipt</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium">
-                  {currentLedger.map((f, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/80 transition">
-                      <td className="py-3.5 px-4 font-mono font-bold text-blue-900">{f.receiptNo}</td>
-                      <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-900 block">{f.term}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">Ref ID: {f.txnId}</span>
-                      </td>
-                      <td className="py-3.5 px-4 font-black font-mono text-slate-900">{f.amount}</td>
-                      <td className="py-3.5 px-4">{f.paidDate}</td>
-                      <td className="py-3.5 px-4">
-                        <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-mono text-[10px]">
-                          {f.mode}
+                  {currentLedger.map((tx: any) => (
+                    <tr key={tx.receiptNo} className="hover:bg-slate-50">
+                      <td className="p-3.5 font-mono font-bold text-blue-700">{tx.receiptNo}</td>
+                      <td className="p-3.5 font-bold text-slate-900">{tx.term}</td>
+                      <td className="p-3.5 text-slate-600">{tx.paidDate}</td>
+                      <td className="p-3.5">
+                        <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono text-[10px]">
+                          {tx.mode}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="p-3.5 font-mono font-black text-slate-900">{tx.amount}</td>
+                      <td className="p-3.5">
+                        <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-[10px]">
+                          {tx.status}
+                        </span>
+                      </td>
+                      <td className="p-3.5 text-right">
                         <Button
                           size="sm"
-                          variant="outline"
-                          onClick={() => setSelectedReceipt(f)}
-                          leftIcon={<Printer className="w-3.5 h-3.5 text-slate-600" />}
+                          className="bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                          onClick={() => setSelectedReceipt(tx)}
+                          leftIcon={<Printer className="w-3.5 h-3.5" />}
                         >
-                          View Receipt
+                          View Voucher
                         </Button>
                       </td>
                     </tr>
@@ -242,7 +276,7 @@ export default function ParentFeesPage() {
             </div>
 
             {/* Printable Receipt Body */}
-            <div className="p-3.5 sm:p-6 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
+            <div id="parent-fee-receipt-inner" className="printable-document p-3.5 sm:p-6 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
               <div className="text-center space-y-1 border-b border-slate-200 pb-2.5 sm:pb-3">
                 <h2 className="font-serif font-black text-sm sm:text-base text-slate-900">
                   सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
@@ -270,7 +304,7 @@ export default function ParentFeesPage() {
                 </div>
                 <div className="p-2 bg-white rounded-lg border border-slate-200">
                   <span className="text-slate-400 block text-[8px] sm:text-[9px] uppercase font-bold">Admission ID:</span>
-                  <p className="font-mono font-bold text-slate-900 truncate">{selectedReceipt.admissionNo || 'SGM-2026-1001'}</p>
+                  <p className="font-mono font-bold text-slate-900 truncate">{selectedReceipt.admissionNo}</p>
                 </div>
               </div>
 
@@ -319,14 +353,23 @@ export default function ParentFeesPage() {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1.5 sm:pt-2">
+            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-1.5 sm:pt-2">
               <Button
                 type="button"
-                className="w-full bg-[#002060] hover:bg-blue-900 font-bold text-xs"
+                className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                onClick={handleDownloadReceiptPdf}
+                disabled={isDownloading}
+                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              >
+                {isDownloading ? 'Exporting PDF...' : 'Download PDF Voucher'}
+              </Button>
+              <Button
+                type="button"
+                className="w-full sm:w-auto bg-[#002060] hover:bg-blue-900 font-bold text-xs"
                 onClick={handlePrintReceipt}
                 leftIcon={<Printer className="w-4 h-4" />}
               >
-                Print / Save PDF Receipt
+                Print
               </Button>
               <Button type="button" variant="outline" onClick={() => setSelectedReceipt(null)}>
                 Close

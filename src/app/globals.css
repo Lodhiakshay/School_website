@@ -112,3 +112,42 @@ table td {
   white-space: nowrap;
 }
 
+/* Clean isolated printing rules */
+@media print {
+  body {
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide all website chrome, topbars, navs, sidebars, buttons by default when printing */
+  aside,
+  header,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure background colors, borders, and images render with full fidelity */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .printable-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: auto;
+    margin: 8mm 6mm;
+  }
+}
+

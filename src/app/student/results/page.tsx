@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Award, Printer, Download, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Award, Printer, Download, Sparkles, CheckCircle2, ShieldCheck, Loader2 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Button } from '../../../components/ui/button';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackMarkEntries = [
   { code: 'HIN-101', subject: 'Hindi (हिंदी साहित्य एवं व्याकरण)', theoryMax: 100, theoryObtained: 88, practicalMax: 0, practicalObtained: 0, totalMax: 100, totalObtained: 88, grade: 'A1' },
@@ -19,33 +20,34 @@ const fallbackMarkEntries = [
 export default function StudentResultsPage() {
   const [markEntries, setMarkEntries] = useState<any[]>(fallbackMarkEntries);
   const [studentMeta, setStudentMeta] = useState<any>({ name: 'Aarav Sharma', roll: '10-A-01', adm: 'SGM-2026-1001' });
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     async function loadResult() {
       try {
-        const res = await apiClient.get('/results');
-        if (res.data?.data?.length) {
-          const first = res.data.data[0];
-          if (first.subjects?.length) {
-            const mapped = first.subjects.map((s: any) => ({
-              code: s.subjectCode || 'SUB',
-              subject: s.subjectName,
+        const res = await apiClient.get('/results/my-result');
+        if (res.data?.data) {
+          const r = res.data.data;
+          if (r.subjects && r.subjects.length > 0) {
+            const mapped = r.subjects.map((s: any, idx: number) => ({
+              code: s.subjectCode || `SUB-${101 + idx}`,
+              subject: s.subjectName || 'Subject',
               theoryMax: s.maxMarks || 100,
-              theoryObtained: s.theoryMarks || s.totalMarks,
-              practicalMax: s.practicalMarks ? 30 : 0,
-              practicalObtained: s.practicalMarks || 0,
+              theoryObtained: s.marksObtained || 0,
+              practicalMax: 0,
+              practicalObtained: 0,
               totalMax: s.maxMarks || 100,
-              totalObtained: s.totalMarks,
+              totalObtained: s.marksObtained || 0,
               grade: s.grade || 'A1',
             }));
             setMarkEntries(mapped);
           }
-          if (first.studentId) {
+          if (r.student) {
             setStudentMeta({
-              name: `${first.studentId.firstName} ${first.studentId.lastName || ''}`,
-              roll: first.studentId.studentId || '10-A-01',
-              adm: first.studentId.admissionNumber || 'SGM-2026-1001',
+              name: r.student.name || 'Aarav Sharma',
+              roll: r.student.rollNumber || '10-A-01',
+              adm: r.student.admissionNumber || 'SGM-2026-1001',
             });
           }
         }
@@ -60,16 +62,34 @@ export default function StudentResultsPage() {
   const totalObtained = markEntries.reduce((acc, curr) => acc + curr.totalObtained, 0);
   const percentage = ((totalObtained / totalMax) * 100).toFixed(2);
 
+  const handleDownloadPdf = async () => {
+    setIsDownloading(true);
+    toast.success('Generating high-definition PDF Scorecard...', 'Preparing Download');
+    try {
+      const fileName = `${studentMeta.name.replace(/\s+/g, '_')}_Official_Marksheet_2026.pdf`;
+      const ok = await downloadElementAsPdf('student-marksheet-card', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} successfully!`, 'PDF Download Ready');
+      } else {
+        printIsolatedDocument('student-marksheet-card');
+      }
+    } catch {
+      printIsolatedDocument('student-marksheet-card');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handlePrint = () => {
-    window.print();
-    toast.success('Generated official High School Marksheet PDF.', 'Scorecard Ready');
+    printIsolatedDocument('student-marksheet-card');
+    toast.success('Sent official High School Marksheet to printer.', 'Print Ready');
   };
 
   return (
     <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Parent', 'Admin', 'Principal']}>
       <div className="space-y-6 pt-1">
         {/* Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h1 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2 font-serif">
               <Award className="w-5 h-5 text-blue-600" /> Terminal Examination Marksheet &amp; Scorecard
@@ -78,19 +98,28 @@ export default function StudentResultsPage() {
               Official evaluation statement for Half-Yearly Board Assessment (Academic Session 2026-27).
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
-              className="bg-blue-600 hover:bg-blue-700 font-bold text-xs shadow-md shadow-blue-600/30"
+              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+              leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              onClick={handleDownloadPdf}
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'Exporting PDF...' : 'Download Official PDF'}
+            </Button>
+            <Button
+              variant="outline"
+              className="font-bold text-xs"
               leftIcon={<Printer className="w-4 h-4" />}
               onClick={handlePrint}
             >
-              Print / Save PDF Scorecard
+              Print
             </Button>
           </div>
         </div>
 
         {/* Official Printable Marksheet Card */}
-        <div className="bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+        <div id="student-marksheet-card" className="printable-document bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
           {/* Institution Header Ribbon */}
           <div className="bg-[#002060] text-white p-4 sm:p-8 text-center relative border-b-4 border-amber-400">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">
