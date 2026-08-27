@@ -81,7 +81,16 @@ export const PublicNavbar: React.FC = () => {
   ];
 
   const moreNavLinks = [
-    { label: 'SSSD Public School', href: '/sssd', icon: <Languages className="w-4 h-4 text-emerald-400" />, desc: '100% English medium campus (CBSE Pattern)' },
+    {
+      label: 'SSSD Public School',
+      href: '/sssd',
+      icon: (
+        <div className="w-5 h-5 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+          <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+        </div>
+      ),
+      desc: '100% English medium campus (CBSE Pattern)',
+    },
     { label: 'Downloads & Disclosures', href: '/downloads', icon: <FileDown className="w-4 h-4" />, desc: 'Mandatory certificates, syllabi & forms' },
     { label: 'Careers & Recruitment', href: '/careers', icon: <Briefcase className="w-4 h-4" />, desc: 'Faculty & staff job openings' },
     { label: 'Contact & Helpdesk', href: '/contact', icon: <Mail className="w-4 h-4" />, desc: 'Campus location & phone directory' },
@@ -89,7 +98,15 @@ export const PublicNavbar: React.FC = () => {
 
   const allMobileLinks = [
     ...primaryNavLinks,
-    { label: 'SSSD English Medium Wing', href: '/sssd', icon: <Languages className="w-4 h-4 text-emerald-400" /> },
+    {
+      label: 'SSSD English Medium Wing',
+      href: '/sssd',
+      icon: (
+        <div className="w-4 h-4 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+          <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+        </div>
+      ),
+    },
     { label: 'Downloads', href: '/downloads', icon: <FileDown className="w-4 h-4" /> },
     { label: 'Careers', href: '/careers', icon: <Briefcase className="w-4 h-4" /> },
     { label: 'Contact', href: '/contact', icon: <Mail className="w-4 h-4" /> },

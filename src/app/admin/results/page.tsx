@@ -228,25 +228,29 @@ export default function ResultsAdminPage() {
             <button
               type="button"
               onClick={() => handleCampusSwitch('sgm')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
                 selectedCampus === 'sgm'
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5" />
+              <div className="w-4 h-4 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-xs flex-shrink-0 flex items-center justify-center">
+                <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+              </div>
               <span>SGM Inter College</span>
             </button>
             <button
               type="button"
               onClick={() => handleCampusSwitch('sssd')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
                 selectedCampus === 'sssd'
                   ? 'bg-emerald-600 text-white shadow-md'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Languages className="w-3.5 h-3.5 text-amber-300" />
+              <div className="w-4 h-4 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-xs flex-shrink-0 flex items-center justify-center">
+                <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
+              </div>
               <span>SSSD Public School</span>
             </button>
           </div>
