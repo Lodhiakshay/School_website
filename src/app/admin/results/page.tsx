@@ -489,22 +489,22 @@ export default function ResultsAdminPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
                   <div>
-                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Scholar:</span>
-                    <p className="font-bold text-slate-900 text-[11px] sm:text-xs truncate">{activeResult.studentName}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium block">Scholar:</span>
+                    <p className="font-bold text-slate-900 text-xs leading-normal py-0.5">{activeResult.studentName}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Adm No:</span>
-                    <p className={`font-mono font-bold text-[11px] sm:text-xs truncate ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>{activeResult.admNo}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium block">Adm No:</span>
+                    <p className={`font-mono font-bold text-xs leading-normal py-0.5 ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>{activeResult.admNo}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Class:</span>
-                    <p className="font-bold text-slate-800 text-[11px] sm:text-xs truncate">{activeResult.className}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium block">Class:</span>
+                    <p className="font-bold text-slate-800 text-xs leading-normal py-0.5">{activeResult.className}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Rank:</span>
-                    <p className="font-bold text-emerald-800 text-[11px] sm:text-xs">Rank #{activeResult.rank}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium block">Rank:</span>
+                    <p className="font-bold text-emerald-800 text-xs leading-normal py-0.5">Rank #{activeResult.rank}</p>
                   </div>
                 </div>
 

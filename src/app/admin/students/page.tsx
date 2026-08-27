@@ -21,6 +21,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
+import { downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const sgmStudents = [
   {
@@ -193,7 +194,27 @@ export default function StudentsAdminPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const [uploadedPreview, setUploadedPreview] = useState<any[]>([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
+
+  const handleDownloadStudentIdImage = async () => {
+    if (!activeStudent) return;
+    setIsDownloading(true);
+    toast.success(`Exporting HD Student Badge for ${activeStudent.firstName}...`, 'Preparing ID Image');
+    try {
+      const fileName = `Student_ID_${activeStudent.admissionNumber}_${activeStudent.firstName}_${activeStudent.lastName}.png`;
+      const ok = await downloadElementAsImage('student-id-card-inner', fileName);
+      if (ok) {
+        toast.success(`Downloaded ${fileName} in HD image format!`, 'ID Image Ready');
+      } else {
+        printIsolatedDocument('student-id-card-inner');
+      }
+    } catch {
+      printIsolatedDocument('student-id-card-inner');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -556,7 +577,7 @@ export default function StudentsAdminPage() {
             </div>
 
             {/* ID Badge Card: Emerald Green Theme for SSSD & Royal Navy Theme for SGM */}
-            <div className={`bg-white border-2 ${isSSSD ? 'border-emerald-700' : 'border-[#002060]'} rounded-2xl overflow-hidden shadow-md text-center font-sans`}>
+            <div id="student-id-card-inner" className={`printable-document bg-white border-2 ${isSSSD ? 'border-emerald-700' : 'border-[#002060]'} rounded-2xl overflow-hidden shadow-md text-center font-sans`}>
               {/* Header Banner */}
               {isSSSD ? (
                 <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-2.5 border-b-2 border-amber-400 flex items-center justify-center gap-2">
@@ -642,20 +663,31 @@ export default function StudentsAdminPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-wrap gap-2 pt-1">
               <Button
                 type="button"
                 size="sm"
-                className={`w-full font-bold text-xs ${isSSSD ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                className={`flex-1 font-bold text-xs shadow-md ${isSSSD ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                onClick={handleDownloadStudentIdImage}
+                disabled={isDownloading}
+                leftIcon={<Download className="w-3.5 h-3.5" />}
+              >
+                {isDownloading ? 'Saving...' : 'Download ID Card (HD Image)'}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="font-bold text-xs"
                 onClick={() => {
-                  window.print();
+                  printIsolatedDocument('student-id-card-inner');
                   toast.success(`Generated printable ${isSSSD ? 'SSSD' : 'SGM'} ID Card.`, 'Print Ready');
                 }}
                 leftIcon={<Printer className="w-3.5 h-3.5" />}
               >
-                Print ID Card
+                Print
               </Button>
-              <Button type="button" size="sm" variant="outline" onClick={() => setShowIdCardModal(false)}>
+              <Button type="button" size="sm" variant="ghost" onClick={() => setShowIdCardModal(false)}>
                 Close
               </Button>
             </div>

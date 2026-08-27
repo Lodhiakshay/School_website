@@ -2,7 +2,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 /**
- * Downloads any DOM element as a high-resolution PDF directly to the user's device.
+ * Downloads any DOM element as a high-resolution, perfectly proportioned PDF directly to user device.
+ * Uses off-screen staging to prevent mobile screen clipping or squishing.
+ *
  * @param elementId DOM ID of the element to capture
  * @param fileName Name of the downloaded PDF file (e.g. 'Aarav_Sharma_Report_Card.pdf')
  */
@@ -14,67 +16,151 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     return false;
   }
 
+  // Create an off-screen staging container at standard desktop print width (794px = A4 96 DPI)
+  const stage = document.createElement('div');
+  stage.style.position = 'fixed';
+  stage.style.left = '-99999px';
+  stage.style.top = '0';
+  stage.style.width = '794px';
+  stage.style.minWidth = '794px';
+  stage.style.maxWidth = '794px';
+  stage.style.background = '#ffffff';
+  stage.style.padding = '0';
+  stage.style.margin = '0';
+  stage.style.zIndex = '-99999';
+  stage.style.boxSizing = 'border-box';
+
+  // Clone element into stage
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.style.width = '100%';
+  clone.style.maxWidth = '100%';
+  clone.style.margin = '0';
+  clone.style.boxShadow = 'none';
+  clone.style.overflow = 'visible';
+
+  // Expand any clipped text or table overflows inside clone
+  const overflowElements = clone.querySelectorAll('*');
+  overflowElements.forEach((el) => {
+    const htmlEl = el as HTMLElement;
+    if (htmlEl.style) {
+      if (htmlEl.classList.contains('truncate')) {
+        htmlEl.style.whiteSpace = 'normal';
+        htmlEl.style.overflow = 'visible';
+      }
+      if (htmlEl.classList.contains('overflow-x-auto') || htmlEl.classList.contains('overflow-hidden')) {
+        htmlEl.style.overflow = 'visible';
+      }
+    }
+  });
+
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
   try {
-    // Render element to high-res canvas (scale: 2.5 = 300 DPI clarity)
-    const canvas = await html2canvas(element, {
+    // Render off-screen clone with 300 DPI clarity (scale: 2.5)
+    const canvas = await html2canvas(clone, {
       scale: 2.5,
       useCORS: true,
       allowTaint: true,
       logging: false,
       backgroundColor: '#ffffff',
-      windowWidth: 1200, // standard desktop width for pristine printable rendering
+      windowWidth: 1024,
     });
+
+    // Remove staging element
+    document.body.removeChild(stage);
 
     const imgData = canvas.toDataURL('image/png', 1.0);
+    const contentWidthMm = 210; // Standard A4 width in mm
+    const contentHeightMm = (canvas.height * contentWidthMm) / canvas.width;
+
+    // If document is a 1-page certificate, report card, or receipt, fit page height proportionally
+    // to eliminate vast empty blank white space on mobile viewers.
+    const isSinglePageDoc = contentHeightMm <= 297;
+    const pageFormat: [number, number] | string = isSinglePageDoc
+      ? [contentWidthMm, Math.max(contentHeightMm, 120)]
+      : 'a4';
+
     const pdf = new jsPDF({
-      orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+      orientation: 'portrait',
       unit: 'mm',
-      format: 'a4',
+      format: pageFormat,
     });
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    if (isSinglePageDoc) {
+      pdf.addImage(imgData, 'PNG', 0, 0, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+    } else {
+      let heightLeft = contentHeightMm;
+      let position = 0;
+      const a4PageHeight = 297;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+      pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+      heightLeft -= a4PageHeight;
 
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - contentHeightMm;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+        heightLeft -= a4PageHeight;
+      }
     }
 
     const finalFileName = fileName.endsWith('.pdf') ? fileName : `${fileName}.pdf`;
     pdf.save(finalFileName);
     return true;
   } catch (err) {
+    if (document.body.contains(stage)) {
+      document.body.removeChild(stage);
+    }
     console.error('Error generating PDF:', err);
     return false;
   }
 }
 
 /**
- * Downloads any DOM element as a high-res PNG image.
+ * Downloads ID Badges / Cards as Ultra High-Definition CR80 PNG images.
+ * @param elementId DOM ID of the ID badge card
+ * @param fileName Name of the downloaded image file (e.g. 'Faculty_ID_Dr_Ramesh.png')
  */
-export async function downloadElementAsImage(elementId: string, fileName: string = 'document.png'): Promise<boolean> {
+export async function downloadElementAsImage(elementId: string, fileName: string = 'badge.png'): Promise<boolean> {
   if (typeof window === 'undefined') return false;
   const element = document.getElementById(elementId);
-  if (!element) return false;
+  if (!element) {
+    console.error(`Element with id "${elementId}" not found for image export.`);
+    return false;
+  }
+
+  // Create an off-screen staging container at standard crisp badge width (480px)
+  const stage = document.createElement('div');
+  stage.style.position = 'fixed';
+  stage.style.left = '-99999px';
+  stage.style.top = '0';
+  stage.style.width = '480px';
+  stage.style.maxWidth = '480px';
+  stage.style.background = '#ffffff';
+  stage.style.padding = '0';
+  stage.style.margin = '0';
+  stage.style.zIndex = '-99999';
+
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.style.width = '100%';
+  clone.style.maxWidth = '100%';
+  clone.style.margin = '0';
+  clone.style.boxShadow = 'none';
+
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
 
   try {
-    const canvas = await html2canvas(element, {
-      scale: 2.5,
+    const canvas = await html2canvas(clone, {
+      scale: 3.0, // 300+ DPI ultra crisp image
       useCORS: true,
       allowTaint: true,
       logging: false,
       backgroundColor: '#ffffff',
     });
+
+    document.body.removeChild(stage);
 
     const link = document.createElement('a');
     link.download = fileName.endsWith('.png') ? fileName : `${fileName}.png`;
@@ -84,6 +170,9 @@ export async function downloadElementAsImage(elementId: string, fileName: string
     document.body.removeChild(link);
     return true;
   } catch (err) {
+    if (document.body.contains(stage)) {
+      document.body.removeChild(stage);
+    }
     console.error('Error downloading image:', err);
     return false;
   }
@@ -100,7 +189,6 @@ export function printIsolatedDocument(elementId: string): void {
     return;
   }
 
-  // Create clean printable iframe
   const iframe = document.createElement('iframe');
   iframe.style.position = 'fixed';
   iframe.style.right = '0';
@@ -116,7 +204,6 @@ export function printIsolatedDocument(elementId: string): void {
     return;
   }
 
-  // Clone document and copy all styles
   const cloned = element.cloneNode(true) as HTMLElement;
   cloned.style.maxWidth = '100%';
   cloned.style.margin = '0 auto';
@@ -127,7 +214,7 @@ export function printIsolatedDocument(elementId: string): void {
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Sarswati Gyan Mandir ERP Document</title>
+        <title>Official Institutional Document</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
@@ -153,4 +240,3 @@ export function printIsolatedDocument(elementId: string): void {
     }, 1000);
   }, 500);
 }
-

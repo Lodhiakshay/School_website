@@ -24,7 +24,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
-import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
+import { downloadElementAsPdf, downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
 import { ClientPortal } from '../../../components/ui/client-portal';
 
 const fallbackTeachers = [
@@ -138,15 +138,15 @@ export default function TeachersAdminPage() {
   const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
-  const handleDownloadTeacherIdPdf = async () => {
+  const handleDownloadTeacherIdImage = async () => {
     if (!activeTeacherModal) return;
     setIsDownloading(true);
-    toast.success(`Exporting Faculty ID Card PDF for ${activeTeacherModal.name}...`, 'Preparing Download');
+    toast.success(`Exporting HD Badge Image for ${activeTeacherModal.name}...`, 'Preparing ID Image');
     try {
-      const fileName = `Faculty_ID_${activeTeacherModal.employeeId}_${activeTeacherModal.name.replace(/\s+/g, '_')}.pdf`;
-      const ok = await downloadElementAsPdf('faculty-id-card-inner', fileName);
+      const fileName = `Faculty_ID_${activeTeacherModal.employeeId}_${activeTeacherModal.name.replace(/\s+/g, '_')}.png`;
+      const ok = await downloadElementAsImage('faculty-id-card-inner', fileName);
       if (ok) {
-        toast.success(`Downloaded ${fileName} successfully!`, 'ID Card Downloaded');
+        toast.success(`Downloaded ${fileName} in HD image format!`, 'ID Image Ready');
       } else {
         printIsolatedDocument('faculty-id-card-inner');
       }
@@ -444,11 +444,11 @@ export default function TeachersAdminPage() {
               <div className="p-3 bg-slate-50 border-t border-slate-200 flex flex-wrap gap-2">
                 <Button
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
-                  onClick={handleDownloadTeacherIdPdf}
+                  onClick={handleDownloadTeacherIdImage}
                   disabled={isDownloading}
                   leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                 >
-                  {isDownloading ? 'Saving...' : 'Download ID PDF'}
+                  {isDownloading ? 'Saving Image...' : 'Download ID Card (HD Image)'}
                 </Button>
                 <Button
                   className="bg-blue-700 hover:bg-blue-800 font-bold text-xs"
