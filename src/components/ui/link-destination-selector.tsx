@@ -93,13 +93,13 @@ export function LinkDestinationSelector({
   return (
     <div className={`space-y-1.5 text-xs ${className}`}>
       {/* Header Label and Live Link Tester */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
         <label className="font-bold text-slate-700 flex items-center gap-1.5 tracking-wide">
-          <Link2 className="w-3.5 h-3.5 text-blue-600" />
+          <Link2 className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
           <span>{label}</span>
         </label>
         {value && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
             <span
               className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase border ${
                 isSpecial

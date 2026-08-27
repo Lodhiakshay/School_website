@@ -425,165 +425,170 @@ export default function ResultsAdminPage() {
 
       {/* Official Report Card Modal (Supports SGM & SSSD) */}
       {activeResult && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col p-5 sm:p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3 flex-shrink-0">
-              <span className={`text-xs font-black uppercase tracking-wider font-mono ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col p-3.5 sm:p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 sm:pb-3 flex-shrink-0">
+              <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider font-mono truncate pr-2 ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>
                 {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD PUBLIC SCHOOL CBSE REPORT CARD' : 'SGM INTER COLLEGE OFFICIAL REPORT CARD'}
               </span>
               <button
                 onClick={() => setActiveResult(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex-shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="overflow-y-auto flex-1 py-4 space-y-4">
-              <div className="p-5 sm:p-6 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-slate-900 text-xs shadow-inner">
+            <div className="overflow-y-auto flex-1 py-3 sm:py-4 space-y-3 sm:space-y-4">
+              <div className="p-3.5 sm:p-6 bg-white border sm:border-2 border-slate-900 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-slate-900 text-xs shadow-inner">
                 {/* Institution Header */}
-                <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3">
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 bg-white shadow-md flex-shrink-0">
+                <div className="flex items-center justify-between border-b-2 border-slate-900 pb-2.5 sm:pb-3 gap-2">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-amber-400 bg-white shadow-md flex-shrink-0">
                     <img
                       src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
                       alt="Logo"
                       className="w-full h-full object-contain p-0.5"
                     />
                   </div>
-                  <div className="text-center flex-1 px-3">
-                    <h2 className="text-base font-serif font-black text-slate-950">
+                  <div className="text-center flex-1 px-1 sm:px-3 min-w-0">
+                    <h2 className="text-xs sm:text-base font-serif font-black text-slate-950 truncate sm:whitespace-normal">
                       {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD PUBLIC SCHOOL' : 'सरस्वती ज्ञान मन्दिर इण्टर कॉलेज'}
                     </h2>
-                    <p className="text-[10px] text-slate-600 font-medium">
+                    <p className="text-[9px] sm:text-[10px] text-slate-600 font-medium truncate sm:whitespace-normal">
                       {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SHAMSABAD, FARRUKHABAD (UP) • 100% ENGLISH MEDIUM • CBSE PATTERN' : 'SHAMSABAD, FARRUKHABAD (UP) • UP-FBD-2026-SGM-089'}
                     </p>
-                    <span className={`inline-block mt-1 font-black text-[10px] text-white px-3 py-0.5 rounded-full uppercase ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-800' : 'bg-slate-900'}`}>
+                    <span className={`inline-block mt-0.5 font-black text-[9px] sm:text-[10px] text-white px-2.5 sm:px-3 py-0.5 rounded-full uppercase ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-800' : 'bg-slate-900'}`}>
                       {selectedExam} Report Card
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200 text-xs">
                   <div>
-                    <span className="text-slate-400 font-medium">Scholar:</span>
-                    <p className="font-bold text-slate-900">{activeResult.studentName}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Scholar:</span>
+                    <p className="font-bold text-slate-900 text-[11px] sm:text-xs truncate">{activeResult.studentName}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-medium">Adm No:</span>
-                    <p className={`font-mono font-bold ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>{activeResult.admNo}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Adm No:</span>
+                    <p className={`font-mono font-bold text-[11px] sm:text-xs truncate ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>{activeResult.admNo}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-medium">Class:</span>
-                    <p className="font-bold text-slate-800">{activeResult.className}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Class:</span>
+                    <p className="font-bold text-slate-800 text-[11px] sm:text-xs truncate">{activeResult.className}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-medium">Rank:</span>
-                    <p className="font-bold text-emerald-700">Rank #{activeResult.rank}</p>
+                    <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Rank:</span>
+                    <p className="font-bold text-emerald-700 text-[11px] sm:text-xs">Rank #{activeResult.rank}</p>
                   </div>
                 </div>
 
-                <div className="border border-slate-300 rounded-xl overflow-x-auto">
-                  <table className="w-full text-left text-xs min-w-[500px]">
-                    <thead className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase text-[10px]">
+                {/* Mobile Swipe Table Hint */}
+                <div className="flex items-center justify-end text-[10px] text-slate-400 sm:hidden px-1">
+                  <span>Swipe to view all marks →</span>
+                </div>
+
+                <div className="border border-slate-300 rounded-xl overflow-x-auto shadow-sm">
+                  <table className="w-full text-left text-xs min-w-[420px] sm:min-w-[480px]">
+                    <thead className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase text-[9px] sm:text-[10px]">
                       <tr>
-                        <th className="p-2">Subject</th>
-                        <th className="p-2 text-center">Marks Scored</th>
-                        <th className="p-2 text-center">Max Marks</th>
-                        <th className="p-2 text-center">Grade</th>
+                        <th className="p-2 sm:p-2.5">Subject</th>
+                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Marks Scored</th>
+                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Max Marks</th>
+                        <th className="p-2 sm:p-2.5 text-center whitespace-nowrap">Grade</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200 font-medium">
+                    <tbody className="divide-y divide-slate-200 font-medium text-[11px] sm:text-xs">
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Mathematics (041)' : 'Mathematics (103)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.math}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.math >= 90 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Mathematics (041)' : 'Mathematics (103)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.math}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.math >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Science & Technology (086)' : 'Science (104 - 70Th + 30Pr)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.science}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.science >= 90 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Science & Technology (086)' : 'Science (104 - 70Th + 30Pr)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.science}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.science >= 90 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'English Communicative (101)' : 'Hindi Sahitya (101)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.hindi}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.hindi >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'English Communicative (101)' : 'Hindi Sahitya (101)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.hindi}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.hindi >= 85 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Social Science (087)' : 'English Core (102)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.english}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.english >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Social Science (087)' : 'English Core (102)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.english}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.english >= 85 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Computer & AI Robotics (165)' : 'Social Science (105)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.sst}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.sst >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Computer & AI Robotics (165)' : 'Social Science (105)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.sst}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.sst >= 85 ? 'A1' : 'A2'}</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Hindi Course (002)' : 'Sanskrit (106)'}</td>
-                        <td className="p-2 text-center font-mono font-bold text-blue-700">{activeResult.sanskrit}</td>
-                        <td className="p-2 text-center font-mono">100</td>
-                        <td className="p-2 text-center font-black text-emerald-700">{activeResult.sanskrit >= 85 ? 'A1' : 'A2'}</td>
+                        <td className="p-2 sm:p-2.5 font-bold text-slate-900">{activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'Hindi Course (002)' : 'Sanskrit (106)'}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-blue-700">{activeResult.sanskrit}</td>
+                        <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
+                        <td className="p-2 sm:p-2.5 text-center font-black text-emerald-700">{activeResult.sanskrit >= 85 ? 'A1' : 'A2'}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-xs">
                   <div className="p-2 bg-blue-50 rounded-xl border border-blue-200">
-                    <span className="text-slate-500 font-medium">Percentage</span>
-                    <p className="text-sm font-black text-blue-700">{activeResult.percentage}%</p>
+                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Percentage</span>
+                    <p className="text-xs sm:text-sm font-black text-blue-700">{activeResult.percentage}%</p>
                   </div>
                   <div className="p-2 bg-indigo-50 rounded-xl border border-indigo-200">
-                    <span className="text-slate-500 font-medium">Aggregate</span>
-                    <p className="text-sm font-black text-indigo-700">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</p>
+                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Aggregate</span>
+                    <p className="text-xs sm:text-sm font-black text-indigo-700">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</p>
                   </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl border border-emerald-200">
-                    <span className="text-slate-500 font-medium">Decision</span>
-                    <p className="text-xs font-black text-emerald-700">{activeResult.decision}</p>
+                  <div className="p-2 bg-emerald-50 rounded-xl border border-emerald-200 col-span-2 sm:col-span-1 flex flex-col justify-center">
+                    <span className="text-slate-500 text-[10px] sm:text-xs font-medium">Decision</span>
+                    <p className="text-[11px] sm:text-xs font-black text-emerald-700 leading-tight">{activeResult.decision}</p>
                   </div>
                 </div>
 
                 {/* Stamped Signatures Block */}
-                <div className="pt-4 flex items-end justify-between border-t-2 border-slate-200 text-xs mt-4">
-                  <div className="text-center w-36">
+                <div className="pt-3 sm:pt-4 flex items-end justify-between border-t-2 border-slate-200 text-xs mt-3 sm:mt-4 gap-1.5 sm:gap-2">
+                  <div className="text-center flex-1 max-w-[100px] sm:max-w-[140px]">
                     <img
                       src="/images/stamps/registrar-signature.png"
                       alt="Class Incharge Sig"
-                      className="w-28 h-12 object-contain mx-auto"
+                      className="w-20 sm:w-28 h-8 sm:h-12 object-contain mx-auto"
                     />
-                    <span className="text-[9px] font-bold text-slate-700 block mt-0.5 uppercase">
+                    <span className="text-[8px] sm:text-[9px] font-bold text-slate-700 block mt-0.5 uppercase truncate">
                       Class Incharge
                     </span>
                   </div>
 
-                  <div className="text-center">
+                  <div className="text-center flex-1 max-w-[80px] sm:max-w-[100px]">
                     <img
                       src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/stamps/sssd-principal-round-seal.png' : '/images/stamps/approved-stamp.png'}
                       alt="Stamp"
-                      className="w-12 h-12 object-contain mx-auto drop-shadow-sm transform -rotate-2"
+                      className="w-8 h-8 sm:w-12 sm:h-12 object-contain mx-auto drop-shadow-sm transform -rotate-2"
                     />
-                    <span className="text-[8px] font-bold text-emerald-800 block mt-0.5 uppercase">
-                      Exam Cell Verified
+                    <span className="text-[7px] sm:text-[8px] font-bold text-emerald-800 block mt-0.5 uppercase truncate">
+                      Exam Verified
                     </span>
                   </div>
 
-                  <div className="text-center w-40">
+                  <div className="text-center flex-1 max-w-[120px] sm:max-w-[160px]">
                     <img
                       src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/stamps/sssd-principal-signature.png' : '/images/stamps/principal-signature.png'}
                       alt="Principal Signature"
-                      className="w-36 h-16 object-contain mx-auto"
+                      className="w-24 sm:w-36 h-10 sm:h-16 object-contain mx-auto"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-3 border-t border-slate-200 flex-shrink-0">
+            <div className="flex gap-2 pt-2.5 sm:pt-3 border-t border-slate-200 flex-shrink-0">
               <Button
                 type="button"
                 className={`w-full font-bold text-xs ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}

@@ -891,16 +891,16 @@ export default function SchoolSettingsPage() {
           <div className="space-y-6 animate-in fade-in duration-200">
             {/* Top Header Announcement & Contact Strip (Full Master Control) */}
             <Card className="border-slate-200 shadow-sm overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-b border-slate-800 py-4 px-5 flex flex-row items-center justify-between text-white">
+              <CardHeader className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-b border-slate-800 py-4 px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
                 <div>
                   <CardTitle className="text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 text-amber-300 font-serif">
-                    <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" /> Top Notification &amp; Contact Strip (Navbar Top Bar)
+                    <Sparkles className="w-4 h-4 text-amber-400 animate-pulse flex-shrink-0" /> Top Notification &amp; Contact Strip (Navbar Top Bar)
                   </CardTitle>
                   <p className="text-[11px] text-slate-400 font-medium mt-0.5">
                     Controls the top bar displaying institutional address, phone, urgent announcement badge &amp; marquee ticker.
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 self-start sm:self-auto flex-shrink-0">
                   <span className={`text-[11px] font-extrabold px-2.5 py-1 rounded-full border ${
                     cmsData.ticker.isActive
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
@@ -1370,7 +1370,7 @@ export default function SchoolSettingsPage() {
 
                 {/* Benefits List CRUD */}
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <label className="text-xs font-bold text-slate-700">
                       Admission Card Feature Highlights Checklist
                     </label>
@@ -1379,6 +1379,7 @@ export default function SchoolSettingsPage() {
                       size="sm"
                       onClick={addHeroBenefit}
                       leftIcon={<Plus className="w-3.5 h-3.5" />}
+                      className="w-full sm:w-auto"
                     >
                       Add Benefit Point
                     </Button>
@@ -1388,14 +1389,14 @@ export default function SchoolSettingsPage() {
                     {(cmsData.hero?.quickAdmissionWidget?.benefits || []).map((ben: any, bIdx: number) => (
                       <div
                         key={bIdx}
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border ${
+                        className={`flex items-center gap-2 p-2 sm:p-2.5 rounded-xl border ${
                           ben.isActive ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-100 border-dashed opacity-60'
                         }`}
                       >
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                         <input
                           type="text"
-                          className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500"
+                          className="flex-1 min-w-0 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500"
                           value={ben.text}
                           onChange={(e) => {
                             const next = [...(cmsData.hero?.quickAdmissionWidget?.benefits || [])];
@@ -1412,22 +1413,24 @@ export default function SchoolSettingsPage() {
                             });
                           }}
                         />
-                        <button
-                          type="button"
-                          onClick={() => toggleHeroBenefit(bIdx)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100"
-                          title="Toggle Active/Inactive"
-                        >
-                          {ben.isActive ? <Eye className="w-4 h-4 text-emerald-600" /> : <EyeOff className="w-4 h-4 text-slate-400" />}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => removeHeroBenefit(bIdx)}
-                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50"
-                          title="Delete Point"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => toggleHeroBenefit(bIdx)}
+                            className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100"
+                            title="Toggle Active/Inactive"
+                          >
+                            {ben.isActive ? <Eye className="w-4 h-4 text-emerald-600" /> : <EyeOff className="w-4 h-4 text-slate-400" />}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeHeroBenefit(bIdx)}
+                            className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50"
+                            title="Delete Point"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1477,12 +1480,12 @@ export default function SchoolSettingsPage() {
         {/* TAB 3: STATS TELEMETRY (FULL CRUD) */}
         {activeTab === 'stats' && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif">Key Institutional Stats Counters</h3>
                 <p className="text-xs text-slate-500">Manage, reorder, create or hide live numbers on the home page.</p>
               </div>
-              <Button type="button" size="sm" onClick={addStat} leftIcon={<Plus className="w-4 h-4" />}>
+              <Button type="button" size="sm" onClick={addStat} leftIcon={<Plus className="w-4 h-4" />} className="w-full sm:w-auto">
                 Add New Stat
               </Button>
             </div>
@@ -1550,12 +1553,12 @@ export default function SchoolSettingsPage() {
         {/* TAB 4: ACADEMIC WINGS (FULL CRUD WITH CLOUDINARY IMAGE UPLOADER) */}
         {activeTab === 'wings' && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif">Comprehensive Academic Wings</h3>
                 <p className="text-xs text-slate-500">Upload photos directly to Cloudinary, edit curriculum details, or toggle visibility.</p>
               </div>
-              <Button type="button" size="sm" onClick={addWing} leftIcon={<Plus className="w-4 h-4" />}>
+              <Button type="button" size="sm" onClick={addWing} leftIcon={<Plus className="w-4 h-4" />} className="w-full sm:w-auto">
                 Add Academic Wing
               </Button>
             </div>
@@ -1568,14 +1571,14 @@ export default function SchoolSettingsPage() {
                     w.isActive ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-100 border-dashed border-slate-300 opacity-60'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                    <div className="flex items-center gap-2 flex-wrap min-w-0">
+                      <span className="text-xs font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full flex-shrink-0">
                         Wing #{idx + 1}
                       </span>
-                      <span className="text-xs font-bold text-slate-700">{w.title}</span>
+                      <span className="text-xs font-bold text-slate-700 break-words line-clamp-1">{w.title}</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
                       <button
                         type="button"
                         onClick={() => toggleWing(idx)}
@@ -1648,12 +1651,12 @@ export default function SchoolSettingsPage() {
         {/* TAB 5: FACILITIES & LABS (FULL CRUD WITH CLOUDINARY IMAGE UPLOADER) */}
         {activeTab === 'facilities' && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif">Campus Facilities &amp; Science Labs</h3>
                 <p className="text-xs text-slate-500">Visual photo previews with Cloudinary upload for all laboratories and infrastructure.</p>
               </div>
-              <Button type="button" size="sm" onClick={addFacility} leftIcon={<Plus className="w-4 h-4" />}>
+              <Button type="button" size="sm" onClick={addFacility} leftIcon={<Plus className="w-4 h-4" />} className="w-full sm:w-auto">
                 Add Facility / Lab
               </Button>
             </div>
@@ -1666,11 +1669,11 @@ export default function SchoolSettingsPage() {
                     fac.isActive ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-100 border-dashed border-slate-300 opacity-60'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                    <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full flex-shrink-0">
                       Facility #{idx + 1} &bull; {fac.title}
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
                       <button
                         type="button"
                         onClick={() => toggleFacility(idx)}
@@ -1863,7 +1866,7 @@ export default function SchoolSettingsPage() {
 
                 {/* Principal Core Pillars CRUD */}
                 <div className="space-y-3 pt-3 border-t border-slate-200">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div>
                       <h4 className="font-bold text-slate-900">Principal Desk 3 Core Pillars</h4>
                       <p className="text-[11px] text-slate-500">Highlights displayed below the welcome letter.</p>
@@ -1873,6 +1876,7 @@ export default function SchoolSettingsPage() {
                       size="sm"
                       onClick={addPrincipalPillar}
                       leftIcon={<Plus className="w-3.5 h-3.5" />}
+                      className="w-full sm:w-auto"
                     >
                       Add Core Pillar
                     </Button>
@@ -2181,7 +2185,7 @@ export default function SchoolSettingsPage() {
 
                 {/* SSSD Highlights CRUD */}
                 <div className="space-y-3 pt-3 border-t border-slate-200">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div>
                       <h4 className="font-bold text-slate-900">SSSD Feature Highlights Badges</h4>
                       <p className="text-[11px] text-slate-500">Badges displayed directly on the English wing banner.</p>
@@ -2191,6 +2195,7 @@ export default function SchoolSettingsPage() {
                       size="sm"
                       onClick={addSSSDHighlight}
                       leftIcon={<Plus className="w-3.5 h-3.5" />}
+                      className="w-full sm:w-auto"
                     >
                       Add Feature Highlight
                     </Button>
@@ -2260,10 +2265,10 @@ export default function SchoolSettingsPage() {
 
                 {/* SSSD English Language Educators & Mentors CRUD */}
                 <div className="space-y-4 pt-6 border-t border-slate-200">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                        <Users className="w-4 h-4 text-emerald-600" /> SSSD English Language Educators &amp; Mentors
+                        <Users className="w-4 h-4 text-emerald-600 flex-shrink-0" /> SSSD English Language Educators &amp; Mentors
                       </h4>
                       <p className="text-[11px] text-slate-500">
                         Manage faculty profiles, portrait photos, experience badges, qualifications and skill tags displayed on the SSSD wing page.
@@ -2274,7 +2279,7 @@ export default function SchoolSettingsPage() {
                       size="sm"
                       onClick={addSSSDTeacher}
                       leftIcon={<Plus className="w-3.5 h-3.5" />}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold w-full sm:w-auto"
                     >
                       Add Educator / Mentor
                     </Button>
@@ -2419,12 +2424,12 @@ export default function SchoolSettingsPage() {
         {/* TAB 8: CAMPUS CAROUSEL (FULL CRUD WITH CLOUDINARY IMAGE UPLOADER) */}
         {activeTab === 'carousel' && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif">360° Infinite Campus Showcase</h3>
                 <p className="text-xs text-slate-500">Live image previews and direct Cloudinary uploads for all carousel slides.</p>
               </div>
-              <Button type="button" size="sm" onClick={addCarouselSlide} leftIcon={<Plus className="w-4 h-4" />}>
+              <Button type="button" size="sm" onClick={addCarouselSlide} leftIcon={<Plus className="w-4 h-4" />} className="w-full sm:w-auto">
                 Add Showcase Slide
               </Button>
             </div>
@@ -2437,11 +2442,11 @@ export default function SchoolSettingsPage() {
                     slide.isActive ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-100 border-dashed border-slate-300 opacity-60'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                    <span className="text-xs font-black text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full flex-shrink-0">
                       Slide #{idx + 1} &bull; {slide.title}
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
                       <button
                         type="button"
                         onClick={() => toggleCarouselSlide(idx)}
@@ -2607,12 +2612,12 @@ export default function SchoolSettingsPage() {
             </Card>
 
             {/* Testimonials List (CRUD) */}
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif flex items-center gap-2">
-                  <Youtube className="w-4 h-4 text-rose-600" /> Video Testimonial Library
+                  <Youtube className="w-4 h-4 text-rose-600 flex-shrink-0" /> Video Testimonial Library
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Add parent reviews, alumni achievements, and student experiences with YouTube links.
                 </p>
               </div>
@@ -2621,7 +2626,7 @@ export default function SchoolSettingsPage() {
                 size="sm"
                 onClick={addVideoTestimonial}
                 leftIcon={<Plus className="w-4 h-4" />}
-                className="bg-rose-600 hover:bg-rose-700 text-white font-bold"
+                className="bg-rose-600 hover:bg-rose-700 text-white font-bold w-full sm:w-auto"
               >
                 Add Video Story
               </Button>
@@ -2635,22 +2640,22 @@ export default function SchoolSettingsPage() {
                 return (
                   <div
                     key={idx}
-                    className={`p-6 rounded-3xl border transition space-y-4 ${
+                    className={`p-4 sm:p-6 rounded-3xl border transition space-y-4 ${
                       test.isActive
                         ? 'bg-white border-slate-200 shadow-md'
                         : 'bg-slate-100 border-dashed border-slate-300 opacity-60'
                     }`}
                   >
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-black text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-100 pb-3">
+                      <div className="flex items-center gap-2 flex-wrap min-w-0">
+                        <span className="text-xs font-black text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200 flex-shrink-0">
                           Video Story #{idx + 1}
                         </span>
-                        <span className="text-xs font-bold text-slate-800 truncate max-w-xs sm:max-w-md">
+                        <span className="text-xs font-bold text-slate-800 break-words line-clamp-1">
                           {test.title}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
                         <button
                           type="button"
                           onClick={() => toggleVideoTestimonial(idx)}

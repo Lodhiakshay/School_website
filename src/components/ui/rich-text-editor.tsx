@@ -125,15 +125,15 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className={`space-y-1.5 ${className}`}>
       {label && (
-        <div className="flex items-center justify-between">
-          <label className="block text-xs font-bold text-slate-700 tracking-wide">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
+          <label className="block text-xs font-bold text-slate-800">
             {label}
           </label>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setIsHtmlMode(!isHtmlMode)}
-              className={`px-2 py-0.5 rounded-md text-[10px] font-bold border transition flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition flex items-center gap-1 ${
                 isHtmlMode
                   ? 'bg-blue-600 text-white border-blue-700 shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-300'
@@ -145,7 +145,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab(activeTab === 'editor' ? 'preview' : 'editor')}
-              className={`px-2 py-0.5 rounded-md text-[10px] font-bold border transition flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition flex items-center gap-1 ${
                 activeTab === 'preview'
                   ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-300'
