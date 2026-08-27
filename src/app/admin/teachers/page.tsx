@@ -14,6 +14,7 @@ import {
   Award,
   X,
   Sparkles,
+  ChevronDown,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -419,36 +420,46 @@ export default function TeachersAdminPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Department *</label>
-                  <select
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    value={newTeacher.department}
-                    onChange={(e) => setNewTeacher({ ...newTeacher, department: e.target.value })}
-                  >
-                    <option value="Physics">Physics</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Biology">Biology</option>
-                    <option value="Sanskrit">Sanskrit</option>
-                    <option value="English">English</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Hindi">Hindi</option>
-                  </select>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Department *</label>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      value={newTeacher.department}
+                      onChange={(e) => setNewTeacher({ ...newTeacher, department: e.target.value })}
+                    >
+                      <option value="Physics">Physics</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Chemistry">Chemistry</option>
+                      <option value="Biology">Biology</option>
+                      <option value="Sanskrit">Sanskrit</option>
+                      <option value="English">English</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Hindi">Hindi</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Class Incharge</label>
-                  <select
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    value={newTeacher.assignedClass}
-                    onChange={(e) => setNewTeacher({ ...newTeacher, assignedClass: e.target.value })}
-                  >
-                    <option value="Class 9-A">Class 9-A</option>
-                    <option value="Class 10-A">Class 10-A</option>
-                    <option value="Class 11-A (PCM)">Class 11-A (PCM)</option>
-                    <option value="Class 12-A (PCM)">Class 12-A (PCM)</option>
-                    <option value="Class 12-B (PCB)">Class 12-B (PCB)</option>
-                  </select>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Class Incharge</label>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      value={newTeacher.assignedClass}
+                      onChange={(e) => setNewTeacher({ ...newTeacher, assignedClass: e.target.value })}
+                    >
+                      <option value="Class 9-A">Class 9-A</option>
+                      <option value="Class 10-A">Class 10-A</option>
+                      <option value="Class 11-A (PCM)">Class 11-A (PCM)</option>
+                      <option value="Class 12-A (PCM)">Class 12-A (PCM)</option>
+                      <option value="Class 12-B (PCB)">Class 12-B (PCB)</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
               </div>
 

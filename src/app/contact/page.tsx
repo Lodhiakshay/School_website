@@ -25,6 +25,7 @@ import { PublicFooter } from '../../components/public/public-footer';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { Select } from '../../components/ui/select';
 
 export default function ContactPage() {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -280,40 +281,40 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Inquiry Category *</label>
-                    <select
-                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    <Select
+                      label="Inquiry Category *"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    >
-                      <option value="Admission Inquiry (Session 2026-27)">Admission Inquiry (Session 2026-27)</option>
-                      <option value="Fee Structure & Installments">Fee Structure &amp; Installments</option>
-                      <option value="School Bus & Transport Route">School Bus &amp; Transport Route</option>
-                      <option value="Transfer Certificate (TC) Request">Transfer Certificate (TC) Request</option>
-                      <option value="Academic Curriculum / Board Query">Academic Curriculum / Board Query</option>
-                      <option value="General Feedback or Complaint">General Feedback or Complaint</option>
-                    </select>
+                      options={[
+                        { value: 'Admission Inquiry (Session 2026-27)', label: 'Admission Inquiry (Session 2026-27)' },
+                        { value: 'Fee Structure & Installments', label: 'Fee Structure & Installments' },
+                        { value: 'School Bus & Transport Route', label: 'School Bus & Transport Route' },
+                        { value: 'Transfer Certificate (TC) Request', label: 'Transfer Certificate (TC) Request' },
+                        { value: 'Academic Curriculum / Board Query', label: 'Academic Curriculum / Board Query' },
+                        { value: 'General Feedback or Complaint', label: 'General Feedback or Complaint' },
+                      ]}
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Student Class (If applicable)</label>
-                  <select
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  <Select
+                    label="Student Class (If applicable)"
                     value={formData.targetClass}
                     onChange={(e) => setFormData({ ...formData, targetClass: e.target.value })}
-                  >
-                    <option value="Nursery - UKG">Primary Wing (Nursery - UKG)</option>
-                    <option value="Class 1 to 5">Primary School (Class 1 to 5)</option>
-                    <option value="Class 6 to 8">Middle School (Class 6 to 8)</option>
-                    <option value="Class 9">Class 9</option>
-                    <option value="Class 10">Class 10 (UP Board High School)</option>
-                    <option value="Class 11 - Science (PCM)">Class 11 - Science (PCM Stream)</option>
-                    <option value="Class 11 - Science (PCB)">Class 11 - Science (PCB Stream)</option>
-                    <option value="Class 12 - Science (PCM)">Class 12 - Science (PCM Stream)</option>
-                    <option value="Class 12 - Science (PCB)">Class 12 - Science (PCB Stream)</option>
-                    <option value="Class 11/12 - Arts / Humanities">Class 11/12 - Arts / Humanities</option>
-                  </select>
+                    options={[
+                      { value: 'Nursery - UKG', label: 'Primary Wing (Nursery - UKG)' },
+                      { value: 'Class 1 to 5', label: 'Primary School (Class 1 to 5)' },
+                      { value: 'Class 6 to 8', label: 'Middle School (Class 6 to 8)' },
+                      { value: 'Class 9', label: 'Class 9' },
+                      { value: 'Class 10', label: 'Class 10 (UP Board High School)' },
+                      { value: 'Class 11 - Science (PCM)', label: 'Class 11 - Science (PCM Stream)' },
+                      { value: 'Class 11 - Science (PCB)', label: 'Class 11 - Science (PCB Stream)' },
+                      { value: 'Class 12 - Science (PCM)', label: 'Class 12 - Science (PCM Stream)' },
+                      { value: 'Class 12 - Science (PCB)', label: 'Class 12 - Science (PCB Stream)' },
+                      { value: 'Class 11/12 - Arts / Humanities', label: 'Class 11/12 - Arts / Humanities' },
+                    ]}
+                  />
                 </div>
 
                 <div>

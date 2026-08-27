@@ -13,6 +13,7 @@ import {
   Upload,
   Building2,
   Languages,
+  ChevronDown,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -433,30 +434,33 @@ export default function StudentsAdminPage() {
                 className="pl-9 text-xs"
               />
             </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative w-full md:w-auto">
               <select
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
-                className="w-full md:w-48 p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full md:w-56 appearance-none pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 bg-slate-50/90 hover:bg-white focus:bg-white text-xs font-bold text-slate-800 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer"
               >
                 <option value="all">All Classes ({selectedCampus === 'sssd' ? 'SSSD Wing' : 'SGM Wing'})</option>
                 {selectedCampus === 'sssd' ? (
                   <>
-                    <option value="Nursery">Nursery</option>
-                    <option value="Class 1">Class 1</option>
-                    <option value="Class 5">Class 5</option>
-                    <option value="Class 8">Class 8</option>
-                    <option value="Class 10">Class 10</option>
+                    <option value="Nursery">Nursery (English)</option>
+                    <option value="Class 1">Class 1 (English)</option>
+                    <option value="Class 5">Class 5 (English)</option>
+                    <option value="Class 8">Class 8 (English)</option>
+                    <option value="Class 10">Class 10 (CBSE)</option>
                   </>
                 ) : (
                   <>
-                    <option value="Class 9">Class 9</option>
-                    <option value="Class 10">Class 10</option>
-                    <option value="Class 11">Class 11</option>
-                    <option value="Class 12">Class 12</option>
+                    <option value="Class 9">Class 9 (UP Board)</option>
+                    <option value="Class 10">Class 10 (UP Board)</option>
+                    <option value="Class 11">Class 11 (PCM/PCB/Arts)</option>
+                    <option value="Class 12">Class 12 (PCM/PCB/Arts)</option>
                   </>
                 )}
               </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <ChevronDown className="w-4 h-4" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -751,42 +755,52 @@ export default function StudentsAdminPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Target Class</label>
-                  <select
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    value={newStudent.className}
-                    onChange={(e) => setNewStudent({ ...newStudent, className: e.target.value })}
-                  >
-                    {selectedCampus === 'sssd' ? (
-                      <>
-                        <option value="Nursery">Nursery</option>
-                        <option value="Class 1">Class 1</option>
-                        <option value="Class 5">Class 5</option>
-                        <option value="Class 8">Class 8</option>
-                        <option value="Class 10">Class 10</option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="Class 10">Class 10</option>
-                        <option value="Class 12">Class 12</option>
-                        <option value="Class 11">Class 11</option>
-                        <option value="Class 9">Class 9</option>
-                      </>
-                    )}
-                  </select>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Target Class *</label>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      value={newStudent.className}
+                      onChange={(e) => setNewStudent({ ...newStudent, className: e.target.value })}
+                    >
+                      {selectedCampus === 'sssd' ? (
+                        <>
+                          <option value="Nursery">Nursery (English)</option>
+                          <option value="Class 1">Class 1</option>
+                          <option value="Class 5">Class 5</option>
+                          <option value="Class 8">Class 8</option>
+                          <option value="Class 10">Class 10</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="Class 10">Class 10 (UP Board)</option>
+                          <option value="Class 12">Class 12 (Science)</option>
+                          <option value="Class 11">Class 11 (Science)</option>
+                          <option value="Class 9">Class 9 (UP Board)</option>
+                        </>
+                      )}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Section</label>
-                  <select
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    value={newStudent.sectionName}
-                    onChange={(e) => setNewStudent({ ...newStudent, sectionName: e.target.value })}
-                  >
-                    <option value="A">Section A</option>
-                    <option value="B">Section B</option>
-                    <option value="Rose">Rose Section</option>
-                    <option value="Lotus">Lotus Section</option>
-                  </select>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Section *</label>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      value={newStudent.sectionName}
+                      onChange={(e) => setNewStudent({ ...newStudent, sectionName: e.target.value })}
+                    >
+                      <option value="A">Section A</option>
+                      <option value="B">Section B</option>
+                      <option value="Rose">Rose Section</option>
+                      <option value="Lotus">Lotus Section</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
