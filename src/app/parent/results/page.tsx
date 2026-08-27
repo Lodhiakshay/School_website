@@ -44,7 +44,7 @@ export default function ParentResultsPage() {
   };
 
   return (
-    <PortalLayout allowedRoles={['Parent', 'SuperAdmin', 'Admin']}>
+    <PortalLayout allowedRoles={['Parent', 'SuperAdmin', 'Admin', 'Principal']}>
       <div className="space-y-6 pt-1">
         {/* Header Ribbon & Child Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">

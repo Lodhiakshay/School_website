@@ -66,7 +66,7 @@ export default function StudentResultsPage() {
   };
 
   return (
-    <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Parent', 'Admin']}>
+    <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Parent', 'Admin', 'Principal']}>
       <div className="space-y-6 pt-1">
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">

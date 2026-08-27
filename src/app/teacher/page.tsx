@@ -17,7 +17,7 @@ export default function TeacherDashboardPage() {
   ];
 
   return (
-    <PortalLayout allowedRoles={['Teacher', 'SuperAdmin']}>
+    <PortalLayout allowedRoles={['Teacher', 'SuperAdmin', 'Admin', 'Principal']}>
       {/* Teacher Welcome Banner with Portrait */}
       <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-blue-800/40">
         <div className="flex items-center gap-5">

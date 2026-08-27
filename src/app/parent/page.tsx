@@ -50,7 +50,7 @@ export default function ParentDashboardPage() {
   const [active, setActive] = useState(children[0]);
 
   return (
-    <PortalLayout allowedRoles={['Parent', 'SuperAdmin']}>
+    <PortalLayout allowedRoles={['Parent', 'SuperAdmin', 'Admin', 'Principal']}>
       {/* Parent Welcome Banner */}
       <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 rounded-3xl p-5 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-blue-800/40">
         <div className="space-y-2">

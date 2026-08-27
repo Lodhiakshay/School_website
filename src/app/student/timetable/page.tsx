@@ -85,7 +85,7 @@ export default function StudentTimetablePage() {
   ];
 
   return (
-    <PortalLayout allowedRoles={['Student', 'SuperAdmin']}>
+    <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Admin', 'Parent', 'Principal']}>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">

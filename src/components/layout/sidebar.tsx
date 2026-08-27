@@ -28,6 +28,7 @@ import {
   Receipt,
   UserCircle,
   Image as ImageIcon,
+  Briefcase,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -111,6 +112,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onCloseMob
               { label: 'Daily Attendance Audit', href: '/admin/attendance', icon: <CalendarCheck className="w-4 h-4" /> },
               { label: 'Exam Results Approval', href: '/admin/results', icon: <Award className="w-4 h-4" /> },
               { label: 'School Notices', href: '/admin/notices', icon: <Bell className="w-4 h-4" /> },
+              { label: 'Issue Certificates', href: '/admin/certificates', icon: <FileCheck2 className="w-4 h-4" /> },
+              { label: 'Careers & Recruitment', href: '/admin/careers', icon: <Briefcase className="w-4 h-4" /> },
               { label: 'Academic Reports', href: '/admin/reports', icon: <BarChart3 className="w-4 h-4" /> },
             ],
           },
@@ -191,7 +194,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onCloseMob
           {
             groupTitle: 'Admissions Desk',
             items: [
-              { label: 'Admissions Desk', href: '/admission', icon: <LayoutDashboard className="w-4 h-4" /> },
               { label: 'Inquiries Pipeline', href: '/admin/admissions', icon: <UserPlus className="w-4 h-4" /> },
               { label: 'Enrolled Students', href: '/admin/students', icon: <GraduationCap className="w-4 h-4" /> },
             ],

@@ -30,7 +30,7 @@ export default function StudentDashboardPage() {
   ];
 
   return (
-    <PortalLayout allowedRoles={['Student', 'SuperAdmin']}>
+    <PortalLayout allowedRoles={['Student', 'SuperAdmin', 'Admin', 'Parent', 'Principal']}>
       {/* Student Welcome Banner with Photo & High Contrast Buttons */}
       <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 rounded-3xl p-5 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-blue-800/40">
         <div className="flex items-center gap-4 sm:gap-5 w-full md:w-auto">

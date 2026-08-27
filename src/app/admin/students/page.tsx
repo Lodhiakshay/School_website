@@ -334,7 +334,7 @@ export default function StudentsAdminPage() {
   const isSSSD = activeStudent?.campus === 'sssd' || selectedCampus === 'sssd';
 
   return (
-    <PortalLayout allowedRoles={['SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff']}>
+    <PortalLayout allowedRoles={['SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff', 'Accountant', 'Librarian']}>
       <div className="space-y-6 pt-1">
         {/* Header with Multi-Campus Switcher */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">

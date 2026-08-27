@@ -87,7 +87,36 @@ export default function NoticesAdminPage() {
       .catch(() => {});
   }, []);
 
-  const handleBroadcast = (e: React.FormEvent) => {
+  const formatDate = (d: any) => {
+    if (!d) return 'Recent';
+    try {
+      const dt = new Date(d);
+      if (!isNaN(dt.getTime())) {
+        return dt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      }
+    } catch {}
+    return String(d);
+  };
+
+  const formatPublisher = (n: any) => {
+    if (n.publishedBy) {
+      if (typeof n.publishedBy === 'object') {
+        const name = `${n.publishedBy.firstName || ''} ${n.publishedBy.lastName || ''}`.trim();
+        if (name) return name;
+      }
+    }
+    return n.publisher || 'Principal Office';
+  };
+
+  const formatAudience = (aud: string) => {
+    if (aud === 'all') return 'All Students & Parents';
+    if (aud === 'teachers') return 'Faculty Educators Only';
+    if (aud === 'students') return 'Students Only';
+    if (aud === 'parents') return 'Parents Only';
+    return aud || 'All Campus';
+  };
+
+  const handleBroadcast = async (e: React.FormEvent) => {
     e.preventDefault();
     const created = {
       _id: 'n_' + Date.now(),
@@ -95,13 +124,21 @@ export default function NoticesAdminPage() {
       content: newNotice.content,
       priority: newNotice.priority,
       targetAudience: newNotice.targetAudience,
-      publishDate: 'Today, Just Now',
-      publisher: 'Administrative Portal',
+      publishDate: new Date().toISOString(),
+      publisher: 'Principal Office',
     };
+    try {
+      await apiClient.post('/notices', {
+        title: newNotice.title,
+        content: newNotice.content,
+        priority: newNotice.priority,
+        targetAudience: newNotice.targetAudience.toLowerCase().includes('class 10') ? 'class' : 'all',
+      });
+    } catch {}
     setNotices([created, ...notices]);
     setShowAddModal(false);
     toast.success(
-      `Notice broadcasted to ${created.targetAudience} via SMS & Student Portal!`,
+      `Notice broadcasted to ${newNotice.targetAudience} via SMS & Student Portal!`,
       'Circular Published'
     );
   };
@@ -173,7 +210,7 @@ export default function NoticesAdminPage() {
                       {n.priority}
                     </span>
                     <span className="text-[11px] text-slate-400 font-mono font-medium">
-                      {n.publishDate}
+                      {formatDate(n.publishDate || n.createdAt)}
                     </span>
                   </div>
 
@@ -185,9 +222,9 @@ export default function NoticesAdminPage() {
 
                 <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                   <span className="flex items-center gap-1 text-blue-700 font-bold">
-                    <Users className="w-3.5 h-3.5" /> {n.targetAudience}
+                    <Users className="w-3.5 h-3.5" /> {formatAudience(n.targetAudience)}
                   </span>
-                  <span className="text-slate-400">By: {n.publisher}</span>
+                  <span className="text-slate-400">By: {formatPublisher(n)}</span>
                 </div>
               </Card>
             );

@@ -26,7 +26,7 @@ export default function AccountantDashboardPage() {
   }, []);
 
   return (
-    <PortalLayout allowedRoles={['Accountant', 'SuperAdmin']}>
+    <PortalLayout allowedRoles={['Accountant', 'SuperAdmin', 'Admin', 'Principal']}>
       {/* Banner */}
       <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg space-y-2">
         <div className="inline-flex items-center gap-1.5 text-xs font-semibold bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-400/30">
