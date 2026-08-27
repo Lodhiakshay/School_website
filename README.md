@@ -74,3 +74,4 @@ npm run seed
 - **Frontend Website**: [https://school-website-ecru-pi.vercel.app](https://school-website-ecru-pi.vercel.app)
 - **API Health Check**: `GET /health`
 - **Swagger Documentation**: `GET /api/docs`
+
