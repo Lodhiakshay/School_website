@@ -5,7 +5,8 @@ import { Download, X } from 'lucide-react';
 import { useToast } from '../ui/toast';
 
 const DISMISS_KEY = 'sgm_pwa_dismissed_time';
-const DISMISS_COOLDOWN_DAYS = 7; // Don't show again for 7 days if dismissed
+const INSTALLED_KEY = 'sgm_pwa_is_installed';
+const DISMISS_COOLDOWN_DAYS = 7;
 
 export const PwaInstallPrompt: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -18,17 +19,44 @@ export const PwaInstallPrompt: React.FC = () => {
   useEffect(() => {
     setMounted(true);
 
-    // 1. Check if already installed / running in standalone PWA mode
+    // 1. Check if running in standalone PWA window / Home Screen App mode
     if (
       typeof window !== 'undefined' &&
       (window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone === true)
+        (window.navigator as any).standalone === true ||
+        window.matchMedia('(display-mode: fullscreen)').matches)
     ) {
       setIsInstalled(true);
+      try {
+        localStorage.setItem(INSTALLED_KEY, 'true');
+      } catch {}
       return;
     }
 
-    // 2. Check 7-day cooldown from localStorage
+    // 2. Check persistent installed flag from localStorage
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem(INSTALLED_KEY) === 'true') {
+        setIsInstalled(true);
+        return; // App is already installed on this device, never show prompt
+      }
+    } catch {}
+
+    // 3. Check native Android Chrome getInstalledRelatedApps API
+    if (typeof window !== 'undefined' && 'getInstalledRelatedApps' in navigator) {
+      (navigator as any)
+        .getInstalledRelatedApps()
+        .then((relatedApps: any[]) => {
+          if (relatedApps && relatedApps.length > 0) {
+            setIsInstalled(true);
+            try {
+              localStorage.setItem(INSTALLED_KEY, 'true');
+            } catch {}
+          }
+        })
+        .catch(() => {});
+    }
+
+    // 4. Check 7-day cooldown from localStorage
     try {
       const dismissedTime = localStorage.getItem(DISMISS_KEY);
       if (dismissedTime) {
@@ -37,57 +65,69 @@ export const PwaInstallPrompt: React.FC = () => {
           return; // Still in 7-day cooldown
         }
       }
-    } catch {
-      // Storage access safety
-    }
+    } catch {}
 
-    // 3. Capture beforeinstallprompt event
-    const handler = (e: Event) => {
+    // 5. Strictly capture beforeinstallprompt event
+    // Chrome ONLY fires this event if the app is NOT installed on the device
+    const beforeInstallHandler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      // Only show banner after beforeinstallprompt confirms the app is uninstalled
+      setTimeout(() => {
+        setShowBanner(true);
+      }, 3000);
     };
-    window.addEventListener('beforeinstallprompt', handler);
 
-    // 4. Production-grade Engagement Delay: Wait 5 seconds so user browses the school first
-    const timer = setTimeout(() => {
-      setShowBanner(true);
-    }, 5000);
+    window.addEventListener('beforeinstallprompt', beforeInstallHandler);
 
+    // 6. Handle successful app install
     const appInstalledHandler = () => {
       setIsInstalled(true);
       setShowBanner(false);
       setIsInstalling(false);
       setDeferredPrompt(null);
+      try {
+        localStorage.setItem(INSTALLED_KEY, 'true');
+      } catch {}
       toast.success('SGM & SSSD App installed successfully!', 'App Installed');
     };
 
     window.addEventListener('appinstalled', appInstalledHandler);
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('beforeinstallprompt', beforeInstallHandler);
       window.removeEventListener('appinstalled', appInstalledHandler);
     };
   }, [toast]);
 
   const handleInstall = async () => {
-    if (deferredPrompt) {
-      setIsInstalling(true);
+    if (!deferredPrompt) {
+      // If deferredPrompt is missing, it means app might already be installed
+      setIsInstalled(true);
+      setShowBanner(false);
       try {
-        await deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice;
-        if (choice && choice.outcome === 'accepted') {
-          setShowBanner(false);
-        }
-      } catch (err) {
-        console.warn('Install error:', err);
-      } finally {
-        setIsInstalling(false);
-        setDeferredPrompt(null);
+        localStorage.setItem(INSTALLED_KEY, 'true');
+      } catch {}
+      toast.info('The school app is already installed or supported directly from your browser menu.', 'App Info');
+      return;
+    }
+
+    setIsInstalling(true);
+    try {
+      await deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice && choice.outcome === 'accepted') {
+        setShowBanner(false);
+        setIsInstalled(true);
+        try {
+          localStorage.setItem(INSTALLED_KEY, 'true');
+        } catch {}
       }
-    } else {
-      // Fallback guide for iOS Safari & unsupported browsers
-      toast.info('Tap your browser share button (⎋) or menu (⋮) and tap "Add to Home Screen".', 'Install Guide');
+    } catch (err) {
+      console.warn('Install error:', err);
+    } finally {
+      setIsInstalling(false);
+      setDeferredPrompt(null);
     }
   };
 
@@ -95,12 +135,13 @@ export const PwaInstallPrompt: React.FC = () => {
     setShowBanner(false);
     try {
       localStorage.setItem(DISMISS_KEY, Date.now().toString());
-    } catch {
-      // Ignore
-    }
+    } catch {}
   };
 
-  if (!mounted || !showBanner || isInstalled) return null;
+  // NEVER render if not mounted, if already installed, or if beforeinstallprompt did not fire
+  if (!mounted || !showBanner || isInstalled || !deferredPrompt) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-3 right-3 left-3 sm:left-auto sm:right-6 sm:bottom-6 z-50 animate-in slide-in-from-bottom-3 duration-300 pointer-events-auto">

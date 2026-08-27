@@ -359,20 +359,18 @@ export default function AcademicsPage() {
             </div>
 
             {/* Prospectus Download Box */}
-            <div className="p-5 rounded-2xl bg-slate-900 text-white flex items-center justify-between gap-4">
+            <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-slate-800 shadow-xl">
               <div>
-                <h5 className="font-bold text-xs text-amber-300">Official Syllabus Prospectus</h5>
-                <p className="text-[11px] text-slate-300 mt-0.5">Session 2026-27 Academic Guide</p>
+                <h5 className="font-black text-xs text-amber-300 uppercase tracking-wider">Official Syllabus Prospectus</h5>
+                <p className="text-[11px] text-slate-300 mt-0.5">Session 2026-27 Academic Curriculum Guide</p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-white border-slate-700 hover:bg-slate-800 text-xs font-bold whitespace-nowrap"
+              <button
                 onClick={() => window.print()}
-                leftIcon={<FileDown className="w-3.5 h-3.5 text-amber-400" />}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs shadow-md transition active:scale-95 whitespace-nowrap"
               >
-                Print / Save PDF
-              </Button>
+                <FileDown className="w-4 h-4 text-blue-950" />
+                <span>Print / Save PDF</span>
+              </button>
             </div>
           </div>
         </div>

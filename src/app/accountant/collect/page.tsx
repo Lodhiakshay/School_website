@@ -196,34 +196,34 @@ export default function AccountantCollectPage() {
         <Card className="border-slate-200 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[800px]">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px]">
                   <tr>
-                    <th className="p-3.5">Invoice No</th>
-                    <th className="p-3.5">Student &amp; Class</th>
-                    <th className="p-3.5">Term Description</th>
-                    <th className="p-3.5 text-right">Billed (₹)</th>
-                    <th className="p-3.5 text-right">Paid (₹)</th>
-                    <th className="p-3.5 text-right">Balance Due</th>
-                    <th className="p-3.5 text-right">POS Action</th>
+                    <th className="p-3.5 whitespace-nowrap">Invoice No</th>
+                    <th className="p-3.5 whitespace-nowrap">Student &amp; Class</th>
+                    <th className="p-3.5 whitespace-nowrap">Term Description</th>
+                    <th className="p-3.5 whitespace-nowrap text-right">Billed (₹)</th>
+                    <th className="p-3.5 whitespace-nowrap text-right">Paid (₹)</th>
+                    <th className="p-3.5 whitespace-nowrap text-right">Balance Due</th>
+                    <th className="p-3.5 whitespace-nowrap text-right">POS Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                   {filtered.map((inv) => (
                     <tr key={inv._id} className="hover:bg-slate-50 transition">
-                      <td className="p-3.5 font-mono font-bold text-blue-600">{inv.invoiceNumber}</td>
-                      <td className="p-3.5">
+                      <td className="p-3.5 whitespace-nowrap font-mono font-bold text-blue-600">{inv.invoiceNumber}</td>
+                      <td className="p-3.5 whitespace-nowrap">
                         <div className="font-bold text-slate-900">{inv.studentName}</div>
                         <div className="text-[10px] font-mono text-slate-400">{inv.admissionNo}</div>
                       </td>
-                      <td className="p-3.5 text-slate-600">{inv.title}</td>
-                      <td className="p-3.5 text-right font-mono font-bold text-slate-900">
+                      <td className="p-3.5 whitespace-nowrap text-slate-600">{inv.title}</td>
+                      <td className="p-3.5 whitespace-nowrap text-right font-mono font-bold text-slate-900">
                         ₹ {inv.totalAmount.toLocaleString()}
                       </td>
-                      <td className="p-3.5 text-right font-mono font-bold text-emerald-700">
+                      <td className="p-3.5 whitespace-nowrap text-right font-mono font-bold text-emerald-700">
                         ₹ {inv.paidAmount.toLocaleString()}
                       </td>
-                      <td className="p-3.5 text-right font-mono font-bold">
+                      <td className="p-3.5 whitespace-nowrap text-right font-mono font-bold">
                         {inv.balanceAmount > 0 ? (
                           <span className="text-rose-600">₹ {inv.balanceAmount.toLocaleString()}</span>
                         ) : (

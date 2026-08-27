@@ -226,24 +226,24 @@ export default function UsersAdminPage() {
         <Card className="border-slate-200 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[800px]">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px]">
                   <tr>
-                    <th className="p-3.5">Full Name</th>
-                    <th className="p-3.5">Official Email / Username</th>
-                    <th className="p-3.5">Role Permission</th>
-                    <th className="p-3.5">Department / Description</th>
-                    <th className="p-3.5">Status</th>
-                    <th className="p-3.5">Last Login Telemetry</th>
+                    <th className="p-3.5 whitespace-nowrap">Full Name</th>
+                    <th className="p-3.5 whitespace-nowrap">Official Email / Username</th>
+                    <th className="p-3.5 whitespace-nowrap">Role Permission</th>
+                    <th className="p-3.5 whitespace-nowrap">Department / Description</th>
+                    <th className="p-3.5 whitespace-nowrap">Status</th>
+                    <th className="p-3.5 whitespace-nowrap">Last Login Telemetry</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                   {filtered.map((u) => (
                     <tr key={u._id} className="hover:bg-slate-50 transition">
-                      <td className="p-3.5">
+                      <td className="p-3.5 whitespace-nowrap">
                         <div className="font-bold text-slate-900">{u.name}</div>
                       </td>
-                      <td className="p-3.5 font-mono font-bold text-blue-600">{u.email}</td>
+                      <td className="p-3.5 whitespace-nowrap font-mono font-bold text-blue-600">{u.email}</td>
                       <td className="p-3.5">
                         <Badge
                           size="sm"

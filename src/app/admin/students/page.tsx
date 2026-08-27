@@ -460,16 +460,16 @@ export default function StudentsAdminPage() {
         {/* Student Table */}
         <Card className="border-slate-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs border-collapse min-w-[850px]">
               <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
                 <tr>
-                  <th className="p-3.5 pl-5">Scholar &amp; Adm No</th>
-                  <th className="p-3.5">Campus</th>
-                  <th className="p-3.5">Class &amp; Section</th>
-                  <th className="p-3.5">Roll No</th>
-                  <th className="p-3.5">Guardian Contact</th>
-                  <th className="p-3.5">Status</th>
-                  <th className="p-3.5 text-right pr-5">Actions</th>
+                  <th className="p-3.5 pl-5 whitespace-nowrap">Scholar &amp; Adm No</th>
+                  <th className="p-3.5 whitespace-nowrap">Campus</th>
+                  <th className="p-3.5 whitespace-nowrap">Class &amp; Section</th>
+                  <th className="p-3.5 whitespace-nowrap">Roll No</th>
+                  <th className="p-3.5 whitespace-nowrap">Guardian Contact</th>
+                  <th className="p-3.5 whitespace-nowrap">Status</th>
+                  <th className="p-3.5 whitespace-nowrap text-right pr-5">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium">

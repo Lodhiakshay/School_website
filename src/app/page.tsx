@@ -421,7 +421,7 @@ export default function HomePage() {
 
       {/* Principal Desk Leadership Showcase */}
       <section className="py-20 bg-slate-100/60 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-[#001740] via-[#002060] to-[#021029] rounded-3xl p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border-2 border-amber-400/50">
             {/* Background Glows & Watermark Seal */}
             <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -431,9 +431,9 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-              {/* Left Column: Large Hero Portrait & Leadership Credentials */}
-              <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
-                <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-full h-80 sm:h-96 md:h-[390px] rounded-3xl overflow-hidden border-4 border-amber-400/90 shadow-2xl bg-slate-900 group">
+              {/* Left Column: Hero Portrait & Leadership Credentials */}
+              <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-3">
+                <div className="relative w-full max-w-[260px] sm:max-w-[300px] md:max-w-full h-64 sm:h-80 md:h-[370px] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-slate-900 group">
                   <img
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85"
                     alt="Principal Dr. Ramesh Kumar Sharma"
@@ -441,7 +441,7 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
                   
-                  {/* Floating Experience Badge on Photo */}
+                  {/* Floating Experience Badge */}
                   <div className="absolute top-3 left-3 bg-amber-400 text-blue-950 text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 flex items-center gap-1 font-mono">
                     <span>★ 25+ Years Academic Leadership</span>
                   </div>
@@ -458,11 +458,6 @@ export default function HomePage() {
                       Sarswati Gyan Mandir &amp; SSSD Group
                     </p>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-slate-300 bg-white/5 border border-white/10 px-4 py-2 rounded-2xl w-full max-w-[320px] md:max-w-full justify-center md:justify-start">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span className="font-semibold text-[11px]">Academic Year 2026-27 Leadership</span>
                 </div>
               </div>
 

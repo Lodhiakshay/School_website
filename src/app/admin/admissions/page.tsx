@@ -164,36 +164,36 @@ export default function AdmissionsAdminPage() {
         <Card className="border-slate-200 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[820px]">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px]">
                   <tr>
-                    <th className="p-3.5">Application No</th>
-                    <th className="p-3.5">Candidate Name</th>
-                    <th className="p-3.5">Target Class</th>
-                    <th className="p-3.5">Father &amp; Contact</th>
-                    <th className="p-3.5">Prior Academic Standing</th>
-                    <th className="p-3.5 text-center">Status</th>
-                    <th className="p-3.5 text-right">Enroll Action</th>
+                    <th className="p-3.5 whitespace-nowrap">Application No</th>
+                    <th className="p-3.5 whitespace-nowrap">Candidate Name</th>
+                    <th className="p-3.5 whitespace-nowrap">Target Class</th>
+                    <th className="p-3.5 whitespace-nowrap">Father &amp; Contact</th>
+                    <th className="p-3.5 whitespace-nowrap">Prior Academic Standing</th>
+                    <th className="p-3.5 whitespace-nowrap text-center">Status</th>
+                    <th className="p-3.5 whitespace-nowrap text-right">Enroll Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                   {filtered.map((a) => (
                     <tr key={a._id} className="hover:bg-slate-50 transition">
-                      <td className="p-3.5 font-mono font-bold text-blue-600">{a.applicationNumber}</td>
-                      <td className="p-3.5">
+                      <td className="p-3.5 whitespace-nowrap font-mono font-bold text-blue-600">{a.applicationNumber}</td>
+                      <td className="p-3.5 whitespace-nowrap">
                         <div className="font-bold text-slate-900">{a.applicantName}</div>
                       </td>
-                      <td className="p-3.5">
+                      <td className="p-3.5 whitespace-nowrap">
                         <Badge size="sm" variant="info">
                           {a.targetClass}
                         </Badge>
                       </td>
-                      <td className="p-3.5">
+                      <td className="p-3.5 whitespace-nowrap">
                         <div className="font-bold text-slate-800">{a.fatherName}</div>
                         <div className="text-[11px] font-mono text-slate-400">{a.fatherPhone}</div>
                       </td>
-                      <td className="p-3.5 text-slate-600 text-[11px]">{a.previousSchool}</td>
-                      <td className="p-3.5 text-center">
+                      <td className="p-3.5 whitespace-nowrap text-slate-600 text-[11px]">{a.previousSchool}</td>
+                      <td className="p-3.5 whitespace-nowrap text-center">
                         <span
                           className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${
                             a.status === 'admitted'

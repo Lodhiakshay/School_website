@@ -100,3 +100,15 @@ textarea,
     animation-duration: 25s;
   }
 }
+
+/* Responsive Data Table Scrolling & Anti-Word-Breaking */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+table th,
+table td {
+  white-space: nowrap;
+}
+

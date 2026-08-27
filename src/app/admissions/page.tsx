@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   Send,
@@ -19,6 +19,9 @@ import {
   Users,
   MapPin,
   School,
+  Copy,
+  Check,
+  Home,
 } from 'lucide-react';
 import { PublicNavbar } from '../../components/public/public-navbar';
 import { PublicFooter } from '../../components/public/public-footer';
@@ -28,6 +31,9 @@ import { Select } from '../../components/ui/select';
 import { apiClient } from '../../lib/api-client';
 
 export default function AdmissionsPublicPage() {
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
+
   const [formData, setFormData] = useState({
     studentName: '',
     gender: 'male',
@@ -46,6 +52,14 @@ export default function AdmissionsPublicPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedAppNo, setSubmittedAppNo] = useState<string | null>(null);
+
+  const handleCopy = () => {
+    if (submittedAppNo) {
+      navigator.clipboard?.writeText(submittedAppNo);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,14 +86,29 @@ export default function AdmissionsPublicPage() {
       };
 
       const res = await apiClient.post('/admissions/apply', payload);
-      const appNo = res.data?.data?.applicationNumber || `APP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const appNo = res.data?.data?.applicationNumber || `SGM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       setSubmittedAppNo(appNo);
     } catch (err: any) {
-      const fallbackAppNo = `APP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const fallbackAppNo = `SGM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       setSubmittedAppNo(fallbackAppNo);
     } finally {
       setIsSubmitting(false);
+      // Smoothly scroll to the success card so it stays right at eye level on mobile & desktop
+      setTimeout(() => {
+        if (formContainerRef.current) {
+          formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 50);
     }
+  };
+
+  const handleReset = () => {
+    setSubmittedAppNo(null);
+    setTimeout(() => {
+      if (formContainerRef.current) {
+        formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   };
 
   return (
@@ -184,24 +213,84 @@ export default function AdmissionsPublicPage() {
             </div>
           </div>
 
-          {/* Right: Online Application Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl border-2 border-slate-200 p-6 sm:p-10 shadow-xl space-y-6">
+          {/* Right: Online Application Form & Success Screen */}
+          <div
+            ref={formContainerRef}
+            className="lg:col-span-7 bg-white rounded-3xl border-2 border-slate-200 p-6 sm:p-10 shadow-xl space-y-6 scroll-mt-28 min-h-[560px] flex flex-col justify-center transition-all duration-300"
+          >
             {submittedAppNo ? (
-              <div className="text-center py-10 space-y-4 animate-in zoom-in-95 duration-200">
-                <div className="w-20 h-20 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <div className="text-center py-6 sm:py-8 space-y-6 animate-in zoom-in-95 duration-300">
+                {/* Grand Animated Check Icon */}
+                <div className="w-20 h-20 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 border-4 border-emerald-200 animate-pulse">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 font-serif">Application Submitted Successfully!</h3>
-                <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
-                  Thank you for applying to Sarswati Gyan Mandir. Our admission counselors will contact you within 24 hours to schedule verification.
-                </p>
-                <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 inline-block font-mono text-sm font-bold text-blue-900">
-                  Application Reference: <span className="text-base text-blue-700">{submittedAppNo}</span>
+
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
+                    Application Registered Successfully
+                  </span>
+                  <h3 className="text-xl sm:text-3xl font-black text-slate-900 font-serif">
+                    प्रवेश आवेदन सफलतापूर्वक प्राप्त हुआ
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                    Thank you for applying to <strong>Sarswati Gyan Mandir</strong>. Our admission desk has logged your candidate record for Academic Session 2026-27.
+                  </p>
                 </div>
-                <div className="pt-2">
-                  <Button onClick={() => setSubmittedAppNo(null)} variant="outline" size="sm">
+
+                {/* Prominent Copyable Reference Box */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 max-w-md mx-auto space-y-2 shadow-inner">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Official Reference Number
+                  </p>
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-xl sm:text-2xl font-black font-mono text-blue-900 tracking-wider">
+                      {submittedAppNo}
+                    </span>
+                    <button
+                      onClick={handleCopy}
+                      className="p-2 rounded-xl bg-white border border-blue-200 hover:bg-blue-100 text-blue-700 shadow-sm transition flex items-center gap-1 text-xs font-bold"
+                      title="Copy Reference Number"
+                    >
+                      {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                      <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Next Steps Checklist */}
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 max-w-md mx-auto text-left space-y-2 text-xs">
+                  <p className="font-bold text-slate-900 flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-blue-600" /> Next Steps:
+                  </p>
+                  <ul className="space-y-1 text-slate-600 text-[11px]">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span>Our counseling officer will call on <strong>{formData.fatherPhone || 'your mobile'}</strong> within 24 hours.</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span>Keep student TC/Marksheet and 2 passport photos ready for campus visit.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                  <Button
+                    onClick={handleReset}
+                    variant="outline"
+                    size="sm"
+                    className="w-full sm:w-auto text-xs font-bold border-slate-300 hover:bg-slate-100"
+                  >
                     Submit Another Inquiry
                   </Button>
+                  <Link
+                    href="/"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition"
+                  >
+                    <Home className="w-3.5 h-3.5" />
+                    <span>Return to Homepage</span>
+                  </Link>
                 </div>
               </div>
             ) : (
