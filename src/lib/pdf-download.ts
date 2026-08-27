@@ -153,3 +153,4 @@ export function printIsolatedDocument(elementId: string): void {
     }, 1000);
   }, 500);
 }
+

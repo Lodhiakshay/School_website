@@ -22,6 +22,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
+import { ClientPortal } from '../../../components/ui/client-portal';
 
 const fallbackInvoices = [
   {
@@ -312,8 +313,9 @@ export default function FeesAdminPage() {
 
       {/* Bulk Upload Modal */}
       {showBulkUploadModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3 flex-shrink-0">
               <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                 <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> Bulk Fee Invoices &amp; Collections CSV
@@ -402,104 +404,107 @@ export default function FeesAdminPage() {
             </div>
           </div>
         </div>
+      </ClientPortal>
       )}
 
       {/* Official Stamped Fee Voucher Modal */}
       {activeReceipt && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
-                OFFICIAL INSTITUTIONAL FEE VOUCHER
-              </span>
-              <button onClick={() => setActiveReceipt(null)} className="text-slate-400 hover:text-slate-600 p-1">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900 my-auto">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                <span className="text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
+                  OFFICIAL INSTITUTIONAL FEE VOUCHER
+                </span>
+                <button onClick={() => setActiveReceipt(null)} className="text-slate-400 hover:text-slate-600 p-1">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-            <div className="p-5 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-xs font-sans">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-900 bg-white p-0.5 flex-shrink-0">
-                  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <div className="p-5 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-xs font-sans">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-900 bg-white p-0.5 flex-shrink-0">
+                    <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <div className="text-right">
+                    <h3 className="font-serif font-black text-sm text-blue-950">सरस्वती ज्ञान मन्दिर इण्टर कॉलेज</h3>
+                    <p className="text-[10px] text-slate-500 font-mono">VOUCHER: {activeReceipt.invoiceNumber}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <h3 className="font-serif font-black text-sm text-blue-950">सरस्वती ज्ञान मन्दिर इण्टर कॉलेज</h3>
-                  <p className="text-[10px] text-slate-500 font-mono">VOUCHER: {activeReceipt.invoiceNumber}</p>
+
+                <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Student Name:</span>
+                    <p className="font-bold text-slate-900">{activeReceipt.studentName}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Class &amp; Admission:</span>
+                    <p className="font-mono font-bold text-blue-700">{activeReceipt.className}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-slate-400 text-[10px]">Fee Description:</span>
+                  <p className="font-semibold text-slate-800">{activeReceipt.title}</p>
+                </div>
+
+                <div className="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between font-mono">
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider text-slate-300">Amount Paid</span>
+                    <div className="text-lg font-black text-emerald-400">₹ {activeReceipt.paidAmount.toLocaleString()}</div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-300">Balance Due</span>
+                    <div className="text-sm font-bold text-rose-300">₹ {activeReceipt.balanceAmount.toLocaleString()}</div>
+                  </div>
+                </div>
+
+                <div className="pt-3 flex items-end justify-between text-xs border-t border-slate-200 mt-2">
+                  {/* Approved Stamp */}
+                  <div className="text-center">
+                    <img
+                      src="/images/stamps/approved-stamp.png"
+                      alt="Approved Stamp"
+                      className="w-28 h-10 object-contain transform -rotate-2 drop-shadow-sm"
+                    />
+                    <span className="text-[8px] font-mono font-bold text-blue-900 block mt-0.5">
+                      ACCOUNTS COUNTER 1
+                    </span>
+                  </div>
+
+                  {/* Registrar / Cashier Signature */}
+                  <div className="text-center w-36">
+                    <img
+                      src="/images/stamps/registrar-signature.png"
+                      alt="Cashier Sig"
+                      className="w-28 h-12 object-contain mx-auto"
+                    />
+                    <span className="text-[9px] font-bold text-slate-700 block mt-0.5 uppercase">
+                      Accounts Cashier
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                <div>
-                  <span className="text-slate-400 text-[10px]">Student Name:</span>
-                  <p className="font-bold text-slate-900">{activeReceipt.studentName}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400 text-[10px]">Class &amp; Admission:</span>
-                  <p className="font-mono font-bold text-blue-700">{activeReceipt.className}</p>
-                </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  type="button"
+                  className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                  onClick={() => {
+                    window.print();
+                    toast.success('Generated printable Fee Voucher.', 'Print Ready');
+                  }}
+                  leftIcon={<Printer className="w-4 h-4" />}
+                >
+                  Print / Download Voucher
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setActiveReceipt(null)}>
+                  Close
+                </Button>
               </div>
-
-              <div className="space-y-1">
-                <span className="text-slate-400 text-[10px]">Fee Description:</span>
-                <p className="font-semibold text-slate-800">{activeReceipt.title}</p>
-              </div>
-
-              <div className="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between font-mono">
-                <div>
-                  <span className="text-[9px] uppercase tracking-wider text-slate-300">Amount Paid</span>
-                  <div className="text-lg font-black text-emerald-400">₹ {activeReceipt.paidAmount.toLocaleString()}</div>
-                </div>
-                <div className="text-right">
-                  <span className="text-[9px] uppercase tracking-wider text-slate-300">Balance Due</span>
-                  <div className="text-sm font-bold text-rose-300">₹ {activeReceipt.balanceAmount.toLocaleString()}</div>
-                </div>
-              </div>
-
-              <div className="pt-3 flex items-end justify-between text-xs border-t border-slate-200 mt-2">
-                {/* Approved Stamp */}
-                <div className="text-center">
-                  <img
-                    src="/images/stamps/approved-stamp.png"
-                    alt="Approved Stamp"
-                    className="w-28 h-10 object-contain transform -rotate-2 drop-shadow-sm"
-                  />
-                  <span className="text-[8px] font-mono font-bold text-blue-900 block mt-0.5">
-                    ACCOUNTS COUNTER 1
-                  </span>
-                </div>
-
-                {/* Registrar / Cashier Signature */}
-                <div className="text-center w-36">
-                  <img
-                    src="/images/stamps/registrar-signature.png"
-                    alt="Cashier Sig"
-                    className="w-28 h-12 object-contain mx-auto"
-                  />
-                  <span className="text-[9px] font-bold text-slate-700 block mt-0.5 uppercase">
-                    Accounts Cashier
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                type="button"
-                className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-xs"
-                onClick={() => {
-                  window.print();
-                  toast.success('Generated printable Fee Voucher.', 'Print Ready');
-                }}
-                leftIcon={<Printer className="w-4 h-4" />}
-              >
-                Print / Download Voucher
-              </Button>
-              <Button type="button" variant="outline" onClick={() => setActiveReceipt(null)}>
-                Close
-              </Button>
             </div>
           </div>
-        </div>
+        </ClientPortal>
       )}
     </PortalLayout>
   );

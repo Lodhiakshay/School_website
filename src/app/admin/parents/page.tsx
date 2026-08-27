@@ -19,6 +19,7 @@ import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { ClientPortal } from '../../../components/ui/client-portal';
 
 const fallbackParents = [
   {
@@ -93,6 +94,7 @@ export default function ParentsAdminPage() {
     fatherName: '',
     motherName: '',
     fatherPhone: '',
+    email: '',
     fatherOccupation: 'Business',
     children: '',
     residentialAddress: '',
@@ -295,77 +297,86 @@ export default function ParentsAdminPage() {
 
       {/* Add Guardian Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                <Plus className="w-4 h-4 text-blue-600" /> Register Guardian Profile
-              </h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
-                <X className="w-4 h-4" />
-              </button>
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-blue-600" /> Register Guardian Profile
+                </h3>
+                <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleAddParent} className="space-y-3 text-xs">
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Father / Guardian *"
+                    required
+                    placeholder="e.g. Shri Rajesh Sharma"
+                    value={newParent.fatherName}
+                    onChange={(e) => setNewParent({ ...newParent, fatherName: e.target.value })}
+                  />
+                  <Input
+                    label="Mother Name *"
+                    required
+                    placeholder="e.g. Smt. Sunita Sharma"
+                    value={newParent.motherName}
+                    onChange={(e) => setNewParent({ ...newParent, motherName: e.target.value })}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Mobile Phone *"
+                    required
+                    placeholder="+91 98765 43210"
+                    value={newParent.fatherPhone}
+                    onChange={(e) => setNewParent({ ...newParent, fatherPhone: e.target.value })}
+                  />
+                  <Input
+                    label="Email Address"
+                    placeholder="parent@example.com"
+                    value={newParent.email}
+                    onChange={(e) => setNewParent({ ...newParent, email: e.target.value })}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Occupation / Profession"
+                    placeholder="e.g. Senior Bank Officer"
+                    value={newParent.fatherOccupation}
+                    onChange={(e) => setNewParent({ ...newParent, fatherOccupation: e.target.value })}
+                  />
+                  <Input
+                    label="Associated Student Name"
+                    placeholder="e.g. Aarav Sharma"
+                    value={newParent.children}
+                    onChange={(e) => setNewParent({ ...newParent, children: e.target.value })}
+                  />
+                </div>
+
+                <Input
+                  label="Residential Address"
+                  placeholder="e.g. Civil Lines, Shamsabad"
+                  value={newParent.residentialAddress}
+                  onChange={(e) => setNewParent({ ...newParent, residentialAddress: e.target.value })}
+                />
+
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 font-bold">
+                    Save Guardian
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             </div>
-
-            <form onSubmit={handleAddParent} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Father / Guardian *"
-                  required
-                  placeholder="e.g. Shri Rajesh Sharma"
-                  value={newParent.fatherName}
-                  onChange={(e) => setNewParent({ ...newParent, fatherName: e.target.value })}
-                />
-                <Input
-                  label="Mother Name *"
-                  required
-                  placeholder="e.g. Smt. Meena Sharma"
-                  value={newParent.motherName}
-                  onChange={(e) => setNewParent({ ...newParent, motherName: e.target.value })}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Contact Phone *"
-                  required
-                  placeholder="e.g. +91 94150 12345"
-                  value={newParent.fatherPhone}
-                  onChange={(e) => setNewParent({ ...newParent, fatherPhone: e.target.value })}
-                />
-                <Input
-                  label="Occupation"
-                  placeholder="e.g. Government Service"
-                  value={newParent.fatherOccupation}
-                  onChange={(e) => setNewParent({ ...newParent, fatherOccupation: e.target.value })}
-                />
-              </div>
-
-              <Input
-                label="Enrolled Wards (Name & Class) *"
-                required
-                placeholder="e.g. Aarav Sharma (Class 10-A)"
-                value={newParent.children}
-                onChange={(e) => setNewParent({ ...newParent, children: e.target.value })}
-              />
-
-              <Input
-                label="Residential Address"
-                placeholder="e.g. Civil Lines, Shamsabad"
-                value={newParent.residentialAddress}
-                onChange={(e) => setNewParent({ ...newParent, residentialAddress: e.target.value })}
-              />
-
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 font-bold">
-                  Save Guardian
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
           </div>
-        </div>
+        </ClientPortal>
       )}
     </PortalLayout>
   );

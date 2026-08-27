@@ -25,6 +25,7 @@ import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
+import { ClientPortal } from '../../../components/ui/client-portal';
 
 const sgmLedger = [
   {
@@ -449,8 +450,9 @@ export default function ResultsAdminPage() {
 
       {/* Official Report Card Modal (Supports SGM & SSSD) */}
       {activeResult && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col p-3.5 sm:p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col p-3.5 sm:p-6 shadow-2xl border-2 border-slate-900 animate-in zoom-in-95 duration-200 my-auto overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 sm:pb-3 flex-shrink-0">
               <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider font-mono truncate pr-2 ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>
                 {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD PUBLIC SCHOOL CBSE REPORT CARD' : 'SGM INTER COLLEGE OFFICIAL REPORT CARD'}
@@ -636,6 +638,7 @@ export default function ResultsAdminPage() {
             </div>
           </div>
         </div>
+      </ClientPortal>
       )}
     </PortalLayout>
   );

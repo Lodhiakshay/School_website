@@ -22,6 +22,7 @@ import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
 import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
+import { ClientPortal } from '../../../components/ui/client-portal';
 
 const fallbackInvoices = [
   {
@@ -328,189 +329,193 @@ export default function AccountantCollectPage() {
 
       {/* POS Collect Modal */}
       {showPayModal && activeInvoice && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-emerald-600" /> Collect Fee POS: {activeInvoice.invoiceNumber}
-              </h3>
-              <button onClick={() => setShowPayModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-emerald-600" /> Collect Fee POS: {activeInvoice.invoiceNumber}
+                </h3>
+                <button onClick={() => setShowPayModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-            <form onSubmit={handleCollect} className="space-y-3 text-xs">
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
-                <span className="text-slate-400 text-[10px] uppercase font-bold">Student:</span>
-                <p className="font-bold text-slate-900 text-sm">{activeInvoice.studentName}</p>
-                <div className="flex justify-between text-[11px] pt-1">
-                  <span>Balance Outstanding:</span>
-                  <span className="font-mono font-bold text-rose-600">₹ {activeInvoice.balanceAmount}</span>
+              <form onSubmit={handleCollect} className="space-y-3 text-xs">
+                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] uppercase font-bold">Student:</span>
+                  <p className="font-bold text-slate-900 text-sm">{activeInvoice.studentName}</p>
+                  <div className="flex justify-between text-[11px] pt-1">
+                    <span>Balance Outstanding:</span>
+                    <span className="font-mono font-bold text-rose-600">₹ {activeInvoice.balanceAmount}</span>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Amount to Collect (₹) *</label>
-                <input
-                  type="number"
-                  required
-                  max={activeInvoice.balanceAmount}
-                  value={payForm.amount}
-                  onChange={(e) => setPayForm({ ...payForm, amount: Number(e.target.value) })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Amount to Collect (₹) *</label>
+                  <input
+                    type="number"
+                    required
+                    max={activeInvoice.balanceAmount}
+                    value={payForm.amount}
+                    onChange={(e) => setPayForm({ ...payForm, amount: Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Payment Method</label>
+                  <select
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    value={payForm.paymentMethod}
+                    onChange={(e) => setPayForm({ ...payForm, paymentMethod: e.target.value })}
+                  >
+                    <option value="cash">Counter Cash</option>
+                    <option value="online_upi">Online UPI (GPay / PhonePe / Paytm)</option>
+                    <option value="net_banking">Bank NEFT / RTGS</option>
+                    <option value="cheque">Bank Cheque</option>
+                  </select>
+                </div>
+
+                <Input
+                  label="Transaction / UTR Reference (Optional)"
+                  placeholder="e.g. UPI-98124021"
+                  value={payForm.transactionReference}
+                  onChange={(e) => setPayForm({ ...payForm, transactionReference: e.target.value })}
                 />
-              </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Payment Method</label>
-                <select
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={payForm.paymentMethod}
-                  onChange={(e) => setPayForm({ ...payForm, paymentMethod: e.target.value })}
-                >
-                  <option value="cash">Counter Cash</option>
-                  <option value="online_upi">Online UPI (GPay / PhonePe / Paytm)</option>
-                  <option value="net_banking">Bank NEFT / RTGS</option>
-                  <option value="cheque">Bank Cheque</option>
-                </select>
-              </div>
-
-              <Input
-                label="Transaction / UTR Reference (Optional)"
-                placeholder="e.g. UPI-98124021"
-                value={payForm.transactionReference}
-                onChange={(e) => setPayForm({ ...payForm, transactionReference: e.target.value })}
-              />
-
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold">
-                  Confirm Payment
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowPayModal(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                  <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 font-bold">
+                    Confirm Payment
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => setShowPayModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </ClientPortal>
       )}
 
       {/* Official Receipt Modal */}
       {showReceiptModal && activeReceipt && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-3.5 sm:p-6 shadow-2xl space-y-3 sm:space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900 my-auto">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 sm:pb-3">
-              <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
-                OFFICIAL PAYMENT VOUCHER
-              </span>
-              <button onClick={() => setShowReceiptModal(false)} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div id="accountant-fee-receipt-inner" className="printable-document p-3.5 sm:p-5 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
-              <div className="text-center space-y-1 border-b border-slate-200 pb-2.5 sm:pb-3">
-                <h2 className="font-serif font-black text-sm sm:text-base text-slate-900">
-                  सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
-                </h2>
-                <p className="text-[10px] sm:text-[11px] text-slate-600 font-medium">
-                  SHAMSABAD, FARRUKHABAD (UP) &bull; Affiliation: UP-FBD-2026-SGM-089
-                </p>
-                <div className="inline-block bg-emerald-600 text-white text-[9px] sm:text-[10px] font-black uppercase px-2.5 sm:px-3 py-0.5 rounded-full">
-                  FEE COLLECTION RECEIPT
-                </div>
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-3.5 sm:p-6 shadow-2xl space-y-3 sm:space-y-4 animate-in zoom-in-95 duration-200 border-2 border-slate-900 my-auto">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 sm:pb-3">
+                <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-blue-700 font-mono">
+                  OFFICIAL PAYMENT VOUCHER
+                </span>
+                <button onClick={() => setShowReceiptModal(false)} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[10px] sm:text-[11px]">
-                <div>
-                  <span className="text-slate-400">Receipt No:</span>
-                  <p className="font-mono font-bold text-slate-900 truncate">{activeReceipt.receiptNumber}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400">Payment Date:</span>
-                  <p className="font-bold text-slate-900 truncate">{activeReceipt.date}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400">Student Name:</span>
-                  <p className="font-bold text-slate-900 truncate">{activeReceipt.studentName}</p>
-                </div>
-                <div>
-                  <span className="text-slate-400">Admission No:</span>
-                  <p className="font-mono font-bold text-slate-900 truncate">{activeReceipt.admissionNo}</p>
-                </div>
-              </div>
-
-              <div className="p-2.5 sm:p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <span className="font-bold text-slate-800 text-[11px] sm:text-xs truncate block">{activeReceipt.title}</span>
-                  <p className="text-[9px] sm:text-[10px] text-slate-400 font-mono truncate">Ref: {activeReceipt.refNo}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <span className="font-mono font-black text-emerald-700 text-sm sm:text-base">
-                    ₹ {activeReceipt.amountPaid.toLocaleString()}
-                  </span>
-                  <span className="block text-[9px] sm:text-[10px] text-emerald-600 font-bold">● Recorded in POS</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between text-[10px] sm:text-[11px] font-bold text-slate-700 pt-1">
-                <span>Remaining Balance Due:</span>
-                <span className="font-mono">₹ {activeReceipt.balanceRemaining.toLocaleString()}</span>
-              </div>
-
-              {/* Official Digital Stamps & Signatures */}
-              <div className="pt-2.5 sm:pt-3 flex items-end justify-between text-[9px] sm:text-[10px] border-t border-slate-200 gap-2">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <img
-                    src="/images/stamps/principal-round-seal.png"
-                    alt="Round Seal Muhar"
-                    className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90"
-                  />
-                  <div>
-                    <span className="font-bold text-slate-700 block text-[10px] sm:text-xs">Institutional Seal</span>
-                    <span className="text-slate-400 text-[8px] sm:text-[9px]">Shamsabad Farrukhabad</span>
+              <div id="accountant-fee-receipt-inner" className="printable-document p-3.5 sm:p-5 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 text-xs">
+                <div className="text-center space-y-1 border-b border-slate-200 pb-2.5 sm:pb-3">
+                  <h2 className="font-serif font-black text-sm sm:text-base text-slate-900">
+                    सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
+                  </h2>
+                  <p className="text-[10px] sm:text-[11px] text-slate-600 font-medium">
+                    SHAMSABAD, FARRUKHABAD (UP) &bull; Affiliation: UP-FBD-2026-SGM-089
+                  </p>
+                  <div className="inline-block bg-emerald-600 text-white text-[9px] sm:text-[10px] font-black uppercase px-2.5 sm:px-3 py-0.5 rounded-full">
+                    FEE COLLECTION RECEIPT
                   </div>
                 </div>
 
-                <div className="text-right space-y-0.5 sm:space-y-1">
-                  <img
-                    src="/images/stamps/principal-signature.png"
-                    alt="Accounts Officer Signature"
-                    className="h-7 sm:h-8 max-w-[80px] sm:max-w-[100px] object-contain ml-auto filter contrast-125"
-                  />
-                  <span className="font-bold text-slate-700 block text-[10px] sm:text-xs">Accounts In-charge</span>
-                  <span className="text-[7px] sm:text-[8px] text-slate-400 block font-mono truncate">TXN: {activeReceipt.refNo}</span>
+                <div className="grid grid-cols-2 gap-2 text-[10px] sm:text-[11px]">
+                  <div>
+                    <span className="text-slate-400">Receipt No:</span>
+                    <p className="font-mono font-bold text-slate-900 truncate">{activeReceipt.receiptNumber}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Payment Date:</span>
+                    <p className="font-bold text-slate-900 truncate">{activeReceipt.date}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Student Name:</span>
+                    <p className="font-bold text-slate-900 truncate">{activeReceipt.studentName}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Admission No:</span>
+                    <p className="font-mono font-bold text-slate-900 truncate">{activeReceipt.admissionNo}</p>
+                  </div>
+                </div>
+
+                <div className="p-2.5 sm:p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <span className="font-bold text-slate-800 text-[11px] sm:text-xs truncate block">{activeReceipt.title}</span>
+                    <p className="text-[9px] sm:text-[10px] text-slate-400 font-mono truncate">Ref: {activeReceipt.refNo}</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <span className="font-mono font-black text-emerald-700 text-sm sm:text-base">
+                      ₹ {activeReceipt.amountPaid.toLocaleString()}
+                    </span>
+                    <span className="block text-[9px] sm:text-[10px] text-emerald-600 font-bold">● Recorded in POS</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between text-[10px] sm:text-[11px] font-bold text-slate-700 pt-1">
+                  <span>Remaining Balance Due:</span>
+                  <span className="font-mono">₹ {activeReceipt.balanceRemaining.toLocaleString()}</span>
+                </div>
+
+                {/* Official Digital Stamps & Signatures */}
+                <div className="pt-2.5 sm:pt-3 flex items-end justify-between text-[9px] sm:text-[10px] border-t border-slate-200 gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <img
+                      src="/images/stamps/principal-round-seal.png"
+                      alt="Round Seal Muhar"
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-90"
+                    />
+                    <div>
+                      <span className="font-bold text-slate-700 block text-[10px] sm:text-xs">Institutional Seal</span>
+                      <span className="text-slate-400 text-[8px] sm:text-[9px]">Shamsabad Farrukhabad</span>
+                    </div>
+                  </div>
+
+                  <div className="text-right space-y-0.5 sm:space-y-1">
+                    <img
+                      src="/images/stamps/principal-signature.png"
+                      alt="Accounts Officer Signature"
+                      className="h-7 sm:h-8 max-w-[80px] sm:max-w-[100px] object-contain ml-auto filter contrast-125"
+                    />
+                    <span className="font-bold text-slate-700 block text-[10px] sm:text-xs">Accounts In-charge</span>
+                    <span className="text-[7px] sm:text-[8px] text-slate-400 block font-mono truncate">TXN: {activeReceipt.refNo}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-1.5 sm:pt-2">
-              <Button
-                type="button"
-                className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
-                onClick={handleDownloadReceiptPdf}
-                disabled={isDownloading}
-                leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-              >
-                {isDownloading ? 'Exporting PDF...' : 'Download PDF Voucher'}
-              </Button>
-              <Button
-                type="button"
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-bold text-xs"
-                onClick={() => {
-                  printIsolatedDocument('accountant-fee-receipt-inner');
-                  toast.success('Sent Stamped Receipt to printer.', 'Print Isolated');
-                }}
-                leftIcon={<Printer className="w-4 h-4" />}
-              >
-                Print
-              </Button>
-              <Button type="button" variant="outline" onClick={() => setShowReceiptModal(false)}>
-                Close
-              </Button>
+              <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-1.5 sm:pt-2">
+                <Button
+                  type="button"
+                  className="w-full sm:w-auto flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                  onClick={handleDownloadReceiptPdf}
+                  disabled={isDownloading}
+                  leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                >
+                  {isDownloading ? 'Exporting PDF...' : 'Download PDF Voucher'}
+                </Button>
+                <Button
+                  type="button"
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                  onClick={() => {
+                    printIsolatedDocument('accountant-fee-receipt-inner');
+                    toast.success('Sent Stamped Receipt to printer.', 'Print Isolated');
+                  }}
+                  leftIcon={<Printer className="w-4 h-4" />}
+                >
+                  Print
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setShowReceiptModal(false)}>
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        </ClientPortal>
       )}
     </PortalLayout>
   );
