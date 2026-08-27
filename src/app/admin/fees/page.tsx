@@ -23,6 +23,7 @@ import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { ClientPortal } from '../../../components/ui/client-portal';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const fallbackInvoices = [
   {
@@ -421,7 +422,7 @@ export default function FeesAdminPage() {
                 </button>
               </div>
 
-              <div className="p-5 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-xs font-sans">
+              <div id="admin-fee-voucher-inner" className="printable-document p-5 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-xs font-sans">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-900 bg-white p-0.5 flex-shrink-0">
                     <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
@@ -486,17 +487,28 @@ export default function FeesAdminPage() {
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-wrap gap-2 pt-2">
                 <Button
                   type="button"
-                  className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                  onClick={async () => {
+                    await downloadElementAsPdf('admin-fee-voucher-inner', `Fee_Voucher_${activeReceipt.invoiceNumber}.pdf`);
+                    toast.success('Downloaded official Fee Voucher PDF.', 'PDF Ready');
+                  }}
+                  leftIcon={<Download className="w-4 h-4" />}
+                >
+                  Download PDF
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-blue-600 hover:bg-blue-700 font-bold text-xs"
                   onClick={() => {
-                    window.print();
-                    toast.success('Generated printable Fee Voucher.', 'Print Ready');
+                    printIsolatedDocument('admin-fee-voucher-inner');
+                    toast.success('Sent Fee Voucher to printer.', 'Print Ready');
                   }}
                   leftIcon={<Printer className="w-4 h-4" />}
                 >
-                  Print / Download Voucher
+                  Print
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setActiveReceipt(null)}>
                   Close

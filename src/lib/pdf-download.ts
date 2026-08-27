@@ -180,8 +180,9 @@ export async function downloadElementAsImage(elementId: string, fileName: string
 
 /**
  * Clean isolated print of a document without website chrome, topbars, or sidebars.
+ * Uses high-resolution canvas snapshot to ensure 100% CSS style fidelity on mobile and desktop printers without page splitting.
  */
-export function printIsolatedDocument(elementId: string): void {
+export async function printIsolatedDocument(elementId: string): Promise<void> {
   if (typeof window === 'undefined') return;
   const element = document.getElementById(elementId);
   if (!element) {
@@ -189,54 +190,130 @@ export function printIsolatedDocument(elementId: string): void {
     return;
   }
 
-  const iframe = document.createElement('iframe');
-  iframe.style.position = 'fixed';
-  iframe.style.right = '0';
-  iframe.style.bottom = '0';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
+  // Create an off-screen staging container at standard desktop print width (794px = A4 96 DPI)
+  const stage = document.createElement('div');
+  stage.style.position = 'fixed';
+  stage.style.left = '-99999px';
+  stage.style.top = '0';
+  stage.style.width = '794px';
+  stage.style.minWidth = '794px';
+  stage.style.maxWidth = '794px';
+  stage.style.background = '#ffffff';
+  stage.style.padding = '0';
+  stage.style.margin = '0';
+  stage.style.zIndex = '-99999';
+  stage.style.boxSizing = 'border-box';
 
-  const doc = iframe.contentWindow?.document;
-  if (!doc) {
-    window.print();
-    return;
-  }
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.style.width = '100%';
+  clone.style.maxWidth = '100%';
+  clone.style.margin = '0';
+  clone.style.boxShadow = 'none';
+  clone.style.overflow = 'visible';
 
-  const cloned = element.cloneNode(true) as HTMLElement;
-  cloned.style.maxWidth = '100%';
-  cloned.style.margin = '0 auto';
-  cloned.style.boxShadow = 'none';
-
-  doc.open();
-  doc.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Official Institutional Document</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>
-          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-          body { margin: 0; padding: 12px; font-family: system-ui, -apple-system, sans-serif; background: #fff; }
-          @page { size: auto; margin: 10mm; }
-        </style>
-      </head>
-      <body>
-        ${cloned.outerHTML}
-      </body>
-    </html>
-  `);
-  doc.close();
-
-  setTimeout(() => {
-    iframe.contentWindow?.focus();
-    iframe.contentWindow?.print();
-    setTimeout(() => {
-      if (document.body.contains(iframe)) {
-        document.body.removeChild(iframe);
+  // Expand any clipped text or table overflows inside clone
+  const overflowElements = clone.querySelectorAll('*');
+  overflowElements.forEach((el) => {
+    const htmlEl = el as HTMLElement;
+    if (htmlEl.style) {
+      if (htmlEl.classList.contains('truncate')) {
+        htmlEl.style.whiteSpace = 'normal';
+        htmlEl.style.overflow = 'visible';
       }
-    }, 1000);
-  }, 500);
+      if (htmlEl.classList.contains('overflow-x-auto') || htmlEl.classList.contains('overflow-hidden')) {
+        htmlEl.style.overflow = 'visible';
+      }
+    }
+  });
+
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  try {
+    const canvas = await html2canvas(clone, {
+      scale: 2.5, // 300 DPI sharpness
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      windowWidth: 1024,
+    });
+
+    document.body.removeChild(stage);
+
+    const imgData = canvas.toDataURL('image/png', 1.0);
+
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) {
+      window.print();
+      return;
+    }
+
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Official Institutional Document</title>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <style>
+            @page {
+              size: portrait;
+              margin: 6mm;
+            }
+            * {
+              box-sizing: border-box;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              background: #ffffff;
+              width: 100%;
+              height: auto;
+            }
+            .document-image {
+              width: 100%;
+              max-width: 100%;
+              height: auto;
+              display: block;
+              margin: 0 auto;
+              page-break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          <img class="document-image" src="${imgData}" alt="Official Document" />
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 1500);
+    }, 400);
+  } catch (err) {
+    if (document.body.contains(stage)) {
+      document.body.removeChild(stage);
+    }
+    console.error('Print rendering error:', err);
+    window.print();
+  }
 }
