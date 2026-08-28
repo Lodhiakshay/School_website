@@ -3,8 +3,7 @@ import jsPDF from 'jspdf';
 
 /**
  * Downloads any DOM element as a high-resolution, pixel-perfect PDF.
- * Uses native browser SVG <foreignObject> rendering (html-to-image) to guarantee
- * 100% fidelity with the live UI—no font corruption, no clipped text, no broken gradients.
+ * Uses native browser SVG <foreignObject> rendering (html-to-image) directly on the live element.
  *
  * @param elementId DOM ID of the element to capture
  * @param fileName Name of the downloaded PDF file (e.g. 'Aarav_Sharma_Report_Card.pdf')
@@ -18,10 +17,9 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
   }
 
   try {
-    // Generate 300+ DPI snapshot using native browser layout engine
-    const imgData = await toPng(element, {
+    const dataUrl = await toPng(element, {
       quality: 1.0,
-      pixelRatio: 3.0,
+      pixelRatio: 2.5,
       backgroundColor: '#ffffff',
       cacheBust: true,
       filter: (node: HTMLElement) => {
@@ -33,15 +31,15 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     });
 
     const img = new Image();
-    img.src = imgData;
-    await new Promise((resolve) => {
+    img.src = dataUrl;
+    await new Promise((resolve, reject) => {
       img.onload = resolve;
+      img.onerror = reject;
     });
 
     const contentWidthMm = 210; // Standard A4 width in mm
     const contentHeightMm = (img.height * contentWidthMm) / img.width;
 
-    // Check if single page fits standard A4 (297mm) or proportional single sheet
     const isSinglePage = contentHeightMm <= 297;
     const pageFormat: [number, number] | string = isSinglePage
       ? [contentWidthMm, Math.max(contentHeightMm, 120)]
@@ -54,19 +52,19 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     });
 
     if (isSinglePage) {
-      pdf.addImage(imgData, 'PNG', 0, 0, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+      pdf.addImage(dataUrl, 'PNG', 0, 0, contentWidthMm, contentHeightMm, undefined, 'SLOW');
     } else {
       let heightLeft = contentHeightMm;
       let position = 0;
       const a4PageHeight = 297;
 
-      pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+      pdf.addImage(dataUrl, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
       heightLeft -= a4PageHeight;
 
       while (heightLeft > 0) {
         position = heightLeft - contentHeightMm;
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+        pdf.addImage(dataUrl, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
         heightLeft -= a4PageHeight;
       }
     }
@@ -75,7 +73,8 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     pdf.save(finalFileName);
     return true;
   } catch (err) {
-    console.error('Error generating PDF with native renderer:', err);
+    console.error('Error generating PDF:', err);
+    printIsolatedDocument(elementId);
     return false;
   }
 }
@@ -96,10 +95,9 @@ export async function downloadElementAsImage(elementId: string, fileName: string
   }
 
   try {
-    // Generate Ultra HD 350+ DPI image snapshot
     const dataUrl = await toPng(element, {
       quality: 1.0,
-      pixelRatio: 3.5,
+      pixelRatio: 3.0,
       backgroundColor: '#ffffff',
       cacheBust: true,
       filter: (node: HTMLElement) => {
@@ -118,7 +116,7 @@ export async function downloadElementAsImage(elementId: string, fileName: string
     document.body.removeChild(link);
     return true;
   } catch (err) {
-    console.error('Error downloading image with native renderer:', err);
+    console.error('Error downloading image:', err);
     return false;
   }
 }
