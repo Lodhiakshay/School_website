@@ -562,10 +562,10 @@ export default function StudentsAdminPage() {
       {/* Official Identity Badge Modal Portal (Rendered to root document.body for 100% Full-Screen Blur) */}
       {mounted && showIdCardModal && activeStudent && createPortal(
         <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2 animate-in fade-in duration-150">
-          <div className="bg-white rounded-3xl max-w-[290px] w-full p-2.5 shadow-2xl space-y-2 animate-in zoom-in-95 duration-150 border border-slate-200 my-auto">
+          <div className="bg-white rounded-2xl max-w-[265px] w-full p-2 shadow-2xl space-y-1.5 animate-in zoom-in-95 duration-150 border border-slate-200 my-auto">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 px-0.5">
-              <span className={`text-[9px] font-black uppercase tracking-wider font-mono ${isSSSD ? 'text-emerald-700' : 'text-blue-700'}`}>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-1 px-0.5">
+              <span className={`text-[8.5px] font-black uppercase tracking-wider font-mono ${isSSSD ? 'text-emerald-700' : 'text-blue-700'}`}>
                 {isSSSD ? 'SSSD PVC SMART CARD' : 'SGM PVC SMART CARD'}
               </span>
               <button
@@ -576,68 +576,68 @@ export default function StudentsAdminPage() {
               </button>
             </div>
 
-            {/* ID Badge Card: Realistic CR80 Vertical PVC Smart Card (Fixed 270px Dimensions) */}
+            {/* ID Badge Card: Authentic Standard Vertical CR80 PVC Smart Card (245px Standard) */}
             <div
               id="student-id-card-inner"
               className={`printable-document bg-white border-2 ${
                 isSSSD ? 'border-emerald-700' : 'border-[#002060]'
-              } rounded-2xl overflow-hidden shadow-xl text-center font-sans w-[270px] max-w-[270px] mx-auto border-t-4 ${
+              } rounded-2xl overflow-hidden shadow-xl text-center font-sans w-[245px] max-w-[245px] mx-auto border-t-4 ${
                 isSSSD ? 'border-t-emerald-800' : 'border-t-[#002060]'
               }`}
             >
               {/* Lanyard Punch Slot */}
-              <div className="pt-1.5 pb-1 bg-slate-100 flex items-center justify-center border-b border-slate-200">
-                <div className="w-10 h-1.5 rounded-full bg-slate-300 border border-slate-400 shadow-inner"></div>
+              <div className="pt-1 pb-0.5 bg-slate-100 flex items-center justify-center border-b border-slate-200">
+                <div className="w-8 h-1.5 rounded-full bg-slate-300 border border-slate-400"></div>
               </div>
 
               {/* Institution Header Banner */}
               {isSSSD ? (
-                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-2.5 border-b-2 border-amber-400 text-center">
-                  <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md mx-auto mb-1 ring-2 ring-amber-400/30">
+                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white py-1.5 px-2 border-b-2 border-amber-400 text-center">
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm mx-auto mb-0.5">
                     <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
                   </div>
-                  <h3 className="font-serif font-black text-xs text-amber-300 leading-tight tracking-wider uppercase">
+                  <h3 className="font-serif font-black text-[10.5px] text-amber-300 leading-tight uppercase">
                     SSSD PUBLIC SCHOOL
                   </h3>
-                  <p className="text-[7.5px] uppercase tracking-widest text-emerald-200 font-bold mt-0.5">
+                  <p className="text-[6.5px] uppercase tracking-widest text-emerald-200 font-bold">
                     100% ENGLISH MEDIUM &bull; SHAMSABAD
                   </p>
-                  <div className="mt-1 bg-emerald-900/90 text-amber-300 text-[7px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-emerald-700 inline-block font-mono shadow-xs">
-                    STUDENT IDENTITY CARD &bull; 2026-2027
+                  <div className="mt-0.5 bg-emerald-900 text-amber-300 text-[6.5px] font-black uppercase tracking-widest px-1.5 py-0.2 rounded-full border border-emerald-700 inline-block font-mono">
+                    STUDENT ID &bull; 2026-2027
                   </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white p-2.5 border-b-2 border-amber-400 text-center">
-                  <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md mx-auto mb-1 ring-2 ring-amber-400/30">
+                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white py-1.5 px-2 border-b-2 border-amber-400 text-center">
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-amber-400 bg-white p-0.5 shadow-sm mx-auto mb-0.5">
                     <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
                   </div>
-                  <h3 className="font-serif font-black text-xs text-amber-300 leading-tight tracking-wider uppercase">
+                  <h3 className="font-serif font-black text-[10.5px] text-amber-300 leading-tight uppercase">
                     सरस्वती ज्ञान मन्दिर
                   </h3>
-                  <p className="text-[7.5px] uppercase tracking-widest text-slate-200 font-bold mt-0.5">
+                  <p className="text-[6.5px] uppercase tracking-widest text-slate-200 font-bold">
                     INTERMEDIATE COLLEGE &bull; SHAMSABAD
                   </p>
-                  <div className="mt-1 bg-blue-950 text-amber-300 text-[7px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-blue-800 inline-block font-mono shadow-xs">
-                    STUDENT IDENTITY CARD &bull; 2026-2027
+                  <div className="mt-0.5 bg-blue-950 text-amber-300 text-[6.5px] font-black uppercase tracking-widest px-1.5 py-0.2 rounded-full border border-blue-800 inline-block font-mono">
+                    STUDENT ID &bull; 2026-2027
                   </div>
                 </div>
               )}
 
-              <div className="p-2.5 space-y-1.5 bg-gradient-to-b from-white to-slate-50">
-                {/* Scholar Portrait Photo */}
-                <div className={`w-15 h-15 rounded-2xl border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-md ring-2 ring-amber-400/80`}>
+              <div className="p-1.5 space-y-1 bg-gradient-to-b from-white to-slate-50">
+                {/* Scholar Portrait (Compact Original Size) */}
+                <div className={`w-11 h-11 rounded-lg border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-xs ring-1 ring-amber-400`}>
                   <img
-                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80"
+                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=250&q=80"
                     alt={activeStudent.firstName}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-cover rounded-md"
                   />
                 </div>
 
                 <div>
-                  <h4 className="font-black text-xs text-slate-950 font-serif tracking-wide uppercase leading-tight">
+                  <h4 className="font-black text-[10.5px] text-slate-950 font-serif uppercase leading-tight">
                     {activeStudent.firstName} {activeStudent.lastName}
                   </h4>
-                  <span className={`inline-block text-[8px] font-black px-2.5 py-0.5 rounded-full mt-0.5 border shadow-xs ${
+                  <span className={`inline-block text-[7.5px] font-black px-1.5 py-0.2 rounded-full mt-0.5 border ${
                     isSSSD ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-blue-100 text-blue-900 border-blue-300'
                   }`}>
                     {activeStudent.currentClassId?.name} - Section {activeStudent.currentSectionId?.name}
@@ -645,65 +645,65 @@ export default function StudentsAdminPage() {
                 </div>
 
                 {/* Demographic Matrix */}
-                <div className="bg-white p-2 rounded-xl border border-slate-200 text-left text-[9px] space-y-1 shadow-xs">
+                <div className="bg-white p-1 rounded-lg border border-slate-200 text-left text-[8px] space-y-0.5">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-bold uppercase text-[7.5px]">Scholar / Adm:</span>
+                    <span className="text-slate-400 font-bold uppercase text-[7px]">Scholar No:</span>
                     <span className={`font-mono font-black ${isSSSD ? 'text-emerald-700' : 'text-blue-700'}`}>{activeStudent.admissionNumber}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-bold uppercase text-[7.5px]">Roll Number:</span>
+                    <span className="text-slate-400 font-bold uppercase text-[7px]">Roll No:</span>
                     <span className="font-mono font-bold text-slate-900">#{activeStudent.currentRollNumber}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-bold uppercase text-[7.5px]">Father / Guardian:</span>
-                    <span className="font-bold text-slate-800 truncate max-w-[130px]">{activeStudent.parentId?.fatherName}</span>
+                    <span className="text-slate-400 font-bold uppercase text-[7px]">Guardian:</span>
+                    <span className="font-bold text-slate-800 truncate max-w-[110px]">{activeStudent.parentId?.fatherName}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-bold uppercase text-[7.5px]">Emergency Mobile:</span>
+                    <span className="text-slate-400 font-bold uppercase text-[7px]">Emergency:</span>
                     <span className="font-mono text-slate-900 font-bold">{activeStudent.parentId?.fatherPhone}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-bold uppercase text-[7.5px]">Blood Group &bull; DOB:</span>
-                    <span className="font-mono font-bold text-rose-700">B+ &bull; 12-Aug-2010</span>
+                    <span className="text-slate-400 font-bold uppercase text-[7px]">Blood &bull; DOB:</span>
+                    <span className="font-mono font-bold text-rose-700">B+ &bull; 12-Aug-10</span>
                   </div>
                 </div>
 
-                {/* Digital Barcode & Library Scan Strip */}
-                <div className="bg-slate-100 py-0.5 px-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                  <div className="font-mono font-black text-[7.5px] text-slate-600 tracking-wider">
+                {/* Barcode Strip */}
+                <div className="bg-slate-100 py-0.5 px-1.5 rounded border border-slate-200 flex items-center justify-between">
+                  <div className="font-mono font-black text-[6.5px] text-slate-600 tracking-wider">
                     |||||| | |||| || ||| | |||
                   </div>
-                  <span className="text-[7px] font-bold text-slate-500 uppercase font-mono">LIBRARY VERIFIED</span>
+                  <span className="text-[6px] font-bold text-slate-500 uppercase font-mono">VERIFIED</span>
                 </div>
 
                 {/* Stamped Seals & Principal Signature */}
-                <div className="pt-1 pb-0.5 flex items-end justify-between text-[7px] text-slate-400 border-t border-slate-200 px-0.5">
+                <div className="pt-0.5 flex items-end justify-between text-[6.5px] text-slate-400 border-t border-slate-200 px-0.5">
                   <div className="text-left space-y-0.2">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-round-seal.png' : '/images/stamps/principal-round-seal.png'}
                       alt="Round Seal"
-                      className="w-7 h-7 object-contain drop-shadow-xs transform -rotate-3 filter contrast-125"
+                      className="w-6 h-6 object-contain filter contrast-125"
                     />
-                    <span className={`font-mono text-[6.5px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-700'}`}>Valid: 2026-2027</span>
+                    <span className={`font-mono text-[6px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-700'}`}>Valid: 2026-27</span>
                   </div>
                   <div className="text-center">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-signature.png' : '/images/stamps/principal-signature.png'}
                       alt="Principal Signature"
-                      className="w-16 h-6 object-contain mx-auto filter contrast-150"
+                      className="w-14 h-5 object-contain mx-auto filter contrast-150"
                     />
-                    <span className="text-[6.5px] font-bold text-slate-700 block uppercase">Principal Signature</span>
+                    <span className="text-[6px] font-bold text-slate-700 block uppercase">Principal</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-1.5 pt-0.5">
+            <div className="flex gap-1 pt-0.5">
               <Button
                 type="button"
                 size="sm"
-                className={`flex-1 font-bold text-xs h-8 shadow-sm ${isSSSD ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                className={`flex-1 font-bold text-[11px] h-7 shadow-sm ${isSSSD ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}
                 onClick={handleDownloadStudentIdImage}
                 disabled={isDownloading}
                 leftIcon={<Download className="w-3 h-3" />}
@@ -714,7 +714,7 @@ export default function StudentsAdminPage() {
                 type="button"
                 size="sm"
                 variant="outline"
-                className="font-bold text-xs h-8 px-2.5"
+                className="font-bold text-[11px] h-7 px-2"
                 onClick={() => {
                   printIsolatedDocument('student-id-card-inner');
                   toast.success(`Generated printable ${isSSSD ? 'SSSD' : 'SGM'} ID Card.`, 'Print Ready');
@@ -723,7 +723,7 @@ export default function StudentsAdminPage() {
               >
                 Print
               </Button>
-              <Button type="button" size="sm" variant="ghost" className="h-8 px-2 text-xs" onClick={() => setShowIdCardModal(false)}>
+              <Button type="button" size="sm" variant="ghost" className="h-7 px-1.5 text-[11px]" onClick={() => setShowIdCardModal(false)}>
                 Close
               </Button>
             </div>

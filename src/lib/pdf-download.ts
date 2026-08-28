@@ -158,24 +158,24 @@ export async function downloadElementAsImage(elementId: string, fileName: string
     return false;
   }
 
-  // Determine exact natural width of the card element (e.g. 260px - 280px)
+  // Determine exact natural width of the card element (Standard PVC 245px)
   const elementRect = element.getBoundingClientRect();
-  const cardWidth = Math.max(260, Math.min(300, elementRect.width || 270));
+  const cardWidth = elementRect.width > 0 ? elementRect.width : 245;
 
   // Create CR80 standard staging canvas matching the card's exact natural width + 16px safety margins
   const badgeWrapper = document.createElement('div');
   badgeWrapper.style.position = 'fixed';
   badgeWrapper.style.top = '0';
   badgeWrapper.style.left = '0';
-  badgeWrapper.style.width = `${cardWidth + 24}px`;
-  badgeWrapper.style.minWidth = `${cardWidth + 24}px`;
-  badgeWrapper.style.maxWidth = `${cardWidth + 24}px`;
+  badgeWrapper.style.width = `${cardWidth + 16}px`;
+  badgeWrapper.style.minWidth = `${cardWidth + 16}px`;
+  badgeWrapper.style.maxWidth = `${cardWidth + 16}px`;
   badgeWrapper.style.zIndex = '-9999';
   badgeWrapper.style.opacity = '1';
   badgeWrapper.style.pointerEvents = 'none';
   badgeWrapper.style.backgroundColor = '#ffffff';
   badgeWrapper.style.boxSizing = 'border-box';
-  badgeWrapper.style.padding = '12px'; // Safety padding prevents any corner clipping
+  badgeWrapper.style.padding = '8px'; // Minimal clean safety padding
 
   const clone = element.cloneNode(true) as HTMLElement;
   clone.style.width = `${cardWidth}px`;
@@ -292,8 +292,8 @@ export function printIsolatedDocument(elementId: string): void {
             -webkit-user-select: text !important;
           }
           .printable-document {
-            width: ${isIdCard ? '280px' : '100%'} !important;
-            max-width: ${isIdCard ? '280px' : '100%'} !important;
+            width: ${isIdCard ? '245px' : '100%'} !important;
+            max-width: ${isIdCard ? '245px' : '100%'} !important;
             margin: ${isIdCard ? '20px auto' : '0 auto'} !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -302,7 +302,7 @@ export function printIsolatedDocument(elementId: string): void {
         </style>
       </head>
       <body>
-        <div style="width: 100%; max-width: ${isIdCard ? '280px' : '100%'}; margin: 0 auto;">
+        <div style="width: 100%; max-width: ${isIdCard ? '245px' : '100%'}; margin: 0 auto;">
           ${clone.outerHTML}
         </div>
       </body>
