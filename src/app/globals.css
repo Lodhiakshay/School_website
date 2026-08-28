@@ -116,38 +116,57 @@ table td {
 @media print {
   body {
     background: #ffffff !important;
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Hide all website chrome, topbars, navs, sidebars, buttons by default when printing */
-  aside,
-  header,
-  nav,
-  button,
-  .no-print {
-    display: none !important;
+  /* When isolated print is active, hide everything else and only show the isolated document */
+  body.is-printing-isolated * {
+    visibility: hidden !important;
   }
 
-  /* Ensure background colors, borders, and images render with full fidelity */
+  body.is-printing-isolated #isolated-print-container,
+  body.is-printing-isolated #isolated-print-container * {
+    visibility: visible !important;
+  }
+
+  body.is-printing-isolated #isolated-print-container {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    display: block !important;
+    z-index: 99999999 !important;
+  }
+
+  /* Ensure background colors, gradients, borders, and images render with 100% fidelity */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   .printable-document {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 auto !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
+  }
+
+  .no-print,
+  button,
+  aside,
+  header,
+  nav {
+    display: none !important;
   }
 
   @page {
-    size: auto;
-    margin: 8mm 6mm;
+    size: portrait;
+    margin: 6mm 6mm 6mm 6mm;
   }
 }
 
