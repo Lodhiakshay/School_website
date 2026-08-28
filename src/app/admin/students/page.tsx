@@ -592,42 +592,34 @@ export default function StudentsAdminPage() {
                 </div>
               </div>
 
-              {/* Institution Header Banner */}
+              {/* Institution Header Banner (Centered Symmetric Layout) */}
               {isSSSD ? (
-                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-3.5 border-b-2 border-amber-400">
-                  <div className="flex items-center justify-center gap-2.5">
-                    <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
-                      <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <div className="text-left flex-1 min-w-0">
-                      <h3 className="font-serif font-black text-sm sm:text-base text-amber-300 leading-tight tracking-wide truncate">
-                        SSSD PUBLIC SCHOOL
-                      </h3>
-                      <p className="text-[9px] uppercase tracking-widest text-emerald-200 font-bold mt-0.5 truncate">
-                        100% ENGLISH MEDIUM &bull; SHAMSABAD
-                      </p>
-                    </div>
+                <div className="bg-gradient-to-r from-emerald-950 via-[#064e3b] to-teal-950 text-white p-3 border-b-2 border-amber-400 text-center">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md mx-auto mb-1 ring-2 ring-amber-400/30">
+                    <img src="/images/sssd-logo.png" alt="SSSD Logo" className="w-full h-full object-contain" />
                   </div>
-                  <div className="mt-2 bg-emerald-900/90 text-amber-300 text-[9px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full border border-emerald-700 inline-block font-mono shadow-sm">
+                  <h3 className="font-serif font-black text-xs sm:text-sm text-amber-300 leading-tight tracking-wider uppercase">
+                    SSSD PUBLIC SCHOOL
+                  </h3>
+                  <p className="text-[7.5px] uppercase tracking-widest text-emerald-200 font-bold mt-0.5">
+                    100% ENGLISH MEDIUM &bull; SHAMSABAD
+                  </p>
+                  <div className="mt-1.5 bg-emerald-900/90 text-amber-300 text-[7.5px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full border border-emerald-700 inline-block font-mono shadow-sm">
                     STUDENT IDENTITY CARD &bull; 2026-2027
                   </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white p-3.5 border-b-2 border-amber-400">
-                  <div className="flex items-center justify-center gap-2.5">
-                    <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md flex-shrink-0">
-                      <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <div className="text-left flex-1 min-w-0">
-                      <h3 className="font-serif font-black text-sm sm:text-base text-amber-300 leading-tight tracking-wide truncate">
-                        सरस्वती ज्ञान मन्दिर
-                      </h3>
-                      <p className="text-[9px] uppercase tracking-widest text-slate-200 font-bold mt-0.5 truncate">
-                        INTERMEDIATE COLLEGE &bull; SHAMSABAD
-                      </p>
-                    </div>
+                <div className="bg-gradient-to-r from-[#001848] via-[#002060] to-[#001848] text-white p-3 border-b-2 border-amber-400 text-center">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md mx-auto mb-1 ring-2 ring-amber-400/30">
+                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
                   </div>
-                  <div className="mt-2 bg-blue-950 text-amber-300 text-[9px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full border border-blue-800 inline-block font-mono shadow-sm">
+                  <h3 className="font-serif font-black text-xs sm:text-sm text-amber-300 leading-tight tracking-wider uppercase">
+                    सरस्वती ज्ञान मन्दिर
+                  </h3>
+                  <p className="text-[7.5px] uppercase tracking-widest text-slate-200 font-bold mt-0.5">
+                    INTERMEDIATE COLLEGE &bull; SHAMSABAD
+                  </p>
+                  <div className="mt-1.5 bg-blue-950 text-amber-300 text-[7.5px] font-black uppercase tracking-widest px-3 py-0.5 rounded-full border border-blue-800 inline-block font-mono shadow-sm">
                     STUDENT IDENTITY CARD &bull; 2026-2027
                   </div>
                 </div>
