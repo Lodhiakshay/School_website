@@ -119,9 +119,18 @@ export default function StudentResultsPage() {
         </div>
 
         {/* Official Printable Marksheet Card */}
-        <div id="student-marksheet-card" className="printable-document bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+        <div id="student-marksheet-card" className="printable-document relative bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+          {/* Institutional Watermark Logo */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-0 overflow-hidden select-none">
+            <img
+              src="/logo.png"
+              alt="Watermark Crest"
+              className="w-80 sm:w-96 h-80 sm:h-96 object-contain filter grayscale transform -rotate-12"
+            />
+          </div>
+
           {/* Institution Header Ribbon */}
-          <div className="bg-[#002060] text-white p-4 sm:p-8 text-center relative border-b-4 border-amber-400">
+          <div className="relative z-10 bg-[#002060] text-white p-4 sm:p-8 text-center border-b-4 border-amber-400">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">
               <img src="/logo.png" alt="SGM Crest" className="w-full h-full object-contain" />
             </div>
@@ -141,7 +150,7 @@ export default function StudentResultsPage() {
           </div>
 
           {/* Student Demographics Table */}
-          <div className="p-3.5 sm:p-8 space-y-4 sm:space-y-6">
+          <div className="relative z-10 p-3.5 sm:p-8 space-y-4 sm:space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-xs">
               <div>
                 <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Student Name:</span>
