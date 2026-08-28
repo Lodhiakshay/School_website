@@ -22,11 +22,18 @@ import {
   Palette,
   HeartHandshake,
   TrendingUp,
+  Download,
+  Printer,
+  X,
+  Loader2,
 } from 'lucide-react';
 import { PublicNavbar } from '../../components/public/public-navbar';
 import { PublicFooter } from '../../components/public/public-footer';
 import { Button } from '../../components/ui/button';
 import { apiClient } from '../../lib/api-client';
+import { ClientPortal } from '../../components/ui/client-portal';
+import { downloadElementAsPdf, printIsolatedDocument } from '../../lib/pdf-download';
+import { useToast } from '../../components/ui/toast';
 
 const STARTER_STAGES = [
   {
@@ -206,6 +213,9 @@ const STARTER_STAGES = [
 export default function AcademicsPage() {
   const [stages, setStages] = useState<any[]>(STARTER_STAGES);
   const [activeTab, setActiveTab] = useState('high-school');
+  const [showSchemeModal, setShowSchemeModal] = useState(false);
+  const [isDownloadingScheme, setIsDownloadingScheme] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     apiClient
@@ -389,25 +399,30 @@ export default function AcademicsPage() {
 
               {/* Subject Matrix Table */}
               <div className="space-y-3 pt-2">
-                <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-blue-600" /> Prescribed Subject Matrix &amp; Evaluation
-                </h3>
-                <div className="rounded-2xl border border-slate-200 overflow-hidden">
-                  <table className="w-full text-left text-xs">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-blue-600" /> Prescribed Subject Matrix &amp; Evaluation
+                  </h3>
+                  <span className="text-[10px] text-slate-400 sm:hidden flex items-center gap-1 font-medium">
+                    👉 Scroll table
+                  </span>
+                </div>
+                <div className="rounded-2xl border border-slate-200 overflow-x-auto shadow-sm bg-white">
+                  <table className="w-full text-left text-xs min-w-[480px]">
                     <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
                       <tr>
-                        <th className="py-2.5 px-3">Subject Name</th>
-                        <th className="py-2.5 px-3">Subject Code</th>
-                        <th className="py-2.5 px-3 text-right">Assessment Framework</th>
+                        <th className="py-3 px-4">Subject Name</th>
+                        <th className="py-3 px-4 text-center">Subject Code</th>
+                        <th className="py-3 px-4 text-right">Assessment Framework</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-medium">
+                    <tbody className="divide-y divide-slate-100 font-medium text-xs">
                       {currentStage.subjects.map((sub: any, sIdx: number) => (
-                        <tr key={sIdx} className="hover:bg-slate-50/80">
-                          <td className="py-2.5 px-3 font-bold text-slate-900">{sub.name}</td>
-                          <td className="py-2.5 px-3 font-mono text-[11px] text-blue-700">{sub.code}</td>
-                          <td className="py-2.5 px-3 text-right">
-                            <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-mono text-[10px]">
+                        <tr key={sIdx} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-3 px-4 font-bold text-slate-900">{sub.name}</td>
+                          <td className="py-3 px-4 text-center font-mono text-[11px] font-bold text-blue-700">{sub.code}</td>
+                          <td className="py-3 px-4 text-right">
+                            <span className="bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-lg font-mono text-[10px] font-bold inline-block">
                               {sub.type}
                             </span>
                           </td>
@@ -425,11 +440,14 @@ export default function AcademicsPage() {
                     Apply Online for 2026-27
                   </Button>
                 </Link>
-                <Link href="/downloads">
-                  <Button variant="outline" rightIcon={<FileDown className="w-4 h-4" />}>
-                    Download Scheme &amp; Circulars
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  className="font-bold border-slate-300 text-slate-800 hover:bg-slate-100"
+                  onClick={() => setShowSchemeModal(true)}
+                  rightIcon={<FileDown className="w-4 h-4 text-blue-700" />}
+                >
+                  Download Scheme &amp; Circulars
+                </Button>
               </div>
             </div>
 
@@ -479,6 +497,165 @@ export default function AcademicsPage() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Scheme & Curriculum Modal */}
+      {showSchemeModal && currentStage && (
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200 my-auto animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col">
+              <div className="p-4 sm:p-5 bg-[#002060] text-white flex items-center justify-between border-b-2 border-amber-400 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0">
+                    <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <h3 className="font-serif font-black text-sm sm:text-base text-amber-300">
+                      {currentStage.title}
+                    </h3>
+                    <p className="text-[10px] sm:text-xs text-slate-200">
+                      Official Curriculum &amp; Examination Blueprint (2026-27)
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSchemeModal(false)}
+                  className="text-white/80 hover:text-white p-1.5 rounded-full hover:bg-white/10 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 text-xs font-sans">
+                <div
+                  id="academic-scheme-download-card"
+                  className="printable-document p-5 sm:p-6 bg-white border-2 border-slate-900 rounded-2xl space-y-4 text-slate-900 shadow-sm"
+                >
+                  {/* Institutional Header */}
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-3 gap-3">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 bg-white p-0.5 flex-shrink-0">
+                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="text-center flex-1">
+                      <h2 className="font-serif font-black text-sm text-blue-950 uppercase">
+                        सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
+                      </h2>
+                      <p className="text-[9px] font-mono text-slate-600">
+                        SHAMSABAD, FARRUKHABAD (U.P.) &bull; AFFILIATION: UP-FBD-2026-SGM-089
+                      </p>
+                      <span className="inline-block mt-0.5 font-bold font-mono text-[9px] bg-slate-900 text-amber-300 px-3 py-0.5 rounded-full uppercase">
+                        {currentStage.tabLabel} &bull; SYLLABUS &amp; EVALUATION MATRIX (2026-2027)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Highlights Summary */}
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-[11px]">
+                    <span className="font-bold text-slate-900 block">Class Group &amp; Guidelines:</span>
+                    <p className="text-slate-600">{currentStage.classes} ({currentStage.ageGroup})</p>
+                    <p className="text-slate-700 italic">{currentStage.description}</p>
+                  </div>
+
+                  {/* Subject Matrix Table */}
+                  <div className="border border-slate-300 rounded-xl overflow-hidden shadow-sm">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-900 text-white text-[10px] font-bold uppercase">
+                        <tr>
+                          <th className="p-2.5">Subject Name</th>
+                          <th className="p-2.5 text-center">Code</th>
+                          <th className="p-2.5 text-right">Evaluation Pattern</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200 font-medium text-[11px]">
+                        {currentStage.subjects.map((s: any, idx: number) => (
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="p-2.5 font-bold text-slate-900">{s.name}</td>
+                            <td className="p-2.5 text-center font-mono font-bold text-blue-700">{s.code}</td>
+                            <td className="p-2.5 text-right font-mono text-slate-700">{s.type}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pedagogical Features */}
+                  <div className="bg-blue-50/70 p-3 rounded-xl border border-blue-200 text-[11px] space-y-1 text-slate-800">
+                    <span className="font-bold text-blue-950 block">Instructional Focus &amp; Practical Labs:</span>
+                    <ul className="list-disc pl-4 space-y-0.5">
+                      {currentStage.highlights.map((h: string, idx: number) => (
+                        <li key={idx}>{h}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Footer Seal & Sign */}
+                  <div className="pt-3 flex items-end justify-between text-xs border-t border-slate-200 mt-2">
+                    <div className="text-center">
+                      <img
+                        src="/images/stamps/approved-stamp.png"
+                        alt="Approved Stamp"
+                        className="w-24 h-9 object-contain transform -rotate-2"
+                      />
+                      <span className="text-[8px] font-mono font-bold text-blue-900 block mt-0.5">
+                        ACADEMIC COUNCIL
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <img
+                        src="/images/stamps/principal-signature.png"
+                        alt="Principal Sig"
+                        className="w-28 h-10 object-contain mx-auto"
+                      />
+                      <span className="text-[9px] font-bold text-slate-800 block uppercase">
+                        Principal &amp; Head of Institution
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap gap-2 justify-end flex-shrink-0">
+                <Button
+                  type="button"
+                  className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+                  disabled={isDownloadingScheme}
+                  onClick={async () => {
+                    setIsDownloadingScheme(true);
+                    try {
+                      await downloadElementAsPdf(
+                        'academic-scheme-download-card',
+                        `${currentStage.id}_Academic_Curriculum_Scheme_2026_27.pdf`
+                      );
+                      toast.success(`Downloaded official ${currentStage.tabLabel} Scheme PDF.`, 'Downloaded');
+                    } catch {
+                      toast.error('Could not export PDF. Please try again.');
+                    } finally {
+                      setIsDownloadingScheme(false);
+                    }
+                  }}
+                  leftIcon={isDownloadingScheme ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                >
+                  {isDownloadingScheme ? 'Downloading PDF...' : 'Download Official PDF Scheme'}
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-blue-600 hover:bg-blue-700 font-bold text-xs"
+                  onClick={() => {
+                    printIsolatedDocument('academic-scheme-download-card');
+                    toast.success('Sent Scheme to printer.', 'Print Ready');
+                  }}
+                  leftIcon={<Printer className="w-4 h-4" />}
+                >
+                  Print
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setShowSchemeModal(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </ClientPortal>
       )}
 
       <PublicFooter />

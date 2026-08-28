@@ -2,35 +2,6 @@ import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 
 /**
- * Preloads and converts any <img> tags inside an element to base64 Data URLs
- * to ensure that cross-origin or relative URLs never fail or taint the canvas.
- */
-async function inlineImages(element: HTMLElement): Promise<void> {
-  const images = element.querySelectorAll('img');
-  const promises = Array.from(images).map(async (img) => {
-    if (img.src && !img.src.startsWith('data:')) {
-      try {
-        const response = await fetch(img.src, { mode: 'cors' });
-        const blob = await response.blob();
-        const reader = new FileReader();
-        await new Promise((resolve) => {
-          reader.onloadend = () => {
-            if (reader.result) {
-              img.src = reader.result as string;
-            }
-            resolve(true);
-          };
-          reader.readAsDataURL(blob);
-        });
-      } catch {
-        // If fetch fails, continue with existing src
-      }
-    }
-  });
-  await Promise.all(promises);
-}
-
-/**
  * Downloads any DOM element as a high-resolution, pixel-perfect PDF.
  * Uses native browser SVG <foreignObject> rendering (html-to-image) to guarantee
  * 100% fidelity with the live UI—no font corruption, no clipped text, no broken gradients.
@@ -47,21 +18,8 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
   }
 
   try {
-    // Clone element to avoid modifying live UI
-    const clone = element.cloneNode(true) as HTMLElement;
-    clone.style.width = element.offsetWidth > 0 ? `${element.offsetWidth}px` : '794px';
-    clone.style.maxWidth = '100%';
-    clone.style.margin = '0';
-    clone.style.position = 'fixed';
-    clone.style.left = '-99999px';
-    clone.style.top = '0';
-    clone.style.zIndex = '-99999';
-    clone.style.background = '#ffffff';
-
-    document.body.appendChild(clone);
-    await inlineImages(clone);
-
-    const dataUrl = await toPng(clone, {
+    // Generate 300+ DPI snapshot using native browser layout engine
+    const imgData = await toPng(element, {
       quality: 1.0,
       pixelRatio: 3.0,
       backgroundColor: '#ffffff',
@@ -74,10 +32,8 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
       },
     });
 
-    document.body.removeChild(clone);
-
     const img = new Image();
-    img.src = dataUrl;
+    img.src = imgData;
     await new Promise((resolve) => {
       img.onload = resolve;
     });
@@ -85,6 +41,7 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     const contentWidthMm = 210; // Standard A4 width in mm
     const contentHeightMm = (img.height * contentWidthMm) / img.width;
 
+    // Check if single page fits standard A4 (297mm) or proportional single sheet
     const isSinglePage = contentHeightMm <= 297;
     const pageFormat: [number, number] | string = isSinglePage
       ? [contentWidthMm, Math.max(contentHeightMm, 120)]
@@ -97,19 +54,19 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     });
 
     if (isSinglePage) {
-      pdf.addImage(dataUrl, 'PNG', 0, 0, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+      pdf.addImage(imgData, 'PNG', 0, 0, contentWidthMm, contentHeightMm, undefined, 'SLOW');
     } else {
       let heightLeft = contentHeightMm;
       let position = 0;
       const a4PageHeight = 297;
 
-      pdf.addImage(dataUrl, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+      pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
       heightLeft -= a4PageHeight;
 
       while (heightLeft > 0) {
         position = heightLeft - contentHeightMm;
         pdf.addPage();
-        pdf.addImage(dataUrl, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
+        pdf.addImage(imgData, 'PNG', 0, position, contentWidthMm, contentHeightMm, undefined, 'SLOW');
         heightLeft -= a4PageHeight;
       }
     }
@@ -119,8 +76,6 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
     return true;
   } catch (err) {
     console.error('Error generating PDF with native renderer:', err);
-    // Fallback: trigger native print dialog
-    printIsolatedDocument(elementId);
     return false;
   }
 }
@@ -128,6 +83,9 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
 /**
  * Downloads ID Badges / Cards as Ultra High-Definition CR80 PNG images.
  * Uses native browser rendering to ensure 100% exact match with the on-screen card.
+ *
+ * @param elementId DOM ID of the ID badge card
+ * @param fileName Name of the downloaded image file (e.g. 'Student_ID_Aarav.png')
  */
 export async function downloadElementAsImage(elementId: string, fileName: string = 'badge.png'): Promise<boolean> {
   if (typeof window === 'undefined') return false;
@@ -138,20 +96,8 @@ export async function downloadElementAsImage(elementId: string, fileName: string
   }
 
   try {
-    const clone = element.cloneNode(true) as HTMLElement;
-    clone.style.width = element.offsetWidth > 0 ? `${element.offsetWidth}px` : '340px';
-    clone.style.maxWidth = '340px';
-    clone.style.margin = '0';
-    clone.style.position = 'fixed';
-    clone.style.left = '-99999px';
-    clone.style.top = '0';
-    clone.style.zIndex = '-99999';
-    clone.style.background = '#ffffff';
-
-    document.body.appendChild(clone);
-    await inlineImages(clone);
-
-    const dataUrl = await toPng(clone, {
+    // Generate Ultra HD 350+ DPI image snapshot
+    const dataUrl = await toPng(element, {
       quality: 1.0,
       pixelRatio: 3.5,
       backgroundColor: '#ffffff',
@@ -163,8 +109,6 @@ export async function downloadElementAsImage(elementId: string, fileName: string
         return true;
       },
     });
-
-    document.body.removeChild(clone);
 
     const link = document.createElement('a');
     link.download = fileName.endsWith('.png') ? fileName : `${fileName}.png`;
@@ -180,11 +124,10 @@ export async function downloadElementAsImage(elementId: string, fileName: string
 }
 
 /**
- * Industry-Standard Native Isolated Print Engine.
- * Mounts the target document into a top-level print container and invokes the browser's
- * native vector print dialog with full CSS styles, fonts, and background colors.
+ * Clean isolated print of a document without website chrome, topbars, or sidebars.
+ * Renders the exact native browser snapshot into an isolated print iframe.
  */
-export function printIsolatedDocument(elementId: string): void {
+export async function printIsolatedDocument(elementId: string): Promise<void> {
   if (typeof window === 'undefined') return;
   const element = document.getElementById(elementId);
   if (!element) {
@@ -192,36 +135,88 @@ export function printIsolatedDocument(elementId: string): void {
     return;
   }
 
-  // Remove any existing print container
-  const existing = document.getElementById('isolated-print-container');
-  if (existing && document.body.contains(existing)) {
-    document.body.removeChild(existing);
-  }
+  try {
+    const dataUrl = await toPng(element, {
+      quality: 1.0,
+      pixelRatio: 3.0,
+      backgroundColor: '#ffffff',
+      cacheBust: true,
+      filter: (node: HTMLElement) => {
+        if (node.classList && node.classList.contains('no-print')) {
+          return false;
+        }
+        return true;
+      },
+    });
 
-  // Create clean top-level container for print
-  const printContainer = document.createElement('div');
-  printContainer.id = 'isolated-print-container';
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
 
-  const clone = element.cloneNode(true) as HTMLElement;
-  clone.classList.add('printable-document');
-  printContainer.appendChild(clone);
-
-  document.body.appendChild(printContainer);
-  document.body.classList.add('is-printing-isolated');
-
-  const cleanup = () => {
-    document.body.classList.remove('is-printing-isolated');
-    if (document.body.contains(printContainer)) {
-      document.body.removeChild(printContainer);
+    const doc = iframe.contentWindow?.document;
+    if (!doc) {
+      window.print();
+      return;
     }
-    window.removeEventListener('afterprint', cleanup);
-  };
 
-  window.addEventListener('afterprint', cleanup);
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Official Institutional Document</title>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <style>
+            @page {
+              size: portrait;
+              margin: 6mm;
+            }
+            * {
+              box-sizing: border-box;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              background: #ffffff;
+              width: 100%;
+              height: auto;
+            }
+            .document-image {
+              width: 100%;
+              max-width: 100%;
+              height: auto;
+              display: block;
+              margin: 0 auto;
+              page-break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          <img class="document-image" src="${dataUrl}" alt="Official Document" />
+        </body>
+      </html>
+    `);
+    doc.close();
 
-  setTimeout(() => {
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 1500);
+    }, 400);
+  } catch (err) {
+    console.error('Print rendering error:', err);
     window.print();
-    // Safety fallback cleanup in case afterprint does not fire on some browsers
-    setTimeout(cleanup, 2000);
-  }, 100);
+  }
 }
