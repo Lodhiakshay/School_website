@@ -217,10 +217,13 @@ export async function downloadElementAsImage(elementId: string, fileName: string
 }
 
 /**
- * Clean isolated print of a document without website chrome, topbars, or sidebars.
- * Renders the exact native browser snapshot into an isolated print iframe.
+ * Production-Grade Native Vector Document Print / Save as PDF.
+ * Clones the exact HTML DOM tree with all stylesheets, Tailwind classes, and SVG elements
+ * into an isolated print sandbox. When printed or saved as PDF in the browser dialog,
+ * the resulting PDF is a 100% REAL NATIVE VECTOR PDF with zero pixelation, crystal-clear text,
+ * and 100% selectable, copyable, and searchable typography.
  */
-export async function printIsolatedDocument(elementId: string): Promise<void> {
+export function printIsolatedDocument(elementId: string): void {
   if (typeof window === 'undefined') return;
   const element = document.getElementById(elementId);
   if (!element) {
@@ -228,88 +231,93 @@ export async function printIsolatedDocument(elementId: string): Promise<void> {
     return;
   }
 
-  try {
-    const dataUrl = await toPng(element, {
-      quality: 1.0,
-      pixelRatio: 3.0,
-      backgroundColor: '#ffffff',
-      cacheBust: true,
-      filter: (node: HTMLElement) => {
-        if (node.classList && node.classList.contains('no-print')) {
-          return false;
-        }
-        return true;
-      },
-    });
+  // Collect all stylesheet links and style tags from current document
+  const stylesAndLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+    .map((node) => node.outerHTML)
+    .join('\n');
 
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
-    document.body.appendChild(iframe);
+  // Clone target element
+  const clone = element.cloneNode(true) as HTMLElement;
+  // Remove interactive no-print elements from the clone
+  clone.querySelectorAll('.no-print').forEach((el) => el.remove());
 
-    const doc = iframe.contentWindow?.document;
-    if (!doc) {
-      window.print();
-      return;
-    }
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  iframe.style.zIndex = '-9999';
+  document.body.appendChild(iframe);
 
-    doc.open();
-    doc.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Official Institutional Document</title>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <style>
-            @page {
-              size: portrait;
-              margin: 6mm;
-            }
-            * {
-              box-sizing: border-box;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            html, body {
-              margin: 0;
-              padding: 0;
-              background: #ffffff;
-              width: 100%;
-              height: auto;
-            }
-            .document-image {
-              width: 100%;
-              max-width: 100%;
-              height: auto;
-              display: block;
-              margin: 0 auto;
-              page-break-inside: avoid;
-            }
-          </style>
-        </head>
-        <body>
-          <img class="document-image" src="${dataUrl}" alt="Official Document" />
-        </body>
-      </html>
-    `);
-    doc.close();
+  const doc = iframe.contentWindow?.document;
+  if (!doc) {
+    window.print();
+    return;
+  }
 
-    setTimeout(() => {
+  doc.open();
+  doc.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>SGM Official Academic Statement</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        ${stylesAndLinks}
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 4mm;
+          }
+          * {
+            box-sizing: border-box !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            width: 100% !important;
+            height: auto !important;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+          }
+          .printable-document {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            box-shadow: none !important;
+          }
+        </style>
+      </head>
+      <body>
+        <div style="width: 100%; max-width: 100%; margin: 0 auto;">
+          ${clone.outerHTML}
+        </div>
+      </body>
+    </html>
+  `);
+  doc.close();
+
+  setTimeout(() => {
+    try {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
-      setTimeout(() => {
-        if (document.body.contains(iframe)) {
-          document.body.removeChild(iframe);
-        }
-      }, 1500);
-    }, 400);
-  } catch (err) {
-    console.error('Print rendering error:', err);
-    window.print();
-  }
+    } catch (printErr) {
+      console.error('Iframe print execution error:', printErr);
+      window.print();
+    }
+    setTimeout(() => {
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
+    }, 2500);
+  }, 400);
 }

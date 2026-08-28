@@ -476,12 +476,12 @@ export default function ResultsAdminPage() {
                 id="admin-report-card-inner"
                 className="printable-document relative p-4 sm:p-7 bg-white border-4 border-double border-[#002060] rounded-2xl space-y-3.5 sm:space-y-4 text-slate-900 text-xs shadow-xl font-sans overflow-hidden min-w-[580px] sm:min-w-0 select-text"
               >
-                {/* Official Institutional Watermark Logo (Clearly Visible Authentic Crest) */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.14] z-0 overflow-hidden select-none">
+                {/* Official Institutional Watermark Logo (Straight, Centered, Clearly Visible Emblem) */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.22] z-0 overflow-hidden select-none">
                   <img
                     src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
                     alt="Watermark Crest"
-                    className="w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] object-contain filter grayscale transform -rotate-12"
+                    className="w-[360px] sm:w-[460px] h-[360px] sm:h-[460px] object-contain filter grayscale"
                   />
                 </div>
 
@@ -730,25 +730,26 @@ export default function ResultsAdminPage() {
             <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-2.5 sm:pt-3 border-t border-slate-200 flex-shrink-0">
               <Button
                 type="button"
-                className="w-full sm:w-auto flex-1 font-bold text-xs bg-emerald-600 hover:bg-emerald-700 shadow-md"
+                className={`w-full sm:w-auto flex-1 font-bold text-xs shadow-md ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-700 hover:bg-emerald-800' : 'bg-[#002060] hover:bg-[#001845]'}`}
+                onClick={() => {
+                  printIsolatedDocument('admin-report-card-inner');
+                  toast.success(`Generated official Vector PDF for ${activeResult.studentName}. (Select 'Save as PDF' to save with selectable text)`, 'Vector PDF Ready');
+                }}
+                leftIcon={<Printer className="w-4 h-4" />}
+              >
+                Print / Save Vector PDF (Selectable Text)
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto font-bold text-xs border-slate-300"
                 onClick={handleDownloadReportCardPdf}
                 disabled={isDownloading}
                 leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               >
-                {isDownloading ? 'Exporting PDF...' : 'Download Official PDF'}
+                {isDownloading ? 'Exporting...' : 'Direct PDF File'}
               </Button>
-              <Button
-                type="button"
-                className={`w-full sm:w-auto font-bold text-xs ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'bg-emerald-800 hover:bg-emerald-900' : 'bg-blue-600 hover:bg-blue-700'}`}
-                onClick={() => {
-                  printIsolatedDocument('admin-report-card-inner');
-                  toast.success(`Sent ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD' : 'SGM'} Report Card to printer.`, 'Print Isolated');
-                }}
-                leftIcon={<Printer className="w-4 h-4" />}
-              >
-                Print
-              </Button>
-              <Button type="button" variant="outline" onClick={() => setActiveResult(null)}>
+              <Button type="button" variant="ghost" onClick={() => setActiveResult(null)}>
                 Close
               </Button>
             </div>

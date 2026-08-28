@@ -102,33 +102,35 @@ export default function ParentResultsPage() {
                 Ananya (Class 7)
               </button>
             </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
             <Button
-              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs shadow-md"
+              className="bg-[#002060] hover:bg-[#001845] font-bold text-xs shadow-md"
+              leftIcon={<Printer className="w-4 h-4" />}
+              onClick={handlePrint}
+            >
+              Print / Save Vector PDF (Selectable Text)
+            </Button>
+            <Button
+              variant="outline"
+              className="font-bold text-xs border-slate-300"
               leftIcon={isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               onClick={handleDownloadPdf}
               disabled={isDownloading}
             >
-              {isDownloading ? 'Exporting PDF...' : 'Download PDF'}
-            </Button>
-            <Button
-              variant="outline"
-              className="font-bold text-xs"
-              leftIcon={<Printer className="w-4 h-4" />}
-              onClick={handlePrint}
-            >
-              Print
+              {isDownloading ? 'Exporting...' : 'Direct PDF File'}
             </Button>
           </div>
         </div>
 
         {/* Printable Marksheet Card */}
         <div id="parent-marksheet-card" className="printable-document relative bg-white border-4 border-double border-[#002060] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto select-text">
-          {/* Institutional Watermark Logo (Clearly Visible Crest) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.14] z-0 overflow-hidden select-none">
+          {/* Institutional Watermark Logo (Straight, Centered, Clearly Visible Emblem) */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.22] z-0 overflow-hidden select-none">
             <img
               src="/logo.png"
               alt="Watermark Crest"
-              className="w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] object-contain filter grayscale transform -rotate-12"
+              className="w-[360px] sm:w-[460px] h-[360px] sm:h-[460px] object-contain filter grayscale"
             />
           </div>
 
