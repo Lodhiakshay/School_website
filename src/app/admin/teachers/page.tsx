@@ -405,9 +405,9 @@ export default function TeachersAdminPage() {
                   </div>
                 </div>
 
-                <div className="p-4 text-center space-y-3 bg-gradient-to-b from-white to-slate-50">
-                  {/* Faculty Portrait Photo */}
-                  <div className="w-22 h-22 rounded-2xl overflow-hidden border-3 border-blue-700 mx-auto shadow-lg relative bg-slate-100 p-0.5 ring-2 ring-amber-400/80">
+                <div className="p-3.5 text-center space-y-2.5 bg-gradient-to-b from-white to-slate-50">
+                  {/* Faculty Portrait Photo (Compact Original Size) */}
+                  <div className="w-18 h-18 rounded-2xl overflow-hidden border-3 border-blue-700 mx-auto shadow-md relative bg-slate-100 p-0.5 ring-2 ring-amber-400/80">
                     <img
                       src={
                         activeTeacherModal.photoUrl ||
@@ -428,15 +428,15 @@ export default function TeachersAdminPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-black text-base text-slate-950 font-serif tracking-wide uppercase">{activeTeacherModal.name}</h4>
-                    <p className="text-xs font-bold text-blue-900 mt-0.5">{activeTeacherModal.designation}</p>
-                    <span className="inline-block bg-blue-100 text-blue-900 font-mono font-bold text-[10px] px-3 py-0.5 rounded-full mt-1 border border-blue-200">
+                    <h4 className="text-sm font-black text-slate-950 font-serif tracking-wide uppercase">{activeTeacherModal.name}</h4>
+                    <p className="text-[11px] font-bold text-blue-900 mt-0.5">{activeTeacherModal.designation}</p>
+                    <span className="inline-block bg-blue-100 text-blue-900 font-mono font-bold text-[9px] px-2.5 py-0.5 rounded-full mt-1 border border-blue-200">
                       EMP ID: {activeTeacherModal.employeeId}
                     </span>
                   </div>
 
                   {/* Demographic Matrix */}
-                  <div className="bg-white p-3 rounded-2xl text-left text-xs space-y-1.5 border border-slate-200 shadow-sm">
+                  <div className="bg-white p-2.5 rounded-2xl text-left text-xs space-y-1.5 border border-slate-200 shadow-sm">
                     <div className="flex justify-between items-center text-[11px]">
                       <span className="text-slate-400 font-bold uppercase text-[9px]">Department:</span>
                       <span className="font-bold text-slate-800">{activeTeacherModal.department}</span>
@@ -456,30 +456,30 @@ export default function TeachersAdminPage() {
                   </div>
 
                   {/* Barcode & Security Strip */}
-                  <div className="bg-slate-100 p-2 rounded-xl border border-slate-200 flex items-center justify-between px-3">
-                    <div className="font-mono font-black text-[10px] text-slate-700 tracking-widest">
+                  <div className="bg-slate-100 p-1.5 rounded-xl border border-slate-200 flex items-center justify-between px-2.5">
+                    <div className="font-mono font-black text-[9px] text-slate-700 tracking-widest">
                       |||||| | |||| || ||| | |||
                     </div>
-                    <span className="text-[9px] font-bold text-slate-600 uppercase font-mono">STAFF BADGE</span>
+                    <span className="text-[8px] font-bold text-slate-500 uppercase font-mono">STAFF BADGE</span>
                   </div>
 
                   {/* Stamped Seals & Principal Signature with ample bottom clearance */}
-                  <div className="pt-3 pb-1 flex items-end justify-between text-[9px] text-slate-500 border-t border-slate-200 px-1">
+                  <div className="pt-2 pb-2 flex items-end justify-between text-[8px] text-slate-400 border-t border-slate-200 px-1">
                     <div className="text-left space-y-0.5">
                       <img
                         src="/images/stamps/principal-round-seal.png"
                         alt="Round Seal"
-                        className="w-12 h-12 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
+                        className="w-11 h-11 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
                       />
-                      <span className="font-mono text-[9px] block font-bold text-slate-700">Valid: 2026-2027</span>
+                      <span className="font-mono text-[8px] block font-bold text-slate-700">Valid: 2026-2027</span>
                     </div>
                     <div className="text-center">
                       <img
                         src="/images/stamps/principal-signature.png"
                         alt="Principal Sig"
-                        className="w-28 h-10 object-contain mx-auto filter contrast-150"
+                        className="w-24 h-9 object-contain mx-auto filter contrast-150"
                       />
-                      <span className="text-[9px] font-bold text-slate-700 block uppercase">Head of Institution</span>
+                      <span className="text-[8px] font-bold text-slate-700 block uppercase">Head of Institution</span>
                     </div>
                   </div>
                 </div>

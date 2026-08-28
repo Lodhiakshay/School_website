@@ -113,7 +113,8 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
 
 /**
  * Downloads ID Badges / Smart PVC Cards as Ultra High-Definition CR80 PNG images.
- * Uses a standardized 360px CR80 staging canvas with generous borders to prevent side/bottom clipping.
+ * Uses a standardized staging canvas with 12px safety padding so outer borders,
+ * corners, and bottom Principal seals NEVER get clipped on download.
  *
  * @param elementId DOM ID of the ID badge card
  * @param fileName Name of the downloaded image file (e.g. 'Student_ID_Aarav.png')
@@ -126,26 +127,27 @@ export async function downloadElementAsImage(elementId: string, fileName: string
     return false;
   }
 
-  // Create CR80 standard staging canvas (360px width)
+  // Create CR80 standard staging canvas (340px width + 24px padding = 364px)
   const badgeWrapper = document.createElement('div');
   badgeWrapper.style.position = 'fixed';
   badgeWrapper.style.top = '0';
   badgeWrapper.style.left = '0';
-  badgeWrapper.style.width = '360px';
-  badgeWrapper.style.minWidth = '360px';
-  badgeWrapper.style.maxWidth = '360px';
+  badgeWrapper.style.width = '350px';
+  badgeWrapper.style.minWidth = '350px';
+  badgeWrapper.style.maxWidth = '350px';
   badgeWrapper.style.zIndex = '-9999';
   badgeWrapper.style.opacity = '1';
   badgeWrapper.style.pointerEvents = 'none';
   badgeWrapper.style.backgroundColor = '#ffffff';
   badgeWrapper.style.boxSizing = 'border-box';
-  badgeWrapper.style.padding = '0';
+  badgeWrapper.style.padding = '14px'; // 14px clean padding prevents any side/bottom edge clipping
 
   const clone = element.cloneNode(true) as HTMLElement;
   clone.style.width = '100%';
   clone.style.maxWidth = '100%';
   clone.style.margin = '0';
   clone.style.transform = 'none';
+  clone.style.boxSizing = 'border-box';
 
   badgeWrapper.appendChild(clone);
   document.body.appendChild(badgeWrapper);

@@ -633,9 +633,9 @@ export default function StudentsAdminPage() {
                 </div>
               )}
 
-              <div className="p-4 space-y-3 bg-gradient-to-b from-white to-slate-50">
-                {/* Scholar Portrait */}
-                <div className={`w-22 h-22 rounded-2xl border-3 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-lg ring-2 ring-amber-400/80`}>
+              <div className="p-3.5 space-y-2.5 bg-gradient-to-b from-white to-slate-50">
+                {/* Scholar Portrait (Compact Original Size) */}
+                <div className={`w-18 h-18 rounded-2xl border-3 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-md ring-2 ring-amber-400/80`}>
                   <img
                     src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80"
                     alt={activeStudent.firstName}
@@ -644,10 +644,10 @@ export default function StudentsAdminPage() {
                 </div>
 
                 <div>
-                  <h4 className="font-black text-base text-slate-950 font-serif tracking-wide uppercase">
+                  <h4 className="font-black text-sm text-slate-950 font-serif tracking-wide uppercase">
                     {activeStudent.firstName} {activeStudent.lastName}
                   </h4>
-                  <span className={`inline-block text-[11px] font-black px-3.5 py-1 rounded-full mt-1 border shadow-sm ${
+                  <span className={`inline-block text-[10px] font-black px-3 py-0.5 rounded-full mt-0.5 border shadow-sm ${
                     isSSSD ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-blue-100 text-blue-900 border-blue-300'
                   }`}>
                     {activeStudent.currentClassId?.name} - Section {activeStudent.currentSectionId?.name}
@@ -655,7 +655,7 @@ export default function StudentsAdminPage() {
                 </div>
 
                 {/* Demographic Matrix */}
-                <div className="bg-white p-3 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5 shadow-sm">
+                <div className="bg-white p-2.5 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5 shadow-sm">
                   <div className="flex justify-between items-center text-[11px]">
                     <span className="text-slate-400 font-bold uppercase text-[9px]">Scholar / Adm:</span>
                     <span className={`font-mono font-black ${isSSSD ? 'text-emerald-700' : 'text-blue-700'}`}>{activeStudent.admissionNumber}</span>
@@ -679,30 +679,30 @@ export default function StudentsAdminPage() {
                 </div>
 
                 {/* Digital Barcode & Library Scan Strip */}
-                <div className="bg-slate-100 p-2 rounded-xl border border-slate-200 flex items-center justify-between px-3">
-                  <div className="font-mono font-black text-[10px] text-slate-700 tracking-widest">
+                <div className="bg-slate-100 p-1.5 rounded-xl border border-slate-200 flex items-center justify-between px-2.5">
+                  <div className="font-mono font-black text-[9px] text-slate-700 tracking-widest">
                     |||||| | |||| || ||| | |||
                   </div>
-                  <span className="text-[9px] font-bold text-slate-600 uppercase font-mono">LIBRARY VERIFIED</span>
+                  <span className="text-[8px] font-bold text-slate-500 uppercase font-mono">LIBRARY VERIFIED</span>
                 </div>
 
                 {/* Stamped Seals & Principal Signature with ample bottom clearance */}
-                <div className="pt-3 pb-1 flex items-end justify-between text-[9px] text-slate-500 border-t border-slate-200 px-1">
+                <div className="pt-2 pb-2 flex items-end justify-between text-[8px] text-slate-400 border-t border-slate-200 px-1">
                   <div className="text-left space-y-0.5">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-round-seal.png' : '/images/stamps/principal-round-seal.png'}
                       alt="Principal Round Seal"
-                      className="w-12 h-12 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
+                      className="w-11 h-11 object-contain drop-shadow-sm transform -rotate-3 filter contrast-125"
                     />
-                    <span className={`font-mono text-[9px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-700'}`}>Valid: 2026-2027</span>
+                    <span className={`font-mono text-[8px] block font-bold ${isSSSD ? 'text-emerald-800' : 'text-slate-700'}`}>Valid: 2026-2027</span>
                   </div>
                   <div className="text-center">
                     <img
                       src={isSSSD ? '/images/stamps/sssd-principal-signature.png' : '/images/stamps/principal-signature.png'}
                       alt="Principal Signature"
-                      className="w-28 h-10 object-contain mx-auto filter contrast-150"
+                      className="w-24 h-9 object-contain mx-auto filter contrast-150"
                     />
-                    <span className="text-[9px] font-bold text-slate-700 block uppercase">Principal Signature</span>
+                    <span className="text-[8px] font-bold text-slate-700 block uppercase">Principal Signature</span>
                   </div>
                 </div>
               </div>
