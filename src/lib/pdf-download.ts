@@ -145,8 +145,7 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
 
 /**
  * Downloads ID Badges / Smart PVC Cards as Ultra High-Definition CR80 PNG images.
- * Uses a standardized staging canvas with 12px safety padding so outer borders,
- * corners, and bottom Principal seals NEVER get clipped on download.
+ * Preserves the exact vertical aspect ratio (1 : 1.58) without expanding horizontally.
  *
  * @param elementId DOM ID of the ID badge card
  * @param fileName Name of the downloaded image file (e.g. 'Student_ID_Aarav.png')
@@ -159,25 +158,29 @@ export async function downloadElementAsImage(elementId: string, fileName: string
     return false;
   }
 
-  // Create CR80 standard staging canvas (340px width + 24px padding = 364px)
+  // Determine exact natural width of the card element (e.g. 260px - 280px)
+  const elementRect = element.getBoundingClientRect();
+  const cardWidth = Math.max(260, Math.min(300, elementRect.width || 270));
+
+  // Create CR80 standard staging canvas matching the card's exact natural width + 16px safety margins
   const badgeWrapper = document.createElement('div');
   badgeWrapper.style.position = 'fixed';
   badgeWrapper.style.top = '0';
   badgeWrapper.style.left = '0';
-  badgeWrapper.style.width = '350px';
-  badgeWrapper.style.minWidth = '350px';
-  badgeWrapper.style.maxWidth = '350px';
+  badgeWrapper.style.width = `${cardWidth + 24}px`;
+  badgeWrapper.style.minWidth = `${cardWidth + 24}px`;
+  badgeWrapper.style.maxWidth = `${cardWidth + 24}px`;
   badgeWrapper.style.zIndex = '-9999';
   badgeWrapper.style.opacity = '1';
   badgeWrapper.style.pointerEvents = 'none';
   badgeWrapper.style.backgroundColor = '#ffffff';
   badgeWrapper.style.boxSizing = 'border-box';
-  badgeWrapper.style.padding = '14px'; // 14px clean padding prevents any side/bottom edge clipping
+  badgeWrapper.style.padding = '12px'; // Safety padding prevents any corner clipping
 
   const clone = element.cloneNode(true) as HTMLElement;
-  clone.style.width = '100%';
-  clone.style.maxWidth = '100%';
-  clone.style.margin = '0';
+  clone.style.width = `${cardWidth}px`;
+  clone.style.maxWidth = `${cardWidth}px`;
+  clone.style.margin = '0 auto';
   clone.style.transform = 'none';
   clone.style.boxSizing = 'border-box';
 
@@ -219,9 +222,8 @@ export async function downloadElementAsImage(elementId: string, fileName: string
 /**
  * Production-Grade Native Vector Document Print / Save as PDF.
  * Clones the exact HTML DOM tree with all stylesheets, Tailwind classes, and SVG elements
- * into an isolated print sandbox. When printed or saved as PDF in the browser dialog,
- * the resulting PDF is a 100% REAL NATIVE VECTOR PDF with zero pixelation, crystal-clear text,
- * and 100% selectable, copyable, and searchable typography.
+ * into an isolated print sandbox. Correctly handles both Full-width A4 Report Cards
+ * and Standard Vertical CR80 PVC ID Cards without stretching.
  */
 export function printIsolatedDocument(elementId: string): void {
   if (typeof window === 'undefined') return;
@@ -230,6 +232,8 @@ export function printIsolatedDocument(elementId: string): void {
     window.print();
     return;
   }
+
+  const isIdCard = elementId.includes('id-card');
 
   // Collect all stylesheet links and style tags from current document
   const stylesAndLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
@@ -262,14 +266,14 @@ export function printIsolatedDocument(elementId: string): void {
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <title>SGM Official Academic Statement</title>
+        <title>SGM Official Academic Document</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         ${stylesAndLinks}
         <style>
           @page {
             size: A4 portrait;
-            margin: 4mm;
+            margin: ${isIdCard ? '15mm auto' : '4mm'};
           }
           * {
             box-sizing: border-box !important;
@@ -288,9 +292,9 @@ export function printIsolatedDocument(elementId: string): void {
             -webkit-user-select: text !important;
           }
           .printable-document {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
+            width: ${isIdCard ? '280px' : '100%'} !important;
+            max-width: ${isIdCard ? '280px' : '100%'} !important;
+            margin: ${isIdCard ? '20px auto' : '0 auto'} !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
             box-shadow: none !important;
@@ -298,7 +302,7 @@ export function printIsolatedDocument(elementId: string): void {
         </style>
       </head>
       <body>
-        <div style="width: 100%; max-width: 100%; margin: 0 auto;">
+        <div style="width: 100%; max-width: ${isIdCard ? '280px' : '100%'}; margin: 0 auto;">
           ${clone.outerHTML}
         </div>
       </body>
