@@ -125,13 +125,18 @@ export default function ParentResultsPage() {
 
         {/* Printable Marksheet Card */}
         <div id="parent-marksheet-card" className="printable-document relative bg-white border-4 border-double border-[#002060] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto select-text">
-          {/* Institutional Watermark Logo (Straight, Centered, Clearly Visible Emblem) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.22] z-0 overflow-hidden select-none">
-            <img
-              src="/logo.png"
-              alt="Watermark Crest"
-              className="w-[360px] sm:w-[460px] h-[360px] sm:h-[460px] object-contain filter grayscale"
-            />
+          {/* Institutional Watermark Logo (Prestige Circular Crest) */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
+            <div className="relative flex items-center justify-center">
+              {/* Decorative Concentric Watermark Rings */}
+              <div className="absolute w-[360px] sm:w-[480px] h-[360px] sm:h-[480px] rounded-full border-4 border-dashed border-amber-500/25 animate-[spin_180s_linear_infinite]" />
+              <div className="absolute w-[320px] sm:w-[430px] h-[320px] sm:h-[430px] rounded-full border-2 border-[#002060]/20" />
+              <img
+                src="/logo.png"
+                alt="Watermark Crest"
+                className="w-[260px] sm:w-[360px] h-[260px] sm:h-[360px] object-contain opacity-[0.24] filter contrast-125 saturate-125"
+              />
+            </div>
           </div>
 
           {/* Header */}
@@ -152,7 +157,7 @@ export default function ParentResultsPage() {
 
           <div className="relative z-10 p-3.5 sm:p-7 space-y-4 sm:space-y-5">
             {/* Demographics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/60 border border-blue-200 text-xs shadow-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/70 border border-blue-200 text-xs shadow-sm backdrop-blur-[0.5px]">
               <div>
                 <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Student Name:</span>
                 <p className="font-black text-slate-900 text-xs sm:text-sm truncate">{currentChildName}</p>
@@ -177,7 +182,7 @@ export default function ParentResultsPage() {
             </div>
 
             {/* Marks Table with Horizontal Scroll */}
-            <div className="border-2 border-[#002060] rounded-xl sm:rounded-2xl overflow-x-auto shadow-sm">
+            <div className="border-2 border-[#002060] rounded-xl sm:rounded-2xl overflow-x-auto shadow-sm bg-white/85 backdrop-blur-[0.5px]">
               <table className="w-full text-left text-xs min-w-[480px] sm:min-w-[650px]">
                 <thead className="bg-[#002060] text-amber-300 font-bold uppercase text-[9px] sm:text-[10px] tracking-wider">
                   <tr>
@@ -189,7 +194,7 @@ export default function ParentResultsPage() {
                     <th className="p-2.5 sm:p-3.5 text-center">Grade</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-blue-100 font-medium text-[11px] sm:text-xs">
+                <tbody className="divide-y divide-blue-100 font-medium text-[11px] sm:text-xs bg-white/70">
                   {currentMarks.map((m) => (
                     <tr key={m.code} className="hover:bg-blue-50/40">
                       <td className="p-2.5 sm:p-3.5 font-mono font-bold text-blue-700 whitespace-nowrap">{m.code}</td>

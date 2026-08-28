@@ -476,13 +476,18 @@ export default function ResultsAdminPage() {
                 id="admin-report-card-inner"
                 className="printable-document relative p-4 sm:p-7 bg-white border-4 border-double border-[#002060] rounded-2xl space-y-3.5 sm:space-y-4 text-slate-900 text-xs shadow-xl font-sans overflow-hidden min-w-[580px] sm:min-w-0 select-text"
               >
-                {/* Official Institutional Watermark Logo (Straight, Centered, Clearly Visible Emblem) */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.22] z-0 overflow-hidden select-none">
-                  <img
-                    src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
-                    alt="Watermark Crest"
-                    className="w-[360px] sm:w-[460px] h-[360px] sm:h-[460px] object-contain filter grayscale"
-                  />
+                {/* Official Institutional Watermark Emblem (Prestige Circular Crest) */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
+                  <div className="relative flex items-center justify-center">
+                    {/* Decorative Concentric Watermark Rings */}
+                    <div className="absolute w-[360px] sm:w-[480px] h-[360px] sm:h-[480px] rounded-full border-4 border-dashed border-amber-500/25 animate-[spin_180s_linear_infinite]" />
+                    <div className="absolute w-[320px] sm:w-[430px] h-[320px] sm:h-[430px] rounded-full border-2 border-[#002060]/20" />
+                    <img
+                      src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
+                      alt="Watermark Crest"
+                      className="w-[260px] sm:w-[360px] h-[260px] sm:h-[360px] object-contain opacity-[0.24] filter contrast-125 saturate-125"
+                    />
+                  </div>
                 </div>
 
                 <div className="relative z-10 space-y-3 sm:space-y-4">
@@ -516,7 +521,7 @@ export default function ResultsAdminPage() {
                   </div>
 
                   {/* Student Demographics Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-gradient-to-r from-blue-50/70 via-slate-50/50 to-blue-50/70 p-2.5 sm:p-3 rounded-xl border border-blue-200 text-xs shadow-sm">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-gradient-to-r from-blue-50/80 via-slate-50/70 to-blue-50/80 p-2.5 sm:p-3 rounded-xl border border-blue-200 text-xs shadow-sm backdrop-blur-[0.5px]">
                     <div>
                       <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Scholar Name:</span>
                       <p className="font-black text-slate-900 text-xs sm:text-sm leading-tight py-0.5">{activeResult.studentName}</p>
@@ -552,13 +557,13 @@ export default function ResultsAdminPage() {
                   </div>
 
                   {/* Scholastic Performance Table */}
-                  <div className="border-2 border-[#002060] rounded-xl overflow-hidden shadow-sm bg-white">
+                  <div className="border-2 border-[#002060] rounded-xl overflow-hidden shadow-sm bg-white/85 backdrop-blur-[0.5px]">
                     <div className="bg-[#002060] text-amber-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider font-mono flex justify-between">
                       <span>Part 1: Scholastic Assessment Performance</span>
                       <span>Assessment: {selectedExam}</span>
                     </div>
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-blue-50 text-blue-950 font-black text-[10px] uppercase border-b-2 border-[#002060]">
+                      <thead className="bg-blue-50/90 text-blue-950 font-black text-[10px] uppercase border-b-2 border-[#002060]">
                         <tr>
                           <th className="p-2 sm:p-2.5">Subject Description</th>
                           <th className="p-2 sm:p-2.5 text-center">Max Marks</th>
@@ -569,8 +574,8 @@ export default function ResultsAdminPage() {
                           <th className="p-2 sm:p-2.5 text-center">GP</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-blue-100 font-medium text-xs">
-                        <tr className="hover:bg-blue-50/30">
+                      <tbody className="divide-y divide-blue-100 font-medium text-xs bg-white/70">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Mathematics (गणित)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.math * 0.7)}</td>
@@ -581,7 +586,7 @@ export default function ResultsAdminPage() {
                           </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">10.0</td>
                         </tr>
-                        <tr className="hover:bg-blue-50/30">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Science (विज्ञान)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.science * 0.7)}</td>
@@ -592,7 +597,7 @@ export default function ResultsAdminPage() {
                           </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">10.0</td>
                         </tr>
-                        <tr className="hover:bg-blue-50/30">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Hindi (हिंदी साहित्य)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.hindi * 0.7)}</td>
@@ -603,7 +608,7 @@ export default function ResultsAdminPage() {
                           </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr className="hover:bg-blue-50/30">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">English (अंग्रेजी)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.english * 0.7)}</td>
@@ -614,7 +619,7 @@ export default function ResultsAdminPage() {
                           </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr className="hover:bg-blue-50/30">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Social Studies (सामाजिक विज्ञान)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.sst * 0.7)}</td>
@@ -625,7 +630,7 @@ export default function ResultsAdminPage() {
                           </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr className="hover:bg-blue-50/30">
+                        <tr className="hover:bg-blue-50/40">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Sanskrit / Computers (संस्कृत)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.sanskrit * 0.7)}</td>
