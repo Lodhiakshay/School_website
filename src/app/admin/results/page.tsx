@@ -465,24 +465,30 @@ export default function ResultsAdminPage() {
               </button>
             </div>
 
-            <div className="overflow-y-auto flex-1 py-3 sm:py-4 space-y-3 sm:space-y-4">
+            {/* Mobile Scroll Hint */}
+            <div className="flex items-center justify-between text-[11px] text-blue-800 bg-blue-50/80 px-3 py-1.5 rounded-lg border border-blue-200 sm:hidden flex-shrink-0">
+              <span className="font-semibold">👉 Swipe sideways to view full certificate</span>
+              <span className="font-mono text-[10px] text-blue-600 font-bold">A4 Single-Page</span>
+            </div>
+
+            <div className="overflow-x-auto overflow-y-auto flex-1 py-2 sm:py-3">
               <div
                 id="admin-report-card-inner"
-                className="printable-document relative p-5 sm:p-8 bg-white border-4 border-double border-slate-900 rounded-2xl space-y-4 text-slate-900 text-xs shadow-2xl font-sans overflow-hidden"
+                className="printable-document relative p-4 sm:p-7 bg-white border-4 border-double border-[#002060] rounded-2xl space-y-3.5 sm:space-y-4 text-slate-900 text-xs shadow-xl font-sans overflow-hidden min-w-[580px] sm:min-w-0"
               >
                 {/* Official Institutional Watermark Logo */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.07] z-0 overflow-hidden select-none">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-0 overflow-hidden select-none">
                   <img
                     src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
                     alt="Watermark Crest"
-                    className="w-80 sm:w-96 h-80 sm:h-96 object-contain filter grayscale transform -rotate-12"
+                    className="w-72 sm:w-96 h-72 sm:h-96 object-contain filter grayscale transform -rotate-12"
                   />
                 </div>
 
                 <div className="relative z-10 space-y-3 sm:space-y-4">
-                  {/* Institution Grand Header */}
-                  <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3 gap-3 sm:gap-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-amber-500 bg-white shadow-md flex-shrink-0 p-0.5">
+                  {/* Institution Grand Header (Website Royal Navy & Gold Theme) */}
+                  <div className="flex items-center justify-between border-b-2 border-[#002060] pb-3 gap-3 sm:gap-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-amber-400 bg-white shadow-md flex-shrink-0 p-0.5">
                       <img
                         src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
                         alt="Logo"
@@ -490,68 +496,68 @@ export default function ResultsAdminPage() {
                       />
                     </div>
                     <div className="text-center flex-1 min-w-0">
-                      <h2 className="text-sm sm:text-xl font-serif font-black text-slate-950 tracking-wide uppercase">
+                      <h2 className="text-base sm:text-2xl font-serif font-black text-[#002060] tracking-wide uppercase">
                         {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD PUBLIC SCHOOL' : 'सरस्वती ज्ञान मन्दिर इण्टर कॉलेज'}
                       </h2>
-                      <p className="text-[10px] sm:text-xs font-bold text-slate-800 uppercase tracking-wider mt-0.5">
+                      <p className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mt-0.5">
                         {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '100% ENGLISH MEDIUM • CBSE PATTERN' : 'SARSWATI GYAN MANDIR INTERMEDIATE COLLEGE'}
                       </p>
-                      <p className="text-[8px] sm:text-[10px] text-slate-600 font-medium">
+                      <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium mt-0.5">
                         SHAMSABAD, FARRUKHABAD (U.P.) - 209503 &bull; AFFILIATION: UP-FBD-2026-SGM-089 &bull; PH: +91 9451234501
                       </p>
-                      <div className="mt-1.5 inline-block bg-slate-900 text-amber-300 font-black text-[9px] sm:text-[11px] px-3 sm:px-4 py-0.5 rounded-full uppercase tracking-widest font-mono shadow-sm">
+                      <div className="mt-1.5 inline-block bg-gradient-to-r from-[#001845] via-[#002060] to-[#001845] text-amber-300 font-bold text-[9px] sm:text-[11px] px-3.5 py-1 rounded-full uppercase tracking-wider font-mono border border-amber-400/40 shadow-sm">
                         ACADEMIC EVALUATION &amp; SCHOLASTIC PROGRESS REPORT (2026-2027)
                       </div>
                     </div>
-                    <div className="w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 text-[8px] sm:text-[9px] text-slate-500 font-bold text-center p-1 font-mono">
+                    <div className="w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50/60 text-[8px] sm:text-[9px] text-blue-800 font-bold text-center p-1 font-mono">
                       OFFICIAL ATTESTED
                     </div>
                   </div>
 
                   {/* Student Demographics Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-slate-50/90 backdrop-blur-sm p-2.5 sm:p-3 rounded-xl border border-slate-300 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-gradient-to-r from-blue-50/70 via-slate-50/50 to-blue-50/70 p-2.5 sm:p-3 rounded-xl border border-blue-200 text-xs shadow-sm">
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Scholar Name:</span>
-                      <p className="font-black text-slate-950 text-xs sm:text-sm leading-tight py-0.5">{activeResult.studentName}</p>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Scholar Name:</span>
+                      <p className="font-black text-slate-900 text-xs sm:text-sm leading-tight py-0.5">{activeResult.studentName}</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Admission / Scholar No:</span>
-                      <p className={`font-mono font-black text-xs sm:text-sm leading-tight py-0.5 ${activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700' : 'text-blue-700'}`}>{activeResult.admNo}</p>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Admission / Scholar No:</span>
+                      <p className="font-mono font-black text-xs sm:text-sm leading-tight py-0.5 text-blue-700">{activeResult.admNo}</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Class &amp; Section:</span>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Class &amp; Section:</span>
                       <p className="font-bold text-slate-900 text-xs sm:text-sm leading-tight py-0.5">{activeResult.className} (Sec A)</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Institutional Rank:</span>
-                      <p className="font-black text-emerald-800 text-xs sm:text-sm leading-tight py-0.5">Rank #{activeResult.rank} (Top 2%)</p>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Institutional Rank:</span>
+                      <p className="font-black text-emerald-700 text-xs sm:text-sm leading-tight py-0.5">Rank #{activeResult.rank} (Top 2%)</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Father / Guardian:</span>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Father / Guardian:</span>
                       <p className="font-bold text-slate-800 text-xs leading-tight py-0.5">Shri Rajesh Sharma</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Mother&apos;s Name:</span>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Mother&apos;s Name:</span>
                       <p className="font-bold text-slate-800 text-xs leading-tight py-0.5">Smt. Sunita Sharma</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Date of Birth:</span>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Date of Birth:</span>
                       <p className="font-mono font-bold text-slate-800 text-xs leading-tight py-0.5">12-Aug-2010</p>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[9px] sm:text-[10px] font-bold block uppercase">Term Attendance:</span>
+                      <span className="text-blue-900/60 text-[9px] sm:text-[10px] font-bold block uppercase">Term Attendance:</span>
                       <p className="font-mono font-bold text-blue-900 text-xs leading-tight py-0.5">95.4% (185/194 Days)</p>
                     </div>
                   </div>
 
                   {/* Scholastic Performance Table */}
-                  <div className="border-2 border-slate-900 rounded-xl overflow-x-auto shadow-sm bg-white/95 backdrop-blur-sm">
-                    <div className="bg-slate-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-wider font-mono flex justify-between min-w-[480px]">
+                  <div className="border-2 border-[#002060] rounded-xl overflow-hidden shadow-sm bg-white">
+                    <div className="bg-[#002060] text-amber-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider font-mono flex justify-between">
                       <span>Part 1: Scholastic Assessment Performance</span>
                       <span>Assessment: {selectedExam}</span>
                     </div>
-                    <table className="w-full text-left text-xs min-w-[480px]">
-                      <thead className="bg-slate-100 text-slate-900 font-black text-[10px] uppercase border-b-2 border-slate-900">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-blue-50 text-blue-950 font-black text-[10px] uppercase border-b-2 border-[#002060]">
                         <tr>
                           <th className="p-2 sm:p-2.5">Subject Description</th>
                           <th className="p-2 sm:p-2.5 text-center">Max Marks</th>
@@ -562,59 +568,71 @@ export default function ResultsAdminPage() {
                           <th className="p-2 sm:p-2.5 text-center">GP</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-200 font-medium text-xs">
-                        <tr>
+                      <tbody className="divide-y divide-blue-100 font-medium text-xs">
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Mathematics (गणित)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.math * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.math - Math.round(activeResult.math * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.math}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.math >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.math}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.math >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">10.0</td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Science (विज्ञान)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.science * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.science - Math.round(activeResult.science * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.science}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.science >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.science}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.science >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">10.0</td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Hindi (हिंदी साहित्य)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.hindi * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.hindi - Math.round(activeResult.hindi * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.hindi}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.hindi >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.hindi}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.hindi >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">English (अंग्रेजी)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.english * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.english - Math.round(activeResult.english * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.english}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.english >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.english}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.english >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Social Studies (सामाजिक विज्ञान)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.sst * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.sst - Math.round(activeResult.sst * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.sst}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.sst >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.sst}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.sst >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-blue-50/30">
                           <td className="p-2 sm:p-2.5 font-bold text-slate-950">Sanskrit / Computers (संस्कृत)</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono">100</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{Math.round(activeResult.sanskrit * 0.7)}</td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-800">{activeResult.sanskrit - Math.round(activeResult.sanskrit * 0.7)}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-blue-900 bg-blue-50/50">{activeResult.sanskrit}</td>
-                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">{activeResult.sanskrit >= 90 ? 'A1' : 'A2'}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-mono font-black text-[#002060] bg-blue-50/70">{activeResult.sanskrit}</td>
+                          <td className="p-2 sm:p-2.5 text-center font-black text-emerald-800">
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[10px]">{activeResult.sanskrit >= 90 ? 'A1' : 'A2'}</span>
+                          </td>
                           <td className="p-2 sm:p-2.5 text-center font-mono font-bold text-slate-700">9.0</td>
                         </tr>
                       </tbody>
@@ -623,42 +641,42 @@ export default function ResultsAdminPage() {
 
                   {/* Co-Scholastic & Life Skills Matrix */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                    <div className="p-2 sm:p-2.5 bg-slate-50/90 border border-slate-300 rounded-xl flex items-center justify-between">
+                    <div className="p-2 sm:p-2.5 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between">
                       <span className="font-bold text-slate-700">Discipline &amp; Conduct:</span>
                       <span className="font-black text-emerald-800 font-mono bg-emerald-100 px-2 py-0.5 rounded-lg">A+ (Exemplary)</span>
                     </div>
-                    <div className="p-2 sm:p-2.5 bg-slate-50/90 border border-slate-300 rounded-xl flex items-center justify-between">
+                    <div className="p-2 sm:p-2.5 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between">
                       <span className="font-bold text-slate-700">Work Education &amp; IT:</span>
                       <span className="font-black text-emerald-800 font-mono bg-emerald-100 px-2 py-0.5 rounded-lg">A (Proficient)</span>
                     </div>
-                    <div className="p-2 sm:p-2.5 bg-slate-50/90 border border-slate-300 rounded-xl flex items-center justify-between">
+                    <div className="p-2 sm:p-2.5 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between">
                       <span className="font-bold text-slate-700">Sports &amp; Physical Fitness:</span>
                       <span className="font-black text-emerald-800 font-mono bg-emerald-100 px-2 py-0.5 rounded-lg">A (Active Leader)</span>
                     </div>
                   </div>
 
-                  {/* Comprehensive Performance Summary Card */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-slate-950 text-white p-3 sm:p-3.5 rounded-xl text-center text-xs shadow-md border-2 border-slate-900 font-sans">
+                  {/* Comprehensive Performance Summary Card (Website Royal Navy & Gold Theme) */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 bg-gradient-to-r from-[#001845] via-[#002060] to-[#023e8a] text-white p-3 sm:p-3.5 rounded-xl text-center text-xs shadow-md border-2 border-amber-400/70 font-sans">
                     <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Grand Total</span>
-                      <span className="font-mono font-black text-emerald-300 text-xs sm:text-base">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</span>
+                      <span className="text-blue-200 text-[10px] uppercase font-bold block">Grand Total</span>
+                      <span className="font-mono font-black text-amber-300 text-xs sm:text-base">{activeResult.grandTotal} / {activeResult.maxGrandTotal}</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Percentage</span>
+                      <span className="text-blue-200 text-[10px] uppercase font-bold block">Percentage</span>
                       <span className="font-mono font-black text-amber-300 text-xs sm:text-base">{activeResult.percentage}%</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Overall Grade</span>
+                      <span className="text-blue-200 text-[10px] uppercase font-bold block">Overall Grade</span>
                       <span className="font-mono font-black text-cyan-300 text-xs sm:text-base">A1 (Distinction)</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Decision Status</span>
-                      <span className="font-black text-emerald-400 text-[10px] sm:text-sm block leading-tight">{activeResult.decision}</span>
+                      <span className="text-blue-200 text-[10px] uppercase font-bold block">Decision Status</span>
+                      <span className="font-black text-emerald-300 text-[10px] sm:text-sm block leading-tight">{activeResult.decision}</span>
                     </div>
                   </div>
 
                   {/* Remarks & Grading Scale */}
-                  <div className="bg-amber-50/90 border border-amber-200 p-2.5 rounded-xl text-[11px] text-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <div className="bg-amber-50/90 border border-amber-300/80 p-2.5 rounded-xl text-[11px] text-amber-950 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
                       <span className="font-black text-amber-950">Institutional Remarks: </span>
                       <span className="italic">Extraordinary intellectual dedication and commendable moral discipline displayed throughout the academic term.</span>
@@ -669,7 +687,7 @@ export default function ResultsAdminPage() {
                   </div>
 
                   {/* Stamped Tri-Signatures Block */}
-                  <div className="pt-3 sm:pt-4 flex items-end justify-between border-t-2 border-slate-900 text-xs mt-2 gap-2 sm:gap-4 overflow-x-auto pb-1">
+                  <div className="pt-3 sm:pt-4 flex items-end justify-between border-t-2 border-[#002060] text-xs mt-2 gap-2 sm:gap-4 overflow-x-auto pb-1">
                     <div className="text-center flex-1 min-w-[90px] sm:max-w-[150px]">
                       <img
                         src="/images/stamps/registrar-signature.png"

@@ -119,7 +119,7 @@ export default function StudentResultsPage() {
         </div>
 
         {/* Official Printable Marksheet Card */}
-        <div id="student-marksheet-card" className="printable-document relative bg-white border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
+        <div id="student-marksheet-card" className="printable-document relative bg-white border-4 border-double border-[#002060] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
           {/* Institutional Watermark Logo */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-0 overflow-hidden select-none">
             <img
@@ -130,11 +130,11 @@ export default function StudentResultsPage() {
           </div>
 
           {/* Institution Header Ribbon */}
-          <div className="relative z-10 bg-[#002060] text-white p-4 sm:p-8 text-center border-b-4 border-amber-400">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">
+          <div className="relative z-10 bg-gradient-to-r from-[#001845] via-[#002060] to-[#001845] text-white p-4 sm:p-7 text-center border-b-4 border-amber-400">
+            <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">
               <img src="/logo.png" alt="SGM Crest" className="w-full h-full object-contain" />
             </div>
-            <h2 className="text-sm sm:text-xl font-black uppercase tracking-wider text-amber-300 font-serif">
+            <h2 className="text-base sm:text-2xl font-black uppercase tracking-wider text-amber-300 font-serif">
               सरस्वती ज्ञान मन्दिर इण्टर कॉलेज
             </h2>
             <p className="text-[11px] sm:text-sm text-slate-100 font-medium mt-0.5">
@@ -144,58 +144,58 @@ export default function StudentResultsPage() {
               Affiliated with UP State Board of High School &amp; Intermediate • Code: UP-FBD-2026-SGM-089
             </p>
 
-            <div className="mt-2.5 sm:mt-3 inline-block bg-amber-400 text-slate-950 text-[10px] sm:text-xs font-black uppercase px-3 sm:px-4 py-0.5 sm:py-1 rounded-full shadow-md">
+            <div className="mt-2.5 sm:mt-3 inline-block bg-[#001845] text-amber-300 text-[10px] sm:text-xs font-black uppercase px-4 py-1 rounded-full shadow-md border border-amber-400/40 font-mono">
               HALF-YEARLY EVALUATION STATEMENT (2026-2027)
             </div>
           </div>
 
           {/* Student Demographics Table */}
-          <div className="relative z-10 p-3.5 sm:p-8 space-y-4 sm:space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-xs">
+          <div className="relative z-10 p-3.5 sm:p-7 space-y-4 sm:space-y-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/60 border border-blue-200 text-xs shadow-sm">
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Student Name:</span>
-                <p className="font-black text-slate-900 text-xs sm:text-sm truncate">Aarav Sharma</p>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Student Name:</span>
+                <p className="font-black text-slate-900 text-xs sm:text-sm truncate">{`Aarav Sharma`}</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Roll Number:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Roll Number:</span>
                 <p className="font-mono font-black text-blue-700 text-xs sm:text-sm truncate">10-A-01</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Class &amp; Section:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Class &amp; Section:</span>
                 <p className="font-bold text-slate-800 text-xs sm:text-sm truncate">Class 10 (Section A)</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Admission ID:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Admission ID:</span>
                 <p className="font-mono font-bold text-slate-800 text-xs sm:text-sm truncate">SGM-2026-1001</p>
               </div>
 
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Father&apos;s Name:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Father&apos;s Name:</span>
                 <p className="font-semibold text-slate-800 text-[11px] sm:text-xs truncate">Shri Rajesh Sharma</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Mother&apos;s Name:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Mother&apos;s Name:</span>
                 <p className="font-semibold text-slate-800 text-[11px] sm:text-xs truncate">Smt. Meena Sharma</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Date of Birth:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Date of Birth:</span>
                 <p className="font-mono text-slate-800 text-[11px] sm:text-xs truncate">12 August 2010</p>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] sm:text-xs font-medium">Academic Year:</span>
+                <span className="text-blue-900/60 text-[10px] sm:text-xs font-bold uppercase">Academic Year:</span>
                 <p className="font-bold text-emerald-700 text-[11px] sm:text-xs">2026-2027</p>
               </div>
             </div>
 
             {/* Mobile Scroll Hint */}
-            <div className="flex items-center justify-end text-[10px] text-slate-400 sm:hidden px-1">
+            <div className="flex items-center justify-end text-[10px] text-blue-700 sm:hidden px-1 font-semibold">
               <span>👉 Swipe table sideways to inspect all marks</span>
             </div>
 
             {/* Subject Marks Table with Horizontal Scroll */}
-            <div className="border border-slate-300 rounded-xl sm:rounded-2xl overflow-x-auto shadow-sm">
+            <div className="border-2 border-[#002060] rounded-xl sm:rounded-2xl overflow-x-auto shadow-sm">
               <table className="w-full text-left text-xs min-w-[480px] sm:min-w-[650px]">
-                <thead className="bg-[#002060] text-white font-bold uppercase text-[9px] sm:text-[10px]">
+                <thead className="bg-[#002060] text-amber-300 font-bold uppercase text-[9px] sm:text-[10px] tracking-wider">
                   <tr>
                     <th className="p-2.5 sm:p-3.5">Code</th>
                     <th className="p-2.5 sm:p-3.5">Subject Name</th>
@@ -205,9 +205,9 @@ export default function StudentResultsPage() {
                     <th className="p-2.5 sm:p-3.5 text-center">Grade</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 font-medium text-[11px] sm:text-xs">
+                <tbody className="divide-y divide-blue-100 font-medium text-[11px] sm:text-xs">
                   {markEntries.map((m) => (
-                    <tr key={m.code} className="hover:bg-slate-50">
+                    <tr key={m.code} className="hover:bg-blue-50/40">
                       <td className="p-2.5 sm:p-3.5 font-mono font-bold text-blue-700 whitespace-nowrap">{m.code}</td>
                       <td className="p-2.5 sm:p-3.5 font-bold text-slate-900">{m.subject}</td>
                       <td className="p-2.5 sm:p-3.5 text-center font-mono whitespace-nowrap">
@@ -216,58 +216,58 @@ export default function StudentResultsPage() {
                       <td className="p-2.5 sm:p-3.5 text-center font-mono whitespace-nowrap">
                         {m.practicalMax > 0 ? `${m.practicalObtained} / ${m.practicalMax}` : '—'}
                       </td>
-                      <td className="p-2.5 sm:p-3.5 text-center font-mono font-black text-slate-900 whitespace-nowrap">
+                      <td className="p-2.5 sm:p-3.5 text-center font-mono font-black text-[#002060] bg-blue-50/60 whitespace-nowrap">
                         {m.totalObtained} / {m.totalMax}
                       </td>
                       <td className="p-2.5 sm:p-3.5 text-center whitespace-nowrap">
-                        <span className="bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full text-[10px]">
+                        <span className="bg-emerald-100 text-emerald-800 font-black px-2.5 py-0.5 rounded-full text-[10px]">
                           {m.grade}
                         </span>
                       </td>
                     </tr>
                   ))}
                   {/* Grand Total Row */}
-                  <tr className="bg-slate-100 font-black text-slate-900 text-xs sm:text-sm border-t-2 border-slate-900">
-                    <td colSpan={2} className="p-2.5 sm:p-3.5 uppercase">
+                  <tr className="bg-gradient-to-r from-[#001845] via-[#002060] to-[#023e8a] font-black text-white text-xs sm:text-sm border-t-2 border-amber-400">
+                    <td colSpan={2} className="p-2.5 sm:p-3.5 uppercase tracking-wide text-amber-300">
                       Grand Total Marks
                     </td>
-                    <td colSpan={2} className="p-2.5 sm:p-3.5 text-center text-blue-800 font-mono whitespace-nowrap">
+                    <td colSpan={2} className="p-2.5 sm:p-3.5 text-center text-cyan-200 font-mono whitespace-nowrap">
                       Percentage: {percentage}%
                     </td>
-                    <td className="p-2.5 sm:p-3.5 text-center text-emerald-700 font-mono whitespace-nowrap">
+                    <td className="p-2.5 sm:p-3.5 text-center text-amber-300 font-mono whitespace-nowrap text-sm sm:text-base">
                       {totalObtained} / {totalMax}
                     </td>
-                    <td className="p-2.5 sm:p-3.5 text-center text-emerald-700 whitespace-nowrap">PASS (FIRST DIV)</td>
+                    <td className="p-2.5 sm:p-3.5 text-center text-emerald-300 whitespace-nowrap">PASS (FIRST DIV)</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             {/* Performance Summary Banner */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/80 border border-blue-200 text-xs shadow-sm">
               <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-xs sm:text-sm flex-shrink-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#002060] text-amber-300 flex items-center justify-center font-black text-xs sm:text-sm flex-shrink-0 shadow-sm">
                   #1
                 </div>
                 <div>
-                  <span className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-bold">Class Standing</span>
-                  <p className="font-black text-emerald-800 text-xs sm:text-sm">Rank #1 in Class 10-A</p>
+                  <span className="text-blue-900/60 text-[9px] sm:text-[10px] uppercase font-bold">Class Standing</span>
+                  <p className="font-black text-blue-950 text-xs sm:text-sm">Rank #1 in Class 10-A</p>
                 </div>
               </div>
               <div>
-                <span className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-bold">Aggregate Score</span>
+                <span className="text-blue-900/60 text-[9px] sm:text-[10px] uppercase font-bold">Aggregate Score</span>
                 <p className="font-black text-slate-900 text-xs sm:text-sm">
                   {totalObtained} / {totalMax} ({percentage}%)
                 </p>
               </div>
               <div>
-                <span className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-bold">Result Status</span>
+                <span className="text-blue-900/60 text-[9px] sm:text-[10px] uppercase font-bold">Result Status</span>
                 <p className="font-black text-emerald-700 text-xs sm:text-sm">Passed with Distinction</p>
               </div>
             </div>
 
             {/* Signatures & Institutional Seal */}
-            <div className="pt-4 sm:pt-6 grid grid-cols-3 gap-2 sm:gap-6 text-center text-xs border-t border-slate-200">
+            <div className="pt-4 sm:pt-6 grid grid-cols-3 gap-2 sm:gap-6 text-center text-xs border-t-2 border-[#002060]">
               <div className="space-y-1">
                 <div className="h-10 sm:h-12 flex items-end justify-center pb-1">
                   <span className="font-serif italic text-xs sm:text-sm text-slate-800 font-bold border-b border-slate-400 px-2 sm:px-4 truncate">
