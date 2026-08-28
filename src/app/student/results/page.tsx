@@ -119,19 +119,19 @@ export default function StudentResultsPage() {
         </div>
 
         {/* Official Printable Marksheet Card */}
-        <div id="student-marksheet-card" className="printable-document relative bg-white border-4 border-double border-[#002060] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto">
-          {/* Institutional Watermark Logo */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-0 overflow-hidden select-none">
+        <div id="student-marksheet-card" className="printable-document relative bg-white border-4 border-double border-[#002060] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden max-w-4xl mx-auto select-text">
+          {/* Institutional Watermark Logo (Clearly Visible Crest) */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.14] z-0 overflow-hidden select-none">
             <img
               src="/logo.png"
               alt="Watermark Crest"
-              className="w-80 sm:w-96 h-80 sm:h-96 object-contain filter grayscale transform -rotate-12"
+              className="w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] object-contain filter grayscale transform -rotate-12"
             />
           </div>
 
           {/* Institution Header Ribbon */}
           <div className="relative z-10 bg-gradient-to-r from-[#001845] via-[#002060] to-[#001845] text-white p-4 sm:p-7 text-center border-b-4 border-amber-400">
-            <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-2 border-amber-400 shadow-lg">
+            <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-white p-1 mx-auto mb-2 sm:mb-3 border-3 border-amber-400 shadow-xl ring-4 ring-amber-400/40">
               <img src="/logo.png" alt="SGM Crest" className="w-full h-full object-contain" />
             </div>
             <h2 className="text-base sm:text-2xl font-black uppercase tracking-wider text-amber-300 font-serif">

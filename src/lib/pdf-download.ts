@@ -98,6 +98,38 @@ export async function downloadElementAsPdf(elementId: string, fileName: string =
       'SLOW'
     );
 
+    // Embed selectable & copyable text layer aligned over the visual layout
+    try {
+      const wrapperRect = a4Wrapper.getBoundingClientRect();
+      const textElements = a4Wrapper.querySelectorAll('h1, h2, h3, h4, p, span, th, td, div');
+      const scaleX = renderWidth / (wrapperRect.width || 794);
+      const scaleY = renderHeight / (wrapperRect.height || 1);
+
+      textElements.forEach((el) => {
+        if (el.children.length === 0 && el.textContent?.trim()) {
+          const rect = el.getBoundingClientRect();
+          const relX = rect.left - wrapperRect.left;
+          const relY = rect.top - wrapperRect.top;
+
+          const xMm = xOffset + relX * scaleX;
+          const yMm = yOffset + (relY + rect.height * 0.75) * scaleY;
+
+          const text = el.textContent.trim();
+          if (text && xMm >= 0 && yMm >= 0 && xMm <= pdfWidthMm && yMm <= pdfHeightMm) {
+            try {
+              const fontSizePt = Math.max(5, Math.min(16, rect.height * scaleY * 2.83));
+              pdf.setFontSize(fontSizePt);
+              pdf.text(text, xMm, yMm, { renderingMode: 'invisible' });
+            } catch {
+              // Ignore encoding anomalies for complex unicode
+            }
+          }
+        }
+      });
+    } catch (textLayerErr) {
+      console.warn('Text layer injection notice:', textLayerErr);
+    }
+
     const finalFileName = fileName.endsWith('.pdf') ? fileName : `${fileName}.pdf`;
     pdf.save(finalFileName);
     return true;

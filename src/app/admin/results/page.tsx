@@ -474,29 +474,30 @@ export default function ResultsAdminPage() {
             <div className="overflow-x-auto overflow-y-auto flex-1 py-2 sm:py-3">
               <div
                 id="admin-report-card-inner"
-                className="printable-document relative p-4 sm:p-7 bg-white border-4 border-double border-[#002060] rounded-2xl space-y-3.5 sm:space-y-4 text-slate-900 text-xs shadow-xl font-sans overflow-hidden min-w-[580px] sm:min-w-0"
+                className="printable-document relative p-4 sm:p-7 bg-white border-4 border-double border-[#002060] rounded-2xl space-y-3.5 sm:space-y-4 text-slate-900 text-xs shadow-xl font-sans overflow-hidden min-w-[580px] sm:min-w-0 select-text"
               >
-                {/* Official Institutional Watermark Logo */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-0 overflow-hidden select-none">
+                {/* Official Institutional Watermark Logo (Clearly Visible Authentic Crest) */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.14] z-0 overflow-hidden select-none">
                   <img
                     src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
                     alt="Watermark Crest"
-                    className="w-72 sm:w-96 h-72 sm:h-96 object-contain filter grayscale transform -rotate-12"
+                    className="w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] object-contain filter grayscale transform -rotate-12"
                   />
                 </div>
 
                 <div className="relative z-10 space-y-3 sm:space-y-4">
                   {/* Institution Grand Header (Website Royal Navy & Gold Theme) */}
                   <div className="flex items-center justify-between border-b-2 border-[#002060] pb-3 gap-3 sm:gap-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-amber-400 bg-white shadow-md flex-shrink-0 p-0.5">
+                    {/* Enlarged Prominent School Crest Logo */}
+                    <div className="w-20 h-20 sm:w-26 sm:h-26 rounded-full overflow-hidden border-3 border-amber-400 bg-white shadow-lg flex-shrink-0 p-1 ring-4 ring-amber-400/40">
                       <img
                         src={activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? '/images/sssd-logo.png' : '/logo.png'}
-                        alt="Logo"
+                        alt="School Crest Logo"
                         className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="text-center flex-1 min-w-0">
-                      <h2 className="text-base sm:text-2xl font-serif font-black text-[#002060] tracking-wide uppercase">
+                      <h2 className="text-base sm:text-2xl font-serif font-black text-[#002060] tracking-wide uppercase leading-tight">
                         {activeResult.campus === 'sssd' || selectedCampus === 'sssd' ? 'SSSD PUBLIC SCHOOL' : 'सरस्वती ज्ञान मन्दिर इण्टर कॉलेज'}
                       </h2>
                       <p className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mt-0.5">
@@ -505,11 +506,11 @@ export default function ResultsAdminPage() {
                       <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium mt-0.5">
                         SHAMSABAD, FARRUKHABAD (U.P.) - 209503 &bull; AFFILIATION: UP-FBD-2026-SGM-089 &bull; PH: +91 9451234501
                       </p>
-                      <div className="mt-1.5 inline-block bg-gradient-to-r from-[#001845] via-[#002060] to-[#001845] text-amber-300 font-bold text-[9px] sm:text-[11px] px-3.5 py-1 rounded-full uppercase tracking-wider font-mono border border-amber-400/40 shadow-sm">
+                      <div className="mt-2 inline-block bg-gradient-to-r from-[#001845] via-[#002060] to-[#001845] text-amber-300 font-bold text-[9.5px] sm:text-[11.5px] px-4 py-1 rounded-full uppercase tracking-wider font-mono border border-amber-400/50 shadow-sm">
                         ACADEMIC EVALUATION &amp; SCHOLASTIC PROGRESS REPORT (2026-2027)
                       </div>
                     </div>
-                    <div className="w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50/60 text-[8px] sm:text-[9px] text-blue-800 font-bold text-center p-1 font-mono">
+                    <div className="w-16 h-16 sm:w-22 sm:h-22 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50/60 text-[8px] sm:text-[9.5px] text-blue-800 font-bold text-center p-1 font-mono">
                       OFFICIAL ATTESTED
                     </div>
                   </div>
