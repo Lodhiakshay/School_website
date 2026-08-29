@@ -9,10 +9,11 @@ router.use(authenticate);
 
 router.get('/', studentController.list);
 router.get('/:id', studentController.getById);
-router.post('/', requireRoles('SuperAdmin', 'Admin', 'AdmissionStaff'), studentController.create);
-router.put('/:id', requireRoles('SuperAdmin', 'Admin', 'AdmissionStaff'), studentController.update);
+router.post('/', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff'), studentController.create);
+router.put('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff'), studentController.update);
+router.delete('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff'), studentController.delete);
 router.post('/:id/promote', requireRoles('SuperAdmin', 'Admin', 'Principal'), studentController.promote);
-router.post('/:id/documents', requireRoles('SuperAdmin', 'Admin', 'AdmissionStaff'), studentController.uploadDoc);
+router.post('/:id/documents', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff'), studentController.uploadDoc);
 
 export default router;
 

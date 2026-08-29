@@ -67,6 +67,15 @@ export class StudentController {
       next(error);
     }
   }
+
+  async delete(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await studentService.deleteStudent(req.params.id);
+      sendResponse(res, 200, result, 'Student record archived successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const studentController = new StudentController();

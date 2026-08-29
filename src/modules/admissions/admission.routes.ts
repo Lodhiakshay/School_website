@@ -18,8 +18,8 @@ router.get('/stats', requireRoles('SuperAdmin', 'Admin', 'Principal', 'Admission
 router.get('/', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff', 'Accountant'), admissionController.list);
 router.get('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff', 'Accountant'), admissionController.getById);
 router.put('/:id/status', requireRoles('SuperAdmin', 'Admin', 'AdmissionStaff', 'Principal'), admissionController.updateStatus);
-router.post('/:id/admit', requireRoles('SuperAdmin', 'Admin', 'AdmissionStaff'), admissionController.convertToStudent);
-router.delete('/:id', requireRoles('SuperAdmin', 'Admin'), admissionController.deleteApplication);
+router.post('/:id/admit', requireRoles('SuperAdmin', 'Admin', 'Principal', 'AdmissionStaff'), admissionController.convertToStudent);
+router.delete('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal'), admissionController.deleteApplication);
 
 export default router;
 

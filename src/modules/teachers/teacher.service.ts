@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { TeacherModel } from './models/teacher.model.js';
 import { UserModel } from '../auth/models/user.model.js';
@@ -120,11 +121,16 @@ export class TeacherService {
   }
 
   async deleteTeacher(id: string) {
-    const teacher = await TeacherModel.findById(id);
-    if (!teacher) throw new NotFoundError('Teacher not found');
-    teacher.status = 'retired';
-    await teacher.save();
-    return { message: 'Teacher status updated to retired' };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      const teacher = await TeacherModel.findById(id);
+      if (teacher) {
+        if (teacher.userId) {
+          await UserModel.findByIdAndDelete(teacher.userId);
+        }
+        await TeacherModel.findByIdAndDelete(id);
+      }
+    }
+    return { message: 'Teacher removed successfully' };
   }
 }
 

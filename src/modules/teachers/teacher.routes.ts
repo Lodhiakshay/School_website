@@ -9,8 +9,8 @@ router.use(authenticate);
 
 router.get('/', teacherController.list.bind(teacherController));
 router.get('/:id', teacherController.getById.bind(teacherController));
-router.post('/', requireRoles('SuperAdmin', 'Admin'), teacherController.create.bind(teacherController));
-router.put('/:id', requireRoles('SuperAdmin', 'Admin'), teacherController.update.bind(teacherController));
-router.delete('/:id', requireRoles('SuperAdmin', 'Admin'), teacherController.delete.bind(teacherController));
+router.post('/', requireRoles('SuperAdmin', 'Admin', 'Principal'), teacherController.create.bind(teacherController));
+router.put('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal'), teacherController.update.bind(teacherController));
+router.delete('/:id', requireRoles('SuperAdmin', 'Admin', 'Principal'), teacherController.delete.bind(teacherController));
 
 export default router;

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { StudentModel, IStudent } from './models/student.model.js';
 import { EnrollmentModel } from './models/enrollment.model.js';
 import { AcademicYearModel } from '../academics/models/academic-year.model.js';
@@ -138,6 +139,19 @@ class StudentService {
     } as any);
     await student.save();
     return student;
+  }
+
+  async deleteStudent(id: string): Promise<any> {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      const student = await StudentModel.findById(id);
+      if (student) {
+        if (student.userId) {
+          await UserModel.findByIdAndDelete(student.userId);
+        }
+        await StudentModel.findByIdAndDelete(id);
+      }
+    }
+    return { message: 'Student record deleted successfully' };
   }
 }
 
