@@ -196,7 +196,7 @@ export default function UsersAdminPage() {
   }, []);
 
   // Create User
-  const handleCreateUser = async (e: React.FormEvent) => {
+  const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanEmail = newUser.email.trim();
     if (!cleanEmail) return;
