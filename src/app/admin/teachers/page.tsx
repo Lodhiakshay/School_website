@@ -291,7 +291,7 @@ export default function TeachersAdminPage() {
       await apiClient.put(`/teachers/${editingTeacher._id}`, updated);
     } catch {}
 
-    const updatedList = teachers.map((t) => (t._id === editingTeacher._id ? updated : t));
+    const updatedList = teachers.map((t) => (String(t._id) === String(editingTeacher._id) ? updated : t));
     setTeachers(updatedList);
     try {
       localStorage.setItem(LOCAL_STORAGE_TEACHERS_KEY, JSON.stringify(updatedList));

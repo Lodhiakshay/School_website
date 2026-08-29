@@ -452,7 +452,7 @@ export default function StudentsAdminPage() {
       await apiClient.put(`/students/${editingStudent._id}`, updated);
     } catch {}
 
-    const updatedList = students.map((s) => (s._id === editingStudent._id ? updated : s));
+    const updatedList = students.map((s) => (String(s._id) === String(editingStudent._id) ? updated : s));
     setStudents(updatedList);
     try {
       localStorage.setItem(LOCAL_STORAGE_STUDENTS_KEY, JSON.stringify(updatedList));
