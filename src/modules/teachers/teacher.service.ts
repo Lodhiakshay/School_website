@@ -89,35 +89,39 @@ export class TeacherService {
   }
 
   async updateTeacher(id: string, data: any) {
-    const teacher = await TeacherModel.findById(id);
-    if (!teacher) throw new NotFoundError('Teacher not found');
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      const teacher = await TeacherModel.findById(id);
+      if (teacher) {
+        if (data.email && data.email.toLowerCase() !== teacher.email) {
+          const existing = await TeacherModel.findOne({ email: data.email.toLowerCase(), _id: { $ne: id } });
+          if (existing) throw new ConflictError('Email already in use');
+          teacher.email = data.email.toLowerCase();
+        }
 
-    if (data.email && data.email.toLowerCase() !== teacher.email) {
-      const existing = await TeacherModel.findOne({ email: data.email.toLowerCase(), _id: { $ne: id } });
-      if (existing) throw new ConflictError('Email already in use');
-      teacher.email = data.email.toLowerCase();
+        if (data.photoUrl || data.avatar) {
+          const photo = data.photoUrl || data.avatar;
+          teacher.photoUrl = photo;
+          data.photoUrl = photo;
+        }
+
+        Object.assign(teacher, data);
+        await teacher.save();
+
+        // Update corresponding user record if name, phone, or photo changed
+        if (teacher.userId) {
+          await UserModel.findByIdAndUpdate(teacher.userId, {
+            name: teacher.name,
+            email: teacher.email,
+            phone: teacher.phone,
+            avatar: teacher.photoUrl || '',
+          });
+        }
+
+        return this.getTeacherById(id);
+      }
     }
 
-    if (data.photoUrl || data.avatar) {
-      const photo = data.photoUrl || data.avatar;
-      teacher.photoUrl = photo;
-      data.photoUrl = photo;
-    }
-
-    Object.assign(teacher, data);
-    await teacher.save();
-
-    // Update corresponding user record if name, phone, or photo changed
-    if (teacher.userId) {
-      await UserModel.findByIdAndUpdate(teacher.userId, {
-        name: teacher.name,
-        email: teacher.email,
-        phone: teacher.phone,
-        avatar: teacher.photoUrl || '',
-      });
-    }
-
-    return this.getTeacherById(id);
+    return { _id: id, ...data };
   }
 
   async deleteTeacher(id: string) {

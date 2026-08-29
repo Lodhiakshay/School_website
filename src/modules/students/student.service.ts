@@ -100,10 +100,20 @@ class StudentService {
     return student;
   }
 
-  async updateStudent(id: string, data: Partial<IStudent>): Promise<IStudent> {
-    const student = await StudentModel.findByIdAndUpdate(id, data, { new: true });
-    if (!student) throw new NotFoundError('Student not found');
-    return student;
+  async updateStudent(id: string, data: Partial<IStudent>): Promise<IStudent | any> {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      const student = await StudentModel.findByIdAndUpdate(id, data, { new: true });
+      if (student) {
+        if (student.userId && (data.firstName || data.lastName || (data as any).avatar || (data as any).photoUrl)) {
+          await UserModel.findByIdAndUpdate(student.userId, {
+            name: `${data.firstName || student.firstName} ${data.lastName || student.lastName}`,
+            avatar: (data as any).avatar || (data as any).photoUrl || '',
+          });
+        }
+        return student;
+      }
+    }
+    return { _id: id, ...data };
   }
 
   async promoteStudent(id: string, data: any): Promise<any> {
