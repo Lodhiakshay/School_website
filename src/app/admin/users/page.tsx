@@ -632,7 +632,7 @@ export default function UsersAdminPage() {
                 helperText="Upload official photograph or pick from institutional faculty/student presets."
               />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Full Name *"
                   required
@@ -650,7 +650,7 @@ export default function UsersAdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Contact Phone"
                   placeholder="+91 9451234500"
@@ -666,7 +666,7 @@ export default function UsersAdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Assigned Security Role *</label>
                   <select
@@ -706,7 +706,7 @@ export default function UsersAdminPage() {
       {/* Edit User Modal */}
       {editingUser && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                 <Edit2 className="w-4 h-4 text-blue-600" /> Edit User Account: {editingUser.name}
@@ -723,7 +723,7 @@ export default function UsersAdminPage() {
                 onChange={(url) => setEditingUser({ ...editingUser, avatar: url })}
               />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Full Name *"
                   required
@@ -739,7 +739,7 @@ export default function UsersAdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Contact Phone"
                   value={editingUser.phone || ''}
@@ -761,7 +761,7 @@ export default function UsersAdminPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Department / Description"
                   value={editingUser.department || ''}

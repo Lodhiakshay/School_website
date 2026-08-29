@@ -998,7 +998,7 @@ export default function StudentsAdminPage() {
                 helperText="Upload scholar portrait or pick from student presets."
               />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="First Name *"
                   required
@@ -1015,7 +1015,7 @@ export default function StudentsAdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Target Class *</label>
                   <div className="relative">
@@ -1066,7 +1066,7 @@ export default function StudentsAdminPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Father Name *"
                   required
@@ -1100,7 +1100,7 @@ export default function StudentsAdminPage() {
       {/* Edit Student Modal */}
       {mounted && editingStudent && createPortal(
         <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                 <Edit2 className="w-4 h-4 text-blue-600" /> Edit Scholar: {editingStudent.firstName} {editingStudent.lastName}
@@ -1117,7 +1117,7 @@ export default function StudentsAdminPage() {
                 onChange={(url) => setEditingStudent({ ...editingStudent, avatar: url, photoUrl: url })}
               />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="First Name *"
                   required
@@ -1132,7 +1132,7 @@ export default function StudentsAdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label="Father Name *"
                   required

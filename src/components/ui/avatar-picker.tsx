@@ -90,12 +90,12 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
   const getDimensions = () => {
     switch (size) {
       case 'sm':
-        return 'w-12 h-12';
+        return 'w-12 h-12 min-w-[48px] min-h-[48px] max-w-[48px] max-h-[48px]';
       case 'lg':
-        return 'w-24 h-24';
+        return 'w-24 h-24 min-w-[96px] min-h-[96px] max-w-[96px] max-h-[96px]';
       case 'md':
       default:
-        return 'w-18 h-18 sm:w-20 sm:h-20';
+        return 'w-20 h-20 min-w-[80px] min-h-[80px] max-w-[80px] max-h-[80px]';
     }
   };
 
@@ -186,7 +186,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
     <div className={`space-y-1.5 ${className}`}>
       {label && <label className="block text-xs font-bold text-slate-800">{label}</label>}
 
-      <div className="flex items-center gap-3.5 p-2.5 rounded-2xl border border-slate-200 bg-slate-50/70">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 p-3 rounded-2xl border border-slate-200 bg-slate-50/70">
         {/* Avatar Display Box */}
         <div
           className={`relative ${getDimensions()} ${getShapeClass()} overflow-hidden border-2 border-slate-300 bg-white shadow-sm flex items-center justify-center shrink-0 group`}
@@ -220,8 +220,8 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex-1 space-y-1.5">
-          <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex-1 w-full space-y-2 text-center sm:text-left">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 w-full">
             {/* Upload from Device */}
             <input
               ref={fileInputRef}

@@ -674,7 +674,7 @@ export default function TeachersAdminPage() {
                   onChange={(e) => setNewTeacher({ ...newTeacher, name: e.target.value })}
                 />
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Department *</label>
                     <div className="relative">
@@ -719,7 +719,7 @@ export default function TeachersAdminPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
                     label="Designation *"
                     required
@@ -736,7 +736,7 @@ export default function TeachersAdminPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
                     label="Phone Number"
                     placeholder="+91 9876543210"
@@ -769,7 +769,7 @@ export default function TeachersAdminPage() {
       {editingTeacher && (
         <ClientPortal>
           <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
-            <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto border border-slate-200">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto border border-slate-200">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                   <Edit2 className="w-4 h-4 text-blue-600" /> Edit Faculty Member: {editingTeacher.name}
@@ -793,7 +793,7 @@ export default function TeachersAdminPage() {
                   onChange={(e) => setEditingTeacher({ ...editingTeacher, name: e.target.value })}
                 />
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Department</label>
                     <div className="relative">
@@ -838,7 +838,7 @@ export default function TeachersAdminPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
                     label="Designation *"
                     required
@@ -853,7 +853,7 @@ export default function TeachersAdminPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
                     label="Phone Number"
                     value={editingTeacher.phone}
