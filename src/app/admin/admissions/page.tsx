@@ -36,6 +36,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Modal } from '../../../components/ui/modal';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 export default function AdmissionsAdminPage() {
   const { toast } = useToast();
@@ -200,16 +201,26 @@ export default function AdmissionsAdminPage() {
     }
   };
 
-  // Delete Application
-  const handleDeleteApp = async (id: string, appNo: string) => {
-    if (!confirm(`Are you sure you want to delete application "${appNo}"?`)) return;
+  const [deletingApp, setDeletingApp] = useState<{ id: string; appNo: string } | null>(null);
+  const [isDeletingApp, setIsDeletingApp] = useState(false);
 
+  // Delete Application
+  const handleDeleteApp = (id: string, appNo: string) => {
+    setDeletingApp({ id, appNo });
+  };
+
+  const handleConfirmDeleteApp = async () => {
+    if (!deletingApp) return;
+    setIsDeletingApp(true);
     try {
-      await apiClient.delete(`/admissions/${id}`);
-      setApps((prev) => prev.filter((a) => a._id !== id));
-      toast.success(`Application ${appNo} removed.`, 'Deleted');
+      await apiClient.delete(`/admissions/${deletingApp.id}`);
+      setApps((prev) => prev.filter((a) => a._id !== deletingApp.id));
+      toast.success(`Application ${deletingApp.appNo} removed.`, 'Deleted');
     } catch {
       toast.error('Failed to delete application.', 'Delete Error');
+    } finally {
+      setIsDeletingApp(false);
+      setDeletingApp(null);
     }
   };
 
@@ -819,6 +830,20 @@ export default function AdmissionsAdminPage() {
           </form>
         )}
       </Modal>
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingApp)}
+        onClose={() => !isDeletingApp && setDeletingApp(null)}
+        onConfirm={handleConfirmDeleteApp}
+        title="Delete Admission Application"
+        description="Are you sure you want to delete this admission enquiry / application? This action cannot be reversed."
+        itemName={deletingApp?.appNo}
+        confirmText="Yes, Delete Application"
+        cancelText="Keep Application"
+        isLoading={isDeletingApp}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

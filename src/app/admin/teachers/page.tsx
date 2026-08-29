@@ -29,6 +29,7 @@ import { AvatarPicker } from '../../../components/ui/avatar-picker';
 import { apiClient } from '../../../lib/api-client';
 import { downloadElementAsPdf, downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
 import { ClientPortal } from '../../../components/ui/client-portal';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 const fallbackTeachers = [
   {
@@ -201,8 +202,12 @@ export default function TeachersAdminPage() {
       newTeacher.avatar ||
       newTeacher.photoUrl ||
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
-    const created = {
-      _id: 't_' + Date.now(),
+
+    const cleanEmail =
+      newTeacher.email?.trim() ||
+      `${newTeacher.name.toLowerCase().replace(/[^a-z0-9]/g, '.')}.${Date.now().toString().slice(-4)}@sarswati.edu`;
+
+    const payload = {
       employeeId: `EMP-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
       name: newTeacher.name,
       avatar: photo,
@@ -212,16 +217,28 @@ export default function TeachersAdminPage() {
       qualification: newTeacher.qualification,
       experience: newTeacher.experience || '5+ Years',
       phone: newTeacher.phone || '+91 9451234999',
-      email: newTeacher.email || `${newTeacher.name.toLowerCase().replace(/\s+/g, '.')}@sarswati.edu`,
+      email: cleanEmail,
       status: newTeacher.status || 'active',
       assignedClass: newTeacher.assignedClass,
     };
 
+    let createdTeacher = {
+      _id: 't_' + Date.now(),
+      ...payload,
+    };
+
     try {
-      await apiClient.post('/teachers', created);
+      const res = await apiClient.post('/teachers', payload);
+      if (res.data?.data) {
+        createdTeacher = {
+          ...res.data.data,
+          avatar: res.data.data.photoUrl || res.data.data.avatar || photo,
+          photoUrl: res.data.data.photoUrl || res.data.data.avatar || photo,
+        };
+      }
     } catch {}
 
-    setTeachers([created, ...teachers]);
+    setTeachers([createdTeacher, ...teachers]);
     setIsAddModalOpen(false);
     setNewTeacher({
       name: '',
@@ -236,7 +253,7 @@ export default function TeachersAdminPage() {
       assignedClass: 'Class 10-A',
       status: 'active',
     });
-    toast.success(`Faculty member ${created.name} enrolled successfully!`, 'Faculty Enrolled');
+    toast.success(`Faculty member ${createdTeacher.name} enrolled successfully!`, 'Faculty Enrolled');
   };
 
   const handleUpdateTeacher = async (e: React.FormEvent) => {
@@ -259,15 +276,26 @@ export default function TeachersAdminPage() {
     toast.success(`Faculty member ${editingTeacher.name} profile updated!`, 'Faculty Updated');
   };
 
-  const handleDeleteTeacher = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to remove faculty member ${name}?`)) return;
+  const [deletingTeacher, setDeletingTeacher] = useState<{ id: string; name: string } | null>(null);
+  const [isDeletingTeacher, setIsDeletingTeacher] = useState(false);
 
+  const handleDeleteTeacher = (id: string, name: string) => {
+    setDeletingTeacher({ id, name });
+  };
+
+  const handleConfirmDeleteTeacher = async () => {
+    if (!deletingTeacher) return;
+    const targetId = deletingTeacher.id;
+    const targetName = deletingTeacher.name;
+    setIsDeletingTeacher(true);
     try {
-      await apiClient.delete(`/teachers/${id}`);
+      await apiClient.delete(`/teachers/${targetId}`);
     } catch {}
 
-    setTeachers(teachers.filter((t) => t._id !== id));
-    toast.success(`Faculty member ${name} removed.`, 'Faculty Removed');
+    setTeachers((prev) => prev.filter((t) => String(t._id) !== String(targetId)));
+    toast.success(`Faculty member ${targetName} removed.`, 'Faculty Removed');
+    setIsDeletingTeacher(false);
+    setDeletingTeacher(null);
   };
 
   const handleBulkUpload = () => {
@@ -350,16 +378,16 @@ export default function TeachersAdminPage() {
         </div>
 
         {/* Faculty Grid Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredTeachers.map((t) => (
             <Card
               key={t._id}
-              className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+              className="overflow-hidden border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between"
             >
-              <CardContent className="p-5 space-y-4 flex flex-col justify-between h-full">
-                <div className="space-y-3.5">
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-sm relative">
+              <CardContent className="p-4 space-y-3 flex flex-col justify-between h-full">
+                <div className="space-y-2.5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-xs relative">
                       <img
                         src={
                           t.avatar ||
@@ -387,18 +415,18 @@ export default function TeachersAdminPage() {
                           {t.status}
                         </Badge>
                       </div>
-                      <h3 className="text-sm font-black text-slate-900 mt-1 truncate">{t.name}</h3>
+                      <h3 className="text-sm font-black text-slate-900 mt-0.5 truncate">{t.name}</h3>
                       <p className="text-xs text-slate-500 font-medium truncate">{t.designation}</p>
                     </div>
                   </div>
 
                   {/* Qualifications & Academic Meta Box */}
-                  <div className="space-y-2 text-xs bg-slate-50/80 p-3 rounded-2xl border border-slate-200/70">
+                  <div className="space-y-1.5 text-xs bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/70">
                     <div className="flex items-center justify-between text-[11.5px]">
                       <span className="text-slate-500 font-medium">Department:</span>
                       <span className="font-bold text-slate-800">{t.department}</span>
                     </div>
-                    <div className="pt-1.5 border-t border-slate-200/60">
+                    <div className="pt-1 border-t border-slate-200/60">
                       <div className="flex items-start justify-between gap-2">
                         <span className="text-slate-500 font-medium text-[11px] shrink-0">Qualifications:</span>
                         <span
@@ -409,14 +437,14 @@ export default function TeachersAdminPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-[11.5px] pt-1.5 border-t border-slate-200/60">
+                    <div className="flex items-center justify-between text-[11.5px] pt-1 border-t border-slate-200/60">
                       <span className="text-slate-500 font-medium">Class Incharge:</span>
                       <span className="font-bold text-blue-700">{t.assignedClass || 'General Faculty'}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-center justify-between text-xs gap-1 border-t border-slate-100 mt-2">
+                <div className="pt-2 flex items-center justify-between text-xs gap-1 border-t border-slate-100 mt-1">
                   <div className="text-[11px] text-slate-500 flex items-center gap-1 font-mono truncate mr-1">
                     <Phone className="w-3 h-3 text-emerald-600 shrink-0" /> {t.phone}
                   </div>
@@ -440,7 +468,7 @@ export default function TeachersAdminPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs px-2 rounded-xl"
+                      className="text-xs px-2 h-7 rounded-xl"
                       onClick={() => setActiveTeacherModal(t)}
                       leftIcon={<Printer className="w-3.5 h-3.5 text-amber-600" />}
                     >
@@ -868,6 +896,20 @@ export default function TeachersAdminPage() {
           </div>
         </ClientPortal>
       )}
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingTeacher)}
+        onClose={() => !isDeletingTeacher && setDeletingTeacher(null)}
+        onConfirm={handleConfirmDeleteTeacher}
+        title="Remove Faculty Member"
+        description="Are you sure you want to remove this educator from the faculty directory? This will remove their wing assignments and ID credentials."
+        itemName={deletingTeacher?.name}
+        confirmText="Yes, Remove Faculty"
+        cancelText="Keep Faculty"
+        isLoading={isDeletingTeacher}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

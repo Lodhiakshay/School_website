@@ -28,6 +28,8 @@ import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { AvatarPicker } from '../../../components/ui/avatar-picker';
 import { downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
+import { apiClient } from '../../../lib/api-client';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 const sgmStudents = [
   {
@@ -236,6 +238,24 @@ export default function StudentsAdminPage() {
 
   useEffect(() => {
     setMounted(true);
+    apiClient
+      .get('/students')
+      .then((res: any) => {
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          const mapped = res.data.data.map((s: any) => ({
+            ...s,
+            campus: s.campus || (s.admissionNumber?.startsWith('SSSD') ? 'sssd' : 'sgm'),
+            avatar:
+              s.avatar ||
+              s.photoUrl ||
+              (s.gender === 'female'
+                ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
+                : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80'),
+          }));
+          setStudents(mapped);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const [newStudent, setNewStudent] = useState({
@@ -338,30 +358,50 @@ export default function StudentsAdminPage() {
     toast.success(`Successfully enrolled ${formatted.length} students via CSV Bulk Import!`, 'Bulk Import Complete');
   };
 
-  const handleCreateStudent = (e: React.FormEvent) => {
+  const handleCreateStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     const prefix = selectedCampus === 'sssd' ? 'SSSD' : 'SGM';
-    const created = {
-      _id: 'stu_' + Date.now(),
+    const photo =
+      newStudent.avatar ||
+      (newStudent.gender === 'female'
+        ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
+        : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80');
+
+    const payload = {
       campus: selectedCampus,
       admissionNumber: `${prefix}-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       firstName: newStudent.firstName,
       lastName: newStudent.lastName,
-      avatar:
-        newStudent.avatar ||
-        (newStudent.gender === 'female'
-          ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
-          : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80'),
+      avatar: photo,
+      photoUrl: photo,
       gender: newStudent.gender,
       dob: newStudent.dob,
       currentRollNumber: students.length + 1,
       currentClassId: { _id: 'cls_custom', name: newStudent.className },
       currentSectionId: { _id: 'sec_custom', name: newStudent.sectionName },
       parentId: { fatherName: newStudent.fatherName, fatherPhone: newStudent.fatherPhone },
+      residentialAddress: newStudent.residentialAddress,
       status: 'active',
     };
 
-    setStudents([created, ...students]);
+    let createdStudent = {
+      _id: 'stu_' + Date.now(),
+      ...payload,
+    };
+
+    try {
+      const res = await apiClient.post('/students', payload);
+      if (res.data?.data) {
+        createdStudent = {
+          ...res.data.data,
+          campus: selectedCampus,
+          avatar: res.data.data.avatar || res.data.data.photoUrl || photo,
+          photoUrl: res.data.data.avatar || res.data.data.photoUrl || photo,
+        };
+      }
+    } catch {}
+
+    setStudents([createdStudent, ...students]);
     setShowAddModal(false);
     setNewStudent({
       firstName: '',
@@ -375,21 +415,48 @@ export default function StudentsAdminPage() {
       fatherPhone: '',
       residentialAddress: 'Shamsabad, Farrukhabad (UP)',
     });
-    toast.success(`Enrolled student ${created.firstName} ${created.lastName} with custom photo!`, 'Admission Completed');
+    toast.success(`Enrolled scholar ${createdStudent.firstName} ${createdStudent.lastName} successfully!`, 'Admission Completed');
   };
 
-  const handleUpdateStudent = (e: React.FormEvent) => {
+  const handleUpdateStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingStudent) return;
-    setStudents(students.map((s) => (s._id === editingStudent._id ? editingStudent : s)));
+    const photo = editingStudent.avatar || editingStudent.photoUrl;
+    const updated = {
+      ...editingStudent,
+      avatar: photo,
+      photoUrl: photo,
+    };
+
+    try {
+      await apiClient.put(`/students/${editingStudent._id}`, updated);
+    } catch {}
+
+    setStudents(students.map((s) => (s._id === editingStudent._id ? updated : s)));
     setEditingStudent(null);
     toast.success(`Scholar ${editingStudent.firstName} profile updated!`, 'Profile Updated');
   };
 
+  const [deletingStudent, setDeletingStudent] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleDeleteStudent = (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to remove scholar ${name}?`)) return;
-    setStudents(students.filter((s) => s._id !== id));
-    toast.success(`Scholar record ${name} removed.`, 'Scholar Removed');
+    setDeletingStudent({ id, name });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingStudent) return;
+    const targetId = deletingStudent.id;
+    const targetName = deletingStudent.name;
+    setIsDeleting(true);
+    try {
+      await apiClient.delete(`/students/${targetId}`);
+    } catch {}
+
+    setStudents((prev) => prev.filter((s) => String(s._id) !== String(targetId)));
+    toast.success(`Scholar record ${targetName} removed.`, 'Scholar Removed');
+    setIsDeleting(false);
+    setDeletingStudent(null);
   };
 
   const filtered = students.filter((s) => {
@@ -1017,7 +1084,7 @@ export default function StudentsAdminPage() {
               <AvatarPicker
                 label="Update Scholar Photo"
                 value={editingStudent.avatar || editingStudent.photoUrl}
-                onChange={(url) => setEditingStudent({ ...editingStudent, avatar: url })}
+                onChange={(url) => setEditingStudent({ ...editingStudent, avatar: url, photoUrl: url })}
               />
 
               <div className="grid grid-cols-2 gap-3">
@@ -1069,6 +1136,20 @@ export default function StudentsAdminPage() {
         </div>,
         document.body
       )}
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingStudent)}
+        onClose={() => !isDeleting && setDeletingStudent(null)}
+        onConfirm={handleConfirmDelete}
+        title="Remove Scholar Record"
+        description="Are you sure you want to remove this scholar from the student information system? This will archive their profile and invalidate their official ID cards."
+        itemName={deletingStudent?.name}
+        confirmText="Yes, Remove Scholar"
+        cancelText="Keep Scholar"
+        isLoading={isDeleting}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

@@ -35,6 +35,7 @@ import { Modal } from '../../../components/ui/modal';
 import { useToast } from '../../../components/ui/toast';
 import { ImageUploader } from '../../../components/ui/image-uploader';
 import { apiClient } from '../../../lib/api-client';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 const CATEGORY_OPTIONS = [
   { value: 'all', label: 'All Categories', icon: Grid },
@@ -217,16 +218,26 @@ export default function AdminGalleryPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to permanently delete "${title}" from the gallery?`)) return;
+  const [deletingGalleryItem, setDeletingGalleryItem] = useState<{ id: string; title: string } | null>(null);
+  const [isDeletingGalleryItem, setIsDeletingGalleryItem] = useState(false);
 
+  const handleDelete = (id: string, title: string) => {
+    setDeletingGalleryItem({ id, title });
+  };
+
+  const handleConfirmDeleteGallery = async () => {
+    if (!deletingGalleryItem) return;
+    setIsDeletingGalleryItem(true);
     try {
-      await apiClient.delete(`/gallery/${id}`);
-      setItems((prev) => prev.filter((item) => item._id !== id));
-      toast.success(`"${title}" removed from gallery.`, 'Deleted');
+      await apiClient.delete(`/gallery/${deletingGalleryItem.id}`);
+      setItems((prev) => prev.filter((item) => item._id !== deletingGalleryItem.id));
+      toast.success(`"${deletingGalleryItem.title}" removed from gallery.`, 'Deleted');
       setStats((prev: any) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
     } catch {
       toast.error('Failed to delete item.', 'Delete Error');
+    } finally {
+      setIsDeletingGalleryItem(false);
+      setDeletingGalleryItem(null);
     }
   };
 
@@ -690,6 +701,20 @@ export default function AdminGalleryPage() {
           </div>
         </form>
       </Modal>
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingGalleryItem)}
+        onClose={() => !isDeletingGalleryItem && setDeletingGalleryItem(null)}
+        onConfirm={handleConfirmDeleteGallery}
+        title="Delete Gallery Item"
+        description="Are you sure you want to permanently delete this photo / album item from the public gallery showcase?"
+        itemName={deletingGalleryItem?.title}
+        confirmText="Yes, Delete Photo"
+        cancelText="Keep Photo"
+        isLoading={isDeletingGalleryItem}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

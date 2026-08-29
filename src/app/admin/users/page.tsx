@@ -28,6 +28,7 @@ import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
 import { AvatarPicker } from '../../../components/ui/avatar-picker';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 import { apiClient } from '../../../lib/api-client';
 
 export const ERP_ROLES = [
@@ -274,18 +275,27 @@ export default function UsersAdminPage() {
     toast.info(`Account status for ${user.name} changed to ${nextStatus.toUpperCase()}`, 'Status Updated');
   };
 
-  // Delete User
-  const handleDeleteUser = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to revoke access and remove user account "${name}"?`)) return;
+  const [deletingUser, setDeletingUser] = useState<{ id: string; name: string } | null>(null);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
 
+  // Delete User
+  const handleDeleteUser = (id: string, name: string) => {
+    setDeletingUser({ id, name });
+  };
+
+  const handleConfirmDeleteUser = async () => {
+    if (!deletingUser) return;
+    setIsDeletingUser(true);
     try {
-      await apiClient.delete(`/users/${id}`);
+      await apiClient.delete(`/users/${deletingUser.id}`);
     } catch {
       // Local state fallback
     }
 
-    setUsers(users.filter((u) => u._id !== id));
-    toast.success(`User account "${name}" has been removed.`, 'Account Removed');
+    setUsers(users.filter((u) => u._id !== deletingUser.id));
+    toast.success(`User account "${deletingUser.name}" has been removed.`, 'Account Removed');
+    setIsDeletingUser(false);
+    setDeletingUser(null);
   };
 
   const filtered = users.filter((u) => {
@@ -782,6 +792,20 @@ export default function UsersAdminPage() {
           </div>
         </div>
       )}
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingUser)}
+        onClose={() => !isDeletingUser && setDeletingUser(null)}
+        onConfirm={handleConfirmDeleteUser}
+        title="Revoke & Remove User Account"
+        description="Are you sure you want to revoke system access and remove this staff/user account from the ERP portal?"
+        itemName={deletingUser?.name}
+        confirmText="Yes, Remove Account"
+        cancelText="Keep Account"
+        isLoading={isDeletingUser}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

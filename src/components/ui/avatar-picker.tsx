@@ -11,9 +11,11 @@ import {
   User,
   RefreshCw,
   Loader2,
+  Crop,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api-client';
 import { useToast } from './toast';
+import { ImageCropModal } from './image-crop-modal';
 
 // Curated stock avatar presets for instant selection
 export const AVATAR_PRESETS = [
@@ -81,6 +83,10 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
   const [customUrlInput, setCustomUrlInput] = useState('');
   const [previewError, setPreviewError] = useState(false);
 
+  // Image Cropping States
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [rawImageForCrop, setRawImageForCrop] = useState('');
+
   const getDimensions = () => {
     switch (size) {
       case 'sm':
@@ -105,7 +111,8 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
     }
   };
 
-  const handleFile = async (file: File) => {
+  // Convert file to data URL and open cropper
+  const handleFile = (file: File) => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -113,62 +120,55 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
       return;
     }
 
-    if (file.size > 8 * 1024 * 1024) {
-      toast.error('Image size must be under 8MB', 'File Too Large');
+    if (file.size > 12 * 1024 * 1024) {
+      toast.error('Image size must be under 12MB', 'File Too Large');
       return;
     }
 
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setRawImageForCrop(e.target.result as string);
+        setCropModalOpen(true);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Finalize selected photo (either cropped or original)
+  const handleSavePhoto = async (finalDataUrl: string) => {
     setIsUploading(true);
     setPreviewError(false);
+    onChange(finalDataUrl);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await apiClient.post('/school/upload-media', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      // Try to upload to server/CDN
+      const res = await apiClient.post('/school/upload-media', {
+        file: finalDataUrl,
       });
 
       if (res.data?.data?.url) {
         onChange(res.data.data.url);
-        toast.success('Profile photo uploaded successfully!', 'Photo Uploaded');
-      } else {
-        // Fallback to local Base64 URL preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            onChange(e.target.result as string);
-            toast.success('Profile photo loaded from device.', 'Photo Loaded');
-          }
-        };
-        reader.readAsDataURL(file);
       }
     } catch {
-      // Local Base64 fallback if offline or backend upload endpoint is mock
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          onChange(e.target.result as string);
-          toast.success('Profile photo loaded successfully.', 'Photo Loaded');
-        }
-      };
-      reader.readAsDataURL(file);
+      // Keep finalDataUrl (Data URL fallback)
     } finally {
       setIsUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      toast.success('Profile photo saved successfully!', 'Photo Updated');
     }
   };
 
   const handleApplyCustomUrl = () => {
     if (!customUrlInput.trim()) return;
-    onChange(customUrlInput.trim());
+    const clean = customUrlInput.trim();
     setIsUrlModalOpen(false);
     setCustomUrlInput('');
-    toast.success('Custom image URL applied.', 'Photo Updated');
+    setRawImageForCrop(clean);
+    setCropModalOpen(true);
   };
 
   const handleSelectPreset = (url: string) => {
@@ -244,6 +244,22 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
               {isUploading ? 'Uploading...' : 'Upload Photo'}
             </button>
 
+            {/* Crop / Adjust current image */}
+            {value && (
+              <button
+                type="button"
+                onClick={() => {
+                  setRawImageForCrop(value);
+                  setCropModalOpen(true);
+                }}
+                className="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-[11px] font-bold shadow-xs flex items-center gap-1.5 transition"
+                title="Crop or Adjust Current Photo"
+              >
+                <Crop className="w-3.5 h-3.5 text-amber-600" />
+                Crop / Adjust
+              </button>
+            )}
+
             {/* Presets Picker */}
             <button
               type="button"
@@ -277,10 +293,22 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
           </div>
 
           <p className="text-[10px] text-slate-500 leading-tight">
-            {helperText || 'JPG, PNG or WebP under 8MB. Direct sync with official PVC Smart ID Cards.'}
+            {helperText || 'JPG, PNG or WebP under 12MB. Crop or use original image. Syncs with PVC ID Cards.'}
           </p>
         </div>
       </div>
+
+      {/* Image Cropper Modal */}
+      <ImageCropModal
+        isOpen={cropModalOpen}
+        imageSrc={rawImageForCrop}
+        onClose={() => setCropModalOpen(false)}
+        onCropComplete={handleSavePhoto}
+        onUseOriginal={handleSavePhoto}
+        defaultAspectRatio="1:1"
+        title="Crop & Position Profile Photo"
+        description="Choose your crop area (1:1 Avatar, 3:4 ID Card) or click 'Use Original (No Crop)'."
+      />
 
       {/* Preset Avatars Modal */}
       {isPresetsOpen && (

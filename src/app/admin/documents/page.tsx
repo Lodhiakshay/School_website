@@ -33,6 +33,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Modal } from '../../../components/ui/modal';
 import { useToast } from '../../../components/ui/toast';
 import { apiClient } from '../../../lib/api-client';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 const CATEGORY_OPTIONS = [
   { value: 'all', label: 'All Categories' },
@@ -195,16 +196,26 @@ export default function DocumentsAdminPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to permanently remove "${title}" from the document vault?`)) return;
+  const [deletingDoc, setDeletingDoc] = useState<{ id: string; title: string } | null>(null);
+  const [isDeletingDoc, setIsDeletingDoc] = useState(false);
 
+  const handleDelete = (id: string, title: string) => {
+    setDeletingDoc({ id, title });
+  };
+
+  const handleConfirmDeleteDoc = async () => {
+    if (!deletingDoc) return;
+    setIsDeletingDoc(true);
     try {
-      await apiClient.delete(`/documents/${id}`);
-      setDocs((prev) => prev.filter((d) => d._id !== id));
-      toast.success(`"${title}" removed from vault.`, 'Deleted');
+      await apiClient.delete(`/documents/${deletingDoc.id}`);
+      setDocs((prev) => prev.filter((d) => d._id !== deletingDoc.id));
+      toast.success(`"${deletingDoc.title}" removed from vault.`, 'Deleted');
       setStats((prev: any) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
     } catch {
       toast.error('Failed to delete document.', 'Delete Error');
+    } finally {
+      setIsDeletingDoc(false);
+      setDeletingDoc(null);
     }
   };
 
@@ -592,6 +603,20 @@ export default function DocumentsAdminPage() {
           </div>
         </form>
       </Modal>
+
+      {/* Production Grade Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingDoc)}
+        onClose={() => !isDeletingDoc && setDeletingDoc(null)}
+        onConfirm={handleConfirmDeleteDoc}
+        title="Delete Institutional Document"
+        description="Are you sure you want to permanently remove this document from the official document vault? It will no longer be available for download."
+        itemName={deletingDoc?.title}
+        confirmText="Yes, Delete Document"
+        cancelText="Keep Document"
+        isLoading={isDeletingDoc}
+        variant="danger"
+      />
     </PortalLayout>
   );
 }

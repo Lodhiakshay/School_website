@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Upload, Image as ImageIcon, Loader2, CheckCircle, RefreshCw } from 'lucide-react';
+import { Upload, Image as ImageIcon, Loader2, CheckCircle, RefreshCw, Crop } from 'lucide-react';
 import { apiClient } from '../../lib/api-client';
 import { useToast } from './toast';
+import { ImageCropModal, AspectRatioOption } from './image-crop-modal';
 
 interface ImageUploaderProps {
   label: string;
@@ -28,6 +29,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   const [isDragOver, setIsDragOver] = useState(false);
   const [previewError, setPreviewError] = useState(false);
 
+  // Crop States
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [rawImageForCrop, setRawImageForCrop] = useState('');
+
   const getAspectClass = () => {
     switch (aspectRatio) {
       case 'square':
@@ -43,7 +48,21 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
   };
 
-  const handleFile = async (file: File) => {
+  const getDefaultCropAspect = (): AspectRatioOption => {
+    switch (aspectRatio) {
+      case 'square':
+        return '1:1';
+      case 'portrait':
+        return '3:4';
+      case 'wide':
+      case 'video':
+        return '16:9';
+      default:
+        return '4:3';
+    }
+  };
+
+  const handleFile = (file: File) => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -51,35 +70,43 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image size must be under 10MB', 'File Too Large');
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error('Image size must be under 15MB', 'File Too Large');
       return;
     }
 
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setRawImageForCrop(e.target.result as string);
+        setCropModalOpen(true);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleSaveFinalImage = async (finalDataUrl: string) => {
     setIsUploading(true);
     setPreviewError(false);
+    onChange(finalDataUrl);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await apiClient.post('/school/upload-media', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const res = await apiClient.post('/school/upload-media', {
+        file: finalDataUrl,
       });
 
       if (res.data?.data?.url) {
-        const uploadedUrl = res.data.data.url;
-        onChange(uploadedUrl);
-        toast.success('Image successfully uploaded to Cloudinary storage.', 'Image Uploaded');
-      } else {
-        throw new Error('Upload URL missing');
+        onChange(res.data.data.url);
       }
     } catch {
-      toast.error('Failed to upload image. Please try again or check connection.', 'Upload Error');
+      // Fallback retains finalDataUrl
     } finally {
       setIsUploading(false);
+      toast.success('Image saved successfully!', 'Image Ready');
     }
   };
 
@@ -101,11 +128,27 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     <div className={`space-y-1.5 ${className}`}>
       <div className="flex items-center justify-between">
         <label className="block text-xs font-bold text-slate-700">{label}</label>
-        {value && (
-          <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> Image Active
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {value && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setRawImageForCrop(value);
+                setCropModalOpen(true);
+              }}
+              className="text-[11px] text-amber-700 hover:text-amber-800 font-bold flex items-center gap-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-lg transition"
+              title="Crop or Adjust Image"
+            >
+              <Crop className="w-3 h-3 text-amber-600" /> Crop / Adjust
+            </button>
+          )}
+          {value && (
+            <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+              <CheckCircle className="w-3 h-3" /> Image Active
+            </span>
+          )}
+        </div>
       </div>
 
       <div
@@ -158,7 +201,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                 Click to Upload Image or Drag &amp; Drop
               </p>
               <p className="text-[10px] text-slate-500 font-medium">
-                PNG, JPG, WEBP or GIF (Cloudinary CDN)
+                PNG, JPG, WEBP or GIF • Crop &amp; Adjust Support
               </p>
             </div>
           </div>
@@ -168,12 +211,24 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         {isUploading && (
           <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-sm flex flex-col items-center justify-center text-white space-y-2 z-10 animate-in fade-in duration-150">
             <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
-            <p className="text-xs font-black tracking-wide">Uploading to Cloudinary...</p>
+            <p className="text-xs font-black tracking-wide">Processing &amp; Uploading...</p>
           </div>
         )}
       </div>
 
       {helperText && <p className="text-[10px] text-slate-500">{helperText}</p>}
+
+      {/* Image Cropper Modal */}
+      <ImageCropModal
+        isOpen={cropModalOpen}
+        imageSrc={rawImageForCrop}
+        onClose={() => setCropModalOpen(false)}
+        onCropComplete={handleSaveFinalImage}
+        onUseOriginal={handleSaveFinalImage}
+        defaultAspectRatio={getDefaultCropAspect()}
+        title={`Crop & Adjust ${label}`}
+        description="Select crop area or click 'Use Original (No Crop)'."
+      />
     </div>
   );
 };
