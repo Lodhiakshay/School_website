@@ -202,6 +202,8 @@ const sssdStudents = [
   },
 ];
 
+const LOCAL_STORAGE_STUDENTS_KEY = 'erp_students_roster_v2';
+
 export default function StudentsAdminPage() {
   const [mounted, setMounted] = useState(false);
   const [selectedCampus, setSelectedCampus] = useState<'sgm' | 'sssd'>('sgm');
@@ -238,6 +240,16 @@ export default function StudentsAdminPage() {
 
   useEffect(() => {
     setMounted(true);
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_STUDENTS_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length >= 0) {
+          setStudents(parsed);
+        }
+      }
+    } catch {}
+
     apiClient
       .get('/students')
       .then((res: any) => {
@@ -253,6 +265,9 @@ export default function StudentsAdminPage() {
                 : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80'),
           }));
           setStudents(mapped);
+          try {
+            localStorage.setItem(LOCAL_STORAGE_STUDENTS_KEY, JSON.stringify(mapped));
+          } catch {}
         }
       })
       .catch(() => {});
@@ -401,7 +416,12 @@ export default function StudentsAdminPage() {
       }
     } catch {}
 
-    setStudents([createdStudent, ...students]);
+    const updatedList = [createdStudent, ...students];
+    setStudents(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_STUDENTS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setShowAddModal(false);
     setNewStudent({
       firstName: '',
@@ -432,7 +452,12 @@ export default function StudentsAdminPage() {
       await apiClient.put(`/students/${editingStudent._id}`, updated);
     } catch {}
 
-    setStudents(students.map((s) => (s._id === editingStudent._id ? updated : s)));
+    const updatedList = students.map((s) => (s._id === editingStudent._id ? updated : s));
+    setStudents(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_STUDENTS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setEditingStudent(null);
     toast.success(`Scholar ${editingStudent.firstName} profile updated!`, 'Profile Updated');
   };
@@ -453,7 +478,12 @@ export default function StudentsAdminPage() {
       await apiClient.delete(`/students/${targetId}`);
     } catch {}
 
-    setStudents((prev) => prev.filter((s) => String(s._id) !== String(targetId)));
+    const updatedList = students.filter((s) => String(s._id) !== String(targetId));
+    setStudents(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_STUDENTS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     toast.success(`Scholar record ${targetName} removed.`, 'Scholar Removed');
     setIsDeleting(false);
     setDeletingStudent(null);
@@ -776,7 +806,7 @@ export default function StudentsAdminPage() {
 
               <div className="p-2.5 space-y-1.5 bg-gradient-to-b from-white to-slate-50">
                 {/* Scholar Portrait Photo */}
-                <div className={`w-15 h-15 rounded-2xl border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-md ring-2 ring-amber-400/80`}>
+                <div className={`w-16 h-16 rounded-xl border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-amber-400 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-sm ring-2 ring-blue-900/10 shrink-0`}>
                   <img
                     src={
                       activeStudent.avatar ||
@@ -786,7 +816,7 @@ export default function StudentsAdminPage() {
                         : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80')
                     }
                     alt={activeStudent.firstName}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
 

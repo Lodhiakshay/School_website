@@ -230,7 +230,7 @@ export default function AdminGalleryPage() {
     setIsDeletingGalleryItem(true);
     try {
       await apiClient.delete(`/gallery/${deletingGalleryItem.id}`);
-      setItems((prev) => prev.filter((item) => item._id !== deletingGalleryItem.id));
+      setItems((prev) => prev.filter((item) => String(item._id) !== String(deletingGalleryItem.id)));
       toast.success(`"${deletingGalleryItem.title}" removed from gallery.`, 'Deleted');
       setStats((prev: any) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
     } catch {

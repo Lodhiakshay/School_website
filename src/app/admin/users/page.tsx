@@ -146,6 +146,8 @@ const fallbackUsers = [
   },
 ];
 
+const LOCAL_STORAGE_USERS_KEY = 'erp_users_roster_v2';
+
 export default function UsersAdminPage() {
   const [users, setUsers] = useState<any[]>(fallbackUsers);
   const [searchQuery, setSearchQuery] = useState('');
@@ -170,38 +172,55 @@ export default function UsersAdminPage() {
   });
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_USERS_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length >= 0) {
+          setUsers(parsed);
+        }
+      }
+    } catch {}
+
     apiClient
       .get('/users')
       .then((res) => {
-        if (res.data?.data && res.data.data.length > 0) {
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
           setUsers(res.data.data);
+          try {
+            localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(res.data.data));
+          } catch {}
         }
       })
       .catch(() => {});
   }, []);
 
   // Create User
-  const handleAddUser = async (e: React.FormEvent) => {
+  const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = newUser.email.trim();
+    if (!cleanEmail) return;
+
     const created = {
       _id: 'usr_' + Date.now(),
       name: newUser.name,
-      email: newUser.email,
-      phone: newUser.phone || '+91 9451234500',
-      username: newUser.username || newUser.email.split('@')[0],
-      avatar: newUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      email: cleanEmail,
+      phone: newUser.phone || '+91 9451234999',
       role: newUser.role,
-      department: newUser.department,
+      department: newUser.department || 'General Administration',
+      avatar:
+        newUser.avatar ||
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
       status: newUser.status,
-      lastLogin: 'Just Registered',
+      lastLogin: 'Never',
     };
 
     try {
       await apiClient.post('/users', {
         name: newUser.name,
-        email: newUser.email,
+        email: cleanEmail,
         phone: newUser.phone,
-        username: newUser.username || newUser.email.split('@')[0],
+        username: newUser.username || cleanEmail.split('@')[0],
         password: newUser.password || 'School@123',
         avatar: newUser.avatar,
         role: newUser.role,
@@ -211,7 +230,12 @@ export default function UsersAdminPage() {
       // Local state fallback
     }
 
-    setUsers([created, ...users]);
+    const updatedList = [created, ...users];
+    setUsers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setShowAddModal(false);
     setNewUser({
       name: '',
@@ -224,7 +248,7 @@ export default function UsersAdminPage() {
       department: 'Academics',
       status: 'active',
     });
-    toast.success(`User Account "${created.email}" provisioned with role ${created.role}!`, 'User Provisioned');
+    toast.success(`User Account "${created.email}" provisioned!`, 'User Provisioned');
   };
 
   // Update User
@@ -238,7 +262,12 @@ export default function UsersAdminPage() {
       // Local state fallback
     }
 
-    setUsers(users.map((u) => (u._id === editingUser._id ? editingUser : u)));
+    const updatedList = users.map((u) => (u._id === editingUser._id ? editingUser : u));
+    setUsers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setEditingUser(null);
     toast.success(`User Account "${editingUser.name}" updated successfully!`, 'Account Updated');
   };
@@ -271,7 +300,12 @@ export default function UsersAdminPage() {
       // Local state fallback
     }
 
-    setUsers(users.map((u) => (u._id === user._id ? updated : u)));
+    const updatedList = users.map((u) => (u._id === user._id ? updated : u));
+    setUsers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     toast.info(`Account status for ${user.name} changed to ${nextStatus.toUpperCase()}`, 'Status Updated');
   };
 
@@ -285,15 +319,22 @@ export default function UsersAdminPage() {
 
   const handleConfirmDeleteUser = async () => {
     if (!deletingUser) return;
+    const targetId = deletingUser.id;
+    const targetName = deletingUser.name;
     setIsDeletingUser(true);
     try {
-      await apiClient.delete(`/users/${deletingUser.id}`);
+      await apiClient.delete(`/users/${targetId}`);
     } catch {
       // Local state fallback
     }
 
-    setUsers(users.filter((u) => u._id !== deletingUser.id));
-    toast.success(`User account "${deletingUser.name}" has been removed.`, 'Account Removed');
+    const updatedList = users.filter((u) => String(u._id) !== String(targetId));
+    setUsers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
+    toast.success(`User account "${targetName}" has been removed.`, 'Account Removed');
     setIsDeletingUser(false);
     setDeletingUser(null);
   };

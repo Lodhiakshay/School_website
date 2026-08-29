@@ -214,7 +214,7 @@ export default function AdmissionsAdminPage() {
     setIsDeletingApp(true);
     try {
       await apiClient.delete(`/admissions/${deletingApp.id}`);
-      setApps((prev) => prev.filter((a) => a._id !== deletingApp.id));
+      setApps((prev) => prev.filter((a) => String(a._id) !== String(deletingApp.id)));
       toast.success(`Application ${deletingApp.appNo} removed.`, 'Deleted');
     } catch {
       toast.error('Failed to delete application.', 'Delete Error');

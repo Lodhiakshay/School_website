@@ -208,7 +208,7 @@ export default function DocumentsAdminPage() {
     setIsDeletingDoc(true);
     try {
       await apiClient.delete(`/documents/${deletingDoc.id}`);
-      setDocs((prev) => prev.filter((d) => d._id !== deletingDoc.id));
+      setDocs((prev) => prev.filter((d) => String(d._id) !== String(deletingDoc.id)));
       toast.success(`"${deletingDoc.title}" removed from vault.`, 'Deleted');
       setStats((prev: any) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
     } catch {

@@ -132,6 +132,8 @@ const fallbackTeachers = [
   },
 ];
 
+const LOCAL_STORAGE_TEACHERS_KEY = 'erp_faculty_roster_v2';
+
 export default function TeachersAdminPage() {
   const [teachers, setTeachers] = useState<any[]>(fallbackTeachers);
   const [searchQuery, setSearchQuery] = useState('');
@@ -177,10 +179,20 @@ export default function TeachersAdminPage() {
   });
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_TEACHERS_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length >= 0) {
+          setTeachers(parsed);
+        }
+      }
+    } catch {}
+
     apiClient
       .get('/teachers')
       .then((res) => {
-        if (res.data?.data && res.data.data.length > 0) {
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
           const mapped = res.data.data.map((t: any) => ({
             ...t,
             avatar:
@@ -191,6 +203,9 @@ export default function TeachersAdminPage() {
                 : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'),
           }));
           setTeachers(mapped);
+          try {
+            localStorage.setItem(LOCAL_STORAGE_TEACHERS_KEY, JSON.stringify(mapped));
+          } catch {}
         }
       })
       .catch(() => {});
@@ -238,7 +253,12 @@ export default function TeachersAdminPage() {
       }
     } catch {}
 
-    setTeachers([createdTeacher, ...teachers]);
+    const updatedList = [createdTeacher, ...teachers];
+    setTeachers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_TEACHERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setIsAddModalOpen(false);
     setNewTeacher({
       name: '',
@@ -271,7 +291,12 @@ export default function TeachersAdminPage() {
       await apiClient.put(`/teachers/${editingTeacher._id}`, updated);
     } catch {}
 
-    setTeachers(teachers.map((t) => (t._id === editingTeacher._id ? updated : t)));
+    const updatedList = teachers.map((t) => (t._id === editingTeacher._id ? updated : t));
+    setTeachers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_TEACHERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     setEditingTeacher(null);
     toast.success(`Faculty member ${editingTeacher.name} profile updated!`, 'Faculty Updated');
   };
@@ -292,7 +317,12 @@ export default function TeachersAdminPage() {
       await apiClient.delete(`/teachers/${targetId}`);
     } catch {}
 
-    setTeachers((prev) => prev.filter((t) => String(t._id) !== String(targetId)));
+    const updatedList = teachers.filter((t) => String(t._id) !== String(targetId));
+    setTeachers(updatedList);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_TEACHERS_KEY, JSON.stringify(updatedList));
+    } catch {}
+
     toast.success(`Faculty member ${targetName} removed.`, 'Faculty Removed');
     setIsDeletingTeacher(false);
     setDeletingTeacher(null);
