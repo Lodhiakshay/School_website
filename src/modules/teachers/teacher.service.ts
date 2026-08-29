@@ -63,6 +63,7 @@ export class TeacherService {
 
     // Create user login for teacher
     const username = `tch_${data.employeeId.toLowerCase()}`;
+    const photo = data.photoUrl || data.avatar || '';
     const user = await UserModel.create({
       name: data.name,
       email: data.email.toLowerCase(),
@@ -71,11 +72,12 @@ export class TeacherService {
       passwordHash: await bcrypt.hash('Teacher@123', 10),
       role: 'Teacher',
       status: 'active',
-      avatar: data.photoUrl || '',
+      avatar: photo,
     });
 
     const teacher = new TeacherModel({
       ...data,
+      photoUrl: photo,
       employeeId: data.employeeId.toUpperCase(),
       email: data.email.toLowerCase(),
       userId: user._id,
@@ -95,15 +97,22 @@ export class TeacherService {
       teacher.email = data.email.toLowerCase();
     }
 
+    if (data.photoUrl || data.avatar) {
+      const photo = data.photoUrl || data.avatar;
+      teacher.photoUrl = photo;
+      data.photoUrl = photo;
+    }
+
     Object.assign(teacher, data);
     await teacher.save();
 
-    // Update corresponding user record if name or phone changed
+    // Update corresponding user record if name, phone, or photo changed
     if (teacher.userId) {
       await UserModel.findByIdAndUpdate(teacher.userId, {
         name: teacher.name,
         email: teacher.email,
         phone: teacher.phone,
+        avatar: teacher.photoUrl || '',
       });
     }
 

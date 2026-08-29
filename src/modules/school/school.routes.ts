@@ -16,7 +16,7 @@ router.use(authenticate);
 router.get('/', schoolController.getPublicProfile);
 router.put('/', requireRoles('SuperAdmin', 'Admin'), schoolController.updateProfile);
 router.patch('/toggle', requireRoles('SuperAdmin', 'Admin'), schoolController.toggleSection);
-router.post('/upload-media', requireRoles('SuperAdmin', 'Admin'), upload.single('file'), schoolController.uploadMedia);
+router.post('/upload-media', requireRoles('SuperAdmin', 'Admin', 'Principal', 'Teacher', 'AdmissionStaff', 'Accountant', 'Librarian'), upload.single('file'), schoolController.uploadMedia);
 
 // Inquiry Admin Management
 router.get('/inquiries/list', requireRoles('SuperAdmin', 'Admin', 'Principal'), schoolController.listInquiries);
