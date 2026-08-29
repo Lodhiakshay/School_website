@@ -31,7 +31,7 @@ import { AvatarPicker } from '../../../components/ui/avatar-picker';
 import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
 import { apiClient } from '../../../lib/api-client';
 
-export const ERP_ROLES = [
+const ERP_ROLES = [
   { value: 'SuperAdmin', label: 'Super Administrator', badge: 'purple', desc: 'Full System Root & IT Access' },
   { value: 'Admin', label: 'School Admin', badge: 'blue', desc: 'School Operations & Configuration' },
   { value: 'Principal', label: 'Principal / Director', badge: 'info', desc: 'Executive Academic Head' },
