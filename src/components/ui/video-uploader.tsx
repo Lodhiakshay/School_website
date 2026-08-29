@@ -13,6 +13,9 @@ import {
   Youtube,
   Film,
   FileVideo,
+  Instagram,
+  Facebook,
+  HardDrive,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api-client';
 import { useToast } from './toast';
@@ -21,6 +24,9 @@ import {
   getVideoPlayerInfo,
   extractYouTubeId,
   extractVimeoId,
+  extractInstagramId,
+  extractGoogleDriveId,
+  isFacebookVideo,
   isDirectVideoUrl,
 } from '../../lib/video-utils';
 
@@ -53,20 +59,27 @@ export function VideoUploader({
 
   const handleFileUpload = async (file: File) => {
     // Validate file type
-    const validTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'];
-    if (!validTypes.includes(file.type) && !file.name.match(/\.(mp4|webm|ogg|mov|m4v|avi)$/i)) {
+    const validTypes = [
+      'video/mp4',
+      'video/webm',
+      'video/ogg',
+      'video/quicktime',
+      'video/x-msvideo',
+      'video/x-matroska',
+    ];
+    if (!validTypes.includes(file.type) && !file.name.match(/\.(mp4|webm|ogg|mov|m4v|avi|mkv)$/i)) {
       toast.error('Please upload a valid video file (MP4, WebM, MOV, OGG).', 'Invalid Video Format');
       return;
     }
 
-    // Validate size (max 100MB)
-    if (file.size > 100 * 1024 * 1024) {
-      toast.error('Video file size exceeds 100MB limit. Please upload a compressed short video.', 'File Too Large');
+    // Validate size (max 50MB, recommended under 10MB)
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Video file size exceeds 50MB limit. Please upload a short video under 10MB.', 'File Too Large');
       return;
     }
 
     setIsUploading(true);
-    setUploadProgress(10);
+    setUploadProgress(15);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -87,12 +100,28 @@ export function VideoUploader({
       const uploadedUrl = res.data?.data?.url || res.data?.url;
       if (uploadedUrl) {
         onChange(uploadedUrl);
-        toast.success('Video uploaded successfully to Cloudinary CDN!', 'Video Uploaded');
+        toast.success('Video uploaded successfully to CDN!', 'Video Uploaded');
       } else {
-        throw new Error('Upload URL missing from server response');
+        // Fallback to local Data URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target?.result) {
+            onChange(e.target.result as string);
+            toast.success('Video loaded from device.', 'Video Loaded');
+          }
+        };
+        reader.readAsDataURL(file);
       }
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || err?.message || 'Failed to upload video file.', 'Upload Failed');
+    } catch {
+      // Local Data URL fallback if network / backend offline
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          onChange(e.target.result as string);
+          toast.success('Video loaded from device storage.', 'Video Loaded');
+        }
+      };
+      reader.readAsDataURL(file);
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -124,7 +153,7 @@ export function VideoUploader({
               inputMode === 'url' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            <LinkIcon className="w-3 h-3 text-blue-600" /> Web Link / YouTube
+            <LinkIcon className="w-3 h-3 text-blue-600" /> Web Link (YouTube / FB / Insta / Drive)
           </button>
           <button
             type="button"
@@ -133,7 +162,7 @@ export function VideoUploader({
               inputMode === 'upload' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            <Upload className="w-3 h-3 text-rose-600" /> Direct File Upload
+            <Upload className="w-3 h-3 text-rose-600" /> Video File Upload (10MB)
           </button>
         </div>
       </div>
@@ -145,15 +174,21 @@ export function VideoUploader({
             <input
               type="text"
               className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-medium focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition"
-              placeholder="Paste YouTube, Vimeo, Cloudinary, or Direct MP4 link..."
+              placeholder="Paste YouTube, Facebook, Instagram Reel, Google Drive, or Direct MP4 link..."
               value={value || ''}
               onChange={(e) => onChange(e.target.value)}
             />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
               {videoType === 'youtube' ? (
                 <Youtube className="w-4 h-4 text-rose-600" />
+              ) : videoType === 'instagram' ? (
+                <Instagram className="w-4 h-4 text-pink-600" />
+              ) : videoType === 'facebook' ? (
+                <Facebook className="w-4 h-4 text-blue-600" />
               ) : videoType === 'vimeo' ? (
                 <Film className="w-4 h-4 text-sky-500" />
+              ) : videoType === 'drive' ? (
+                <HardDrive className="w-4 h-4 text-emerald-600" />
               ) : (
                 <LinkIcon className="w-4 h-4" />
               )}
@@ -174,13 +209,28 @@ export function VideoUploader({
           {/* Type Badge Chip */}
           <div className="flex items-center gap-2 text-[10px] sm:text-[11px] flex-wrap">
             {videoType === 'youtube' && (
-              <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 max-w-full break-all">
-                <CheckCircle2 className="w-3 h-3 text-emerald-600 flex-shrink-0" /> YouTube Video (ID: {videoInfo.id})
+              <span className="inline-flex items-center gap-1 text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full font-bold border border-rose-200 max-w-full break-all">
+                <Youtube className="w-3 h-3 text-rose-600 flex-shrink-0" /> YouTube Video (ID: {videoInfo.id})
+              </span>
+            )}
+            {videoType === 'instagram' && (
+              <span className="inline-flex items-center gap-1 text-pink-700 bg-pink-50 px-2.5 py-0.5 rounded-full font-bold border border-pink-200 max-w-full break-all">
+                <Instagram className="w-3 h-3 text-pink-600 flex-shrink-0" /> Instagram Reel / Video (ID: {videoInfo.id})
+              </span>
+            )}
+            {videoType === 'facebook' && (
+              <span className="inline-flex items-center gap-1 text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full font-bold border border-blue-200 max-w-full break-all">
+                <Facebook className="w-3 h-3 text-blue-600 flex-shrink-0" /> Facebook Video / Reel
               </span>
             )}
             {videoType === 'vimeo' && (
               <span className="inline-flex items-center gap-1 text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full font-bold border border-sky-200 max-w-full break-all">
-                <CheckCircle2 className="w-3 h-3 text-sky-600 flex-shrink-0" /> Vimeo Video (ID: {videoInfo.id})
+                <Film className="w-3 h-3 text-sky-600 flex-shrink-0" /> Vimeo Video (ID: {videoInfo.id})
+              </span>
+            )}
+            {videoType === 'drive' && (
+              <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 max-w-full break-all">
+                <HardDrive className="w-3 h-3 text-emerald-600 flex-shrink-0" /> Google Drive Video
               </span>
             )}
             {videoType === 'direct' && value && (
@@ -222,7 +272,7 @@ export function VideoUploader({
             <div className="space-y-2 py-2">
               <Loader2 className="w-8 h-8 text-rose-600 animate-spin mx-auto" />
               <div className="space-y-1">
-                <p className="text-xs font-bold text-slate-800">Uploading video to Cloudinary CDN...</p>
+                <p className="text-xs font-bold text-slate-800">Uploading video to CDN...</p>
                 <div className="w-48 bg-slate-200 h-2 rounded-full overflow-hidden mx-auto">
                   <div
                     className="bg-rose-600 h-full transition-all duration-300"
@@ -240,7 +290,7 @@ export function VideoUploader({
               <div>
                 <p className="text-xs font-black text-slate-900">Click to Browse or Drag &amp; Drop Video</p>
                 <p className="text-[10px] text-slate-500 mt-0.5">
-                  Supports MP4, WebM, MOV, or OGG short videos (up to 100MB).
+                  Supports MP4, WebM, MOV, or OGG videos (Recommended &lt;10MB).
                 </p>
               </div>
             </div>
@@ -256,7 +306,7 @@ export function VideoUploader({
               <Play className="w-3 h-3 text-amber-400 fill-amber-400" /> Live Player Preview
             </span>
             <span className="text-[10px] text-slate-400 font-mono uppercase bg-slate-800 px-2 py-0.5 rounded-full">
-              {videoType === 'youtube' ? 'YouTube HD' : videoType === 'vimeo' ? 'Vimeo' : 'HTML5 Video'}
+              {videoInfo.platformLabel}
             </span>
           </div>
 
@@ -274,7 +324,7 @@ export function VideoUploader({
                 src={videoInfo.embedUrl}
                 title={label}
                 className="w-full h-full object-cover"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
             )}

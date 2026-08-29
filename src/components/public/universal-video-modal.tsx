@@ -1,7 +1,17 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { X, Play, Video, Youtube, Film, FileVideo } from 'lucide-react';
+import {
+  X,
+  Play,
+  Video,
+  Youtube,
+  Film,
+  FileVideo,
+  Instagram,
+  Facebook,
+  HardDrive,
+} from 'lucide-react';
 import { getVideoPlayerInfo, getVideoType } from '../../lib/video-utils';
 
 export interface VideoModalItem {
@@ -58,8 +68,14 @@ export function UniversalVideoModal({ video, onClose }: UniversalVideoModalProps
             <div className="w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 border border-rose-500/40">
               {videoType === 'youtube' ? (
                 <Youtube className="w-4 h-4 text-rose-500 fill-rose-500" />
+              ) : videoType === 'instagram' ? (
+                <Instagram className="w-4 h-4 text-pink-500" />
+              ) : videoType === 'facebook' ? (
+                <Facebook className="w-4 h-4 text-blue-500 fill-blue-500" />
               ) : videoType === 'vimeo' ? (
                 <Film className="w-4 h-4 text-sky-400" />
+              ) : videoType === 'drive' ? (
+                <HardDrive className="w-4 h-4 text-emerald-400" />
               ) : (
                 <FileVideo className="w-4 h-4 text-indigo-400" />
               )}

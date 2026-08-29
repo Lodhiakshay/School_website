@@ -2551,7 +2551,7 @@ export default function SchoolSettingsPage() {
           </div>
         )}
 
-        {/* TAB 9: VIDEO TESTIMONIALS (YOUTUBE INTEGRATION) */}
+        {/* TAB 9: VIDEO TESTIMONIALS (UNIVERSAL MULTI-PLATFORM & FILE UPLOAD) */}
         {activeTab === 'testimonials' && (
           <div className="space-y-6 animate-in fade-in duration-200">
             {/* Header & Section Master Controls */}
@@ -2650,10 +2650,10 @@ export default function SchoolSettingsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <div>
                 <h3 className="font-black text-slate-900 text-sm font-serif flex items-center gap-2">
-                  <Youtube className="w-4 h-4 text-rose-600 flex-shrink-0" /> Video Testimonial Library
+                  <Video className="w-4 h-4 text-rose-600 flex-shrink-0" /> Universal Video Testimonial Library
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Add parent reviews, alumni achievements, and student experiences with YouTube links.
+                  Add parent reviews, alumni achievements, and student experiences via YouTube, Facebook, Instagram Reels, Google Drive, Vimeo, or Direct Video Upload (10MB).
                 </p>
               </div>
               <Button
@@ -2669,8 +2669,7 @@ export default function SchoolSettingsPage() {
 
             <div className="space-y-6">
               {(cmsData.videoTestimonialsSection?.testimonials || []).map((test: any, idx: number) => {
-                const ytId = extractYouTubeId(test.youtubeUrl);
-                const isYtValid = Boolean(ytId);
+                const videoInfo = getVideoPlayerInfo(test.videoUrl || test.youtubeUrl, test.thumbnailUrl, false);
 
                 return (
                   <div
@@ -2789,7 +2788,7 @@ export default function SchoolSettingsPage() {
 
                         {/* Universal Video Uploader (Web Link or Direct File Upload) */}
                         <VideoUploader
-                          label="Video Source (YouTube, Vimeo, Cloudinary, or Direct File Upload) *"
+                          label="Video Source (YouTube, Facebook, Instagram, Vimeo, Drive, or Video File Upload) *"
                           value={test.videoUrl || test.youtubeUrl || ''}
                           onChange={(url) => {
                             const next = [...(cmsData.videoTestimonialsSection?.testimonials || [])];
@@ -2807,7 +2806,7 @@ export default function SchoolSettingsPage() {
                             });
                           }}
                           posterUrl={test.thumbnailUrl}
-                          helperText="Paste YouTube/Vimeo/Cloudinary link, OR click 'Direct File Upload' to upload MP4/WebM short video."
+                          helperText="Paste YouTube, Facebook, Instagram Reel, Google Drive, or Vimeo link, OR click 'Video File Upload' to upload MP4/WebM video (up to 10MB)."
                           required
                         />
 

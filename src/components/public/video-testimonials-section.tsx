@@ -12,6 +12,9 @@ import {
   VolumeX,
   Sparkles,
   Maximize2,
+  Instagram,
+  Facebook,
+  HardDrive,
 } from 'lucide-react';
 import { getVideoPlayerInfo, getVideoType } from '../../lib/video-utils';
 import { UniversalVideoModal, VideoModalItem } from './universal-video-modal';
@@ -146,9 +149,21 @@ function VideoCardItem({
             <span className="text-[10px] font-black uppercase text-white bg-rose-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">
               <Youtube className="w-3 h-3 fill-white" /> YouTube
             </span>
+          ) : videoType === 'instagram' ? (
+            <span className="text-[10px] font-black uppercase text-white bg-pink-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">
+              <Instagram className="w-3 h-3 text-white" /> Instagram
+            </span>
+          ) : videoType === 'facebook' ? (
+            <span className="text-[10px] font-black uppercase text-white bg-blue-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">
+              <Facebook className="w-3 h-3 fill-white" /> Facebook
+            </span>
           ) : videoType === 'vimeo' ? (
             <span className="text-[10px] font-black uppercase text-white bg-sky-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">
               <Film className="w-3 h-3 fill-white" /> Vimeo
+            </span>
+          ) : videoType === 'drive' ? (
+            <span className="text-[10px] font-black uppercase text-white bg-emerald-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">
+              <HardDrive className="w-3 h-3 text-white" /> Drive
             </span>
           ) : (
             <span className="text-[10px] font-black uppercase text-white bg-indigo-600/90 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow backdrop-blur-md">

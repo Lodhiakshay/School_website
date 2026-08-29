@@ -14,6 +14,11 @@ import {
   Building2,
   Languages,
   ChevronDown,
+  Edit2,
+  Trash2,
+  Sparkles,
+  Phone,
+  User,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -21,6 +26,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { useToast } from '../../../components/ui/toast';
+import { AvatarPicker } from '../../../components/ui/avatar-picker';
 import { downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
 
 const sgmStudents = [
@@ -30,6 +36,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1001',
     firstName: 'Aarav',
     lastName: 'Sharma',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2010-08-12',
     currentRollNumber: 1,
@@ -44,6 +51,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1002',
     firstName: 'Ananya',
     lastName: 'Gupta',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
     gender: 'female',
     dob: '2010-11-05',
     currentRollNumber: 2,
@@ -58,6 +66,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1003',
     firstName: 'Divyanshu',
     lastName: 'Singh',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2010-04-19',
     currentRollNumber: 3,
@@ -72,6 +81,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1004',
     firstName: 'Harshit',
     lastName: 'Dubey',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2010-06-22',
     currentRollNumber: 1,
@@ -86,6 +96,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1005',
     firstName: 'Ishita',
     lastName: 'Verma',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
     gender: 'female',
     dob: '2010-09-14',
     currentRollNumber: 2,
@@ -100,6 +111,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1201',
     firstName: 'Rohan',
     lastName: 'Sharma',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2008-03-29',
     currentRollNumber: 1,
@@ -114,6 +126,7 @@ const sgmStudents = [
     admissionNumber: 'SGM-2026-1202',
     firstName: 'Sneha',
     lastName: 'Tripathi',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
     gender: 'female',
     dob: '2008-07-11',
     currentRollNumber: 2,
@@ -131,6 +144,7 @@ const sssdStudents = [
     admissionNumber: 'SSSD-2026-501',
     firstName: 'Aarav',
     lastName: 'Malhotra',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2015-05-12',
     currentRollNumber: 1,
@@ -145,6 +159,7 @@ const sssdStudents = [
     admissionNumber: 'SSSD-2026-801',
     firstName: 'Kiara',
     lastName: 'Saxena',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
     gender: 'female',
     dob: '2012-09-18',
     currentRollNumber: 2,
@@ -159,6 +174,7 @@ const sssdStudents = [
     admissionNumber: 'SSSD-2026-101',
     firstName: 'Reyansh',
     lastName: 'Verma',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
     gender: 'male',
     dob: '2010-02-25',
     currentRollNumber: 3,
@@ -173,6 +189,7 @@ const sssdStudents = [
     admissionNumber: 'SSSD-2026-001',
     firstName: 'Myra',
     lastName: 'Kapoor',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
     gender: 'female',
     dob: '2022-04-10',
     currentRollNumber: 1,
@@ -190,6 +207,7 @@ export default function StudentsAdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClass, setSelectedClass] = useState('all');
   const [activeStudent, setActiveStudent] = useState<any>(null);
+  const [editingStudent, setEditingStudent] = useState<any | null>(null);
   const [showIdCardModal, setShowIdCardModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
@@ -223,6 +241,7 @@ export default function StudentsAdminPage() {
   const [newStudent, setNewStudent] = useState({
     firstName: '',
     lastName: '',
+    avatar: '',
     gender: 'male',
     dob: '2010-01-01',
     className: 'Class 10',
@@ -328,6 +347,11 @@ export default function StudentsAdminPage() {
       admissionNumber: `${prefix}-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       firstName: newStudent.firstName,
       lastName: newStudent.lastName,
+      avatar:
+        newStudent.avatar ||
+        (newStudent.gender === 'female'
+          ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
+          : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80'),
       gender: newStudent.gender,
       dob: newStudent.dob,
       currentRollNumber: students.length + 1,
@@ -339,7 +363,33 @@ export default function StudentsAdminPage() {
 
     setStudents([created, ...students]);
     setShowAddModal(false);
-    toast.success(`Enrolled student ${created.firstName} ${created.lastName} at ${prefix === 'SSSD' ? 'SSSD Public School' : 'SGM College'}!`, 'Admission Completed');
+    setNewStudent({
+      firstName: '',
+      lastName: '',
+      avatar: '',
+      gender: 'male',
+      dob: '2010-01-01',
+      className: 'Class 10',
+      sectionName: 'A',
+      fatherName: '',
+      fatherPhone: '',
+      residentialAddress: 'Shamsabad, Farrukhabad (UP)',
+    });
+    toast.success(`Enrolled student ${created.firstName} ${created.lastName} with custom photo!`, 'Admission Completed');
+  };
+
+  const handleUpdateStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingStudent) return;
+    setStudents(students.map((s) => (s._id === editingStudent._id ? editingStudent : s)));
+    setEditingStudent(null);
+    toast.success(`Scholar ${editingStudent.firstName} profile updated!`, 'Profile Updated');
+  };
+
+  const handleDeleteStudent = (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to remove scholar ${name}?`)) return;
+    setStudents(students.filter((s) => s._id !== id));
+    toast.success(`Scholar record ${name} removed.`, 'Scholar Removed');
   };
 
   const filtered = students.filter((s) => {
@@ -503,14 +553,27 @@ export default function StudentsAdminPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium">
                 {filtered.map((s) => (
-                  <tr key={s._id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={s._id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="p-3.5 pl-5">
-                      <div className="font-bold text-slate-900">
-                        {s.firstName} {s.lastName}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-slate-200 bg-white shadow-xs shrink-0">
+                          {s.avatar || s.photoUrl ? (
+                            <img src={s.avatar || s.photoUrl} alt={s.firstName} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-600 font-black text-sm">
+                              {s.firstName.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-900 text-xs">
+                            {s.firstName} {s.lastName}
+                          </div>
+                          <span className={`font-mono text-[9.5px] px-2 py-0.5 rounded-full border font-bold ${s.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-blue-700 bg-blue-50 border-blue-200'}`}>
+                            {s.admissionNumber}
+                          </span>
+                        </div>
                       </div>
-                      <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded border font-bold ${s.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-blue-700 bg-blue-50 border-blue-200'}`}>
-                        {s.admissionNumber}
-                      </span>
                     </td>
                     <td className="p-3.5">
                       {s.campus === 'sssd' || selectedCampus === 'sssd' ? (
@@ -527,29 +590,50 @@ export default function StudentsAdminPage() {
                       <span className="font-bold text-slate-800">{s.currentClassId?.name}</span>
                       <span className="text-slate-500 text-[11px] block">Sec {s.currentSectionId?.name}</span>
                     </td>
-                    <td className="p-3.5 font-mono font-bold text-slate-700">{s.currentRollNumber}</td>
+                    <td className="p-3.5 font-mono font-bold text-slate-700">#{s.currentRollNumber}</td>
                     <td className="p-3.5">
                       <div className="font-semibold text-slate-800">{s.parentId?.fatherName}</div>
-                      <span className="font-mono text-slate-500 text-[11px]">{s.parentId?.fatherPhone}</span>
+                      <span className="font-mono text-slate-500 text-[11px] flex items-center gap-1">
+                        <Phone className="w-2.5 h-2.5 text-slate-400" />
+                        {s.parentId?.fatherPhone}
+                      </span>
                     </td>
                     <td className="p-3.5">
                       <Badge variant="success" className="text-[10px]">
                         Active
                       </Badge>
                     </td>
-                    <td className="p-3.5 text-right pr-5 space-x-1.5">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className={`h-7 text-[11px] font-bold ${s.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700 hover:text-emerald-800 border-emerald-300' : 'text-blue-700 hover:text-blue-800 border-blue-300'}`}
-                        onClick={() => {
-                          setActiveStudent(s);
-                          setShowIdCardModal(true);
-                        }}
-                        leftIcon={<Printer className="w-3 h-3" />}
-                      >
-                        Print ID Badge
-                      </Button>
+                    <td className="p-3.5 text-right pr-5 whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setEditingStudent({ ...s })}
+                          className="p-1.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 transition"
+                          title="Edit Scholar Profile"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteStudent(s._id, `${s.firstName} ${s.lastName}`)}
+                          className="p-1.5 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition"
+                          title="Remove Scholar"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className={`h-7 text-[11px] font-bold rounded-xl ${s.campus === 'sssd' || selectedCampus === 'sssd' ? 'text-emerald-700 hover:text-emerald-800 border-emerald-300' : 'text-blue-700 hover:text-blue-800 border-blue-300'}`}
+                          onClick={() => {
+                            setActiveStudent(s);
+                            setShowIdCardModal(true);
+                          }}
+                          leftIcon={<Printer className="w-3 h-3" />}
+                        >
+                          ID Card
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -627,7 +711,13 @@ export default function StudentsAdminPage() {
                 {/* Scholar Portrait Photo */}
                 <div className={`w-15 h-15 rounded-2xl border-2 ${isSSSD ? 'border-emerald-600 bg-emerald-50' : 'border-blue-700 bg-blue-50'} mx-auto overflow-hidden p-0.5 shadow-md ring-2 ring-amber-400/80`}>
                   <img
-                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80"
+                    src={
+                      activeStudent.avatar ||
+                      activeStudent.photoUrl ||
+                      (activeStudent.gender === 'female'
+                        ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
+                        : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80')
+                    }
                     alt={activeStudent.firstName}
                     className="w-full h-full object-cover rounded-xl"
                   />
@@ -792,10 +882,10 @@ export default function StudentsAdminPage() {
 
       {/* New Student Modal */}
       {mounted && showAddModal && createPortal(
-        <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200">
+        <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                 <Plus className="w-4 h-4 text-blue-600" /> New Scholar Enrollment ({selectedCampus === 'sssd' ? 'SSSD Public School' : 'SGM Inter College'})
               </h3>
               <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
@@ -803,7 +893,14 @@ export default function StudentsAdminPage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateStudent} className="space-y-3 text-xs">
+            <form onSubmit={handleCreateStudent} className="space-y-3.5 text-xs">
+              <AvatarPicker
+                label="Scholar Photograph"
+                value={newStudent.avatar}
+                onChange={(url) => setNewStudent({ ...newStudent, avatar: url })}
+                helperText="Upload scholar portrait or pick from student presets."
+              />
+
               <div className="grid grid-cols-2 gap-3">
                 <Input
                   label="First Name *"
@@ -826,7 +923,7 @@ export default function StudentsAdminPage() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Target Class *</label>
                   <div className="relative">
                     <select
-                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
                       value={newStudent.className}
                       onChange={(e) => setNewStudent({ ...newStudent, className: e.target.value })}
                     >
@@ -856,7 +953,7 @@ export default function StudentsAdminPage() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Section *</label>
                   <div className="relative">
                     <select
-                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
                       value={newStudent.sectionName}
                       onChange={(e) => setNewStudent({ ...newStudent, sectionName: e.target.value })}
                     >
@@ -890,10 +987,80 @@ export default function StudentsAdminPage() {
               </div>
 
               <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <Button type="submit" className={`w-full font-bold ${selectedCampus === 'sssd' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                <Button type="submit" className={`flex-1 font-bold rounded-2xl ${selectedCampus === 'sssd' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
                   Enroll Scholar
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
+                <Button type="button" variant="outline" className="rounded-2xl" onClick={() => setShowAddModal(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Edit Student Modal */}
+      {mounted && editingStudent && createPortal(
+        <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 border border-slate-200 my-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
+                <Edit2 className="w-4 h-4 text-blue-600" /> Edit Scholar: {editingStudent.firstName} {editingStudent.lastName}
+              </h3>
+              <button onClick={() => setEditingStudent(null)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateStudent} className="space-y-3.5 text-xs">
+              <AvatarPicker
+                label="Update Scholar Photo"
+                value={editingStudent.avatar || editingStudent.photoUrl}
+                onChange={(url) => setEditingStudent({ ...editingStudent, avatar: url })}
+              />
+
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="First Name *"
+                  required
+                  value={editingStudent.firstName}
+                  onChange={(e) => setEditingStudent({ ...editingStudent, firstName: e.target.value })}
+                />
+                <Input
+                  label="Last Name *"
+                  required
+                  value={editingStudent.lastName}
+                  onChange={(e) => setEditingStudent({ ...editingStudent, lastName: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Father Name *"
+                  required
+                  value={editingStudent.parentId?.fatherName || ''}
+                  onChange={(e) => setEditingStudent({
+                    ...editingStudent,
+                    parentId: { ...editingStudent.parentId, fatherName: e.target.value }
+                  })}
+                />
+                <Input
+                  label="Father Phone *"
+                  required
+                  value={editingStudent.parentId?.fatherPhone || ''}
+                  onChange={(e) => setEditingStudent({
+                    ...editingStudent,
+                    parentId: { ...editingStudent.parentId, fatherPhone: e.target.value }
+                  })}
+                />
+              </div>
+
+              <div className="flex gap-2 pt-3 border-t border-slate-100">
+                <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 font-bold rounded-2xl">
+                  Save Changes
+                </Button>
+                <Button type="button" variant="outline" className="rounded-2xl" onClick={() => setEditingStudent(null)}>
                   Cancel
                 </Button>
               </div>

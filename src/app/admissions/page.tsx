@@ -32,7 +32,7 @@ import { PublicNavbar } from '../../components/public/public-navbar';
 import { PublicFooter } from '../../components/public/public-footer';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { ImageUploader } from '../../components/ui/image-uploader';
+import { AvatarPicker } from '../../components/ui/avatar-picker';
 import { apiClient } from '../../lib/api-client';
 
 export default function AdmissionsPublicPage() {
@@ -40,7 +40,7 @@ export default function AdmissionsPublicPage() {
   const formContainerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
 
-  // Form State
+  // Simplified Form State
   const [formData, setFormData] = useState({
     medium: 'hindi' as 'hindi' | 'english_sssd',
     targetClass: 'Class 10 (High School)',
@@ -48,29 +48,13 @@ export default function AdmissionsPublicPage() {
     studentName: '',
     gender: 'male' as 'male' | 'female' | 'other',
     dob: '2010-05-15',
-    bloodGroup: 'B+',
-    category: 'GEN' as 'GEN' | 'OBC' | 'SC' | 'ST' | 'EWS',
-    aadhaarNumber: '',
-    photoUrl: '',
     fatherName: '',
     fatherPhone: '',
-    fatherOccupation: 'Agriculture & Enterprise',
-    motherName: '',
-    motherPhone: '',
-    motherOccupation: 'Homemaker',
-    annualIncome: '₹1.5 Lakh - ₹3.0 Lakh',
-    whatsappNumber: '',
-    email: '',
-    address: 'Shamsabad Main Road',
     city: 'Shamsabad',
     district: 'Farrukhabad',
-    state: 'Uttar Pradesh',
-    pincode: '209503',
-    previousSchool: 'Primary & Junior High School, Shamsabad',
-    previousClass: 'Class 9',
-    previousMarksPercent: 86.5,
-    birthCertificateUrl: '',
-    marksheetUrl: '',
+    previousSchool: '',
+    message: '',
+    photoUrl: '',
     declarationAccepted: true,
   });
 
@@ -105,54 +89,47 @@ export default function AdmissionsPublicPage() {
         targetClass: formData.targetClass,
         medium: formData.medium,
         stream: formData.targetClass.includes('11') || formData.targetClass.includes('12') ? formData.stream : '',
-        bloodGroup: formData.bloodGroup,
-        category: formData.category,
-        aadhaarNumber: formData.aadhaarNumber,
-        photoUrl: formData.photoUrl,
         fatherName: formData.fatherName.trim(),
         fatherPhone: formData.fatherPhone.trim(),
-        fatherOccupation: formData.fatherOccupation,
-        motherName: formData.motherName.trim(),
-        motherPhone: formData.motherPhone.trim(),
-        motherOccupation: formData.motherOccupation,
-        annualIncome: formData.annualIncome,
-        whatsappNumber: formData.whatsappNumber || formData.fatherPhone,
-        email: formData.email,
-        address: `${formData.address}, ${formData.city}, ${formData.district}, ${formData.state} - ${formData.pincode}`,
+        whatsappNumber: formData.fatherPhone.trim(),
+        address: `${formData.city}, ${formData.district}`,
         city: formData.city,
         district: formData.district,
-        state: formData.state,
-        pincode: formData.pincode,
+        state: 'Uttar Pradesh',
         previousSchool: formData.previousSchool,
-        previousClass: formData.previousClass,
-        previousMarksPercent: Number(formData.previousMarksPercent) || undefined,
-        birthCertificateUrl: formData.birthCertificateUrl,
-        marksheetUrl: formData.marksheetUrl,
-        declarationAccepted: formData.declarationAccepted,
+        photoUrl: formData.photoUrl,
+        remarks: formData.message,
       };
 
-      const res = await apiClient.post('/admissions/apply', payload);
-      const appRecord = res.data?.data || {
+      const res = await apiClient.post('/admissions', payload);
+      const applicationNumber =
+        res.data?.data?.applicationNumber ||
+        `${formData.medium === 'english_sssd' ? 'SSSD' : 'SGM'}-ADM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      setSubmittedData({
         ...payload,
-        applicationNumber: `SGM-ADM-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        applicationNumber,
         createdAt: new Date().toISOString(),
-      };
-      setSubmittedData(appRecord);
+      });
     } catch {
-      // Fallback preview
-      const fallbackRecord = {
-        applicationNumber: `SGM-ADM-2026-${Math.floor(1000 + Math.random() * 9000)}`,
-        applicantName: formData.studentName,
+      // Offline fallback
+      const applicationNumber = `${formData.medium === 'english_sssd' ? 'SSSD' : 'SGM'}-ADM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      setSubmittedData({
+        applicantName: formData.studentName.trim(),
+        gender: formData.gender,
+        dob: formData.dob,
         targetClass: formData.targetClass,
         medium: formData.medium,
-        stream: formData.stream,
-        fatherName: formData.fatherName,
-        fatherPhone: formData.fatherPhone,
+        stream: formData.targetClass.includes('11') || formData.targetClass.includes('12') ? formData.stream : '',
+        fatherName: formData.fatherName.trim(),
+        fatherPhone: formData.fatherPhone.trim(),
+        city: formData.city,
+        district: formData.district,
+        previousSchool: formData.previousSchool,
         photoUrl: formData.photoUrl,
-        status: 'submitted',
+        applicationNumber,
         createdAt: new Date().toISOString(),
-      };
-      setSubmittedData(fallbackRecord);
+      });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => {
@@ -466,17 +443,17 @@ export default function AdmissionsPublicPage() {
                     </div>
                   </div>
 
-                  {/* Section 2: Student Demographics */}
+                  {/* Section 2: Student & Guardian Core Details */}
                   <div className="p-6 sm:p-8 space-y-5">
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">2</span>
-                      <h3 className="font-black text-slate-900 text-base">Student Personal Details (विद्यार्थी विवरण)</h3>
+                      <h3 className="font-black text-slate-900 text-base">Scholar &amp; Guardian Information (विद्यार्थी एवं अभिभावक विवरण)</h3>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="sm:col-span-2">
                         <Input
-                          label="Student Full Name (छात्र / छात्रा का पूरा नाम) *"
+                          label="Scholar Full Name (छात्र / छात्रा का नाम) *"
                           placeholder="e.g. Divyanshu Singh Rathore"
                           value={formData.studentName}
                           onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
@@ -505,175 +482,75 @@ export default function AdmissionsPublicPage() {
                         onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                         required
                       />
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Category (वर्ग) *</label>
-                        <select
-                          className="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-blue-500"
-                          value={formData.category}
-                          onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                        >
-                          <option value="GEN">General (सामान्य)</option>
-                          <option value="OBC">OBC (अन्य पिछड़ा वर्ग)</option>
-                          <option value="SC">SC (अनुसूचित जाति)</option>
-                          <option value="ST">ST (अनुसूचित जनजाति)</option>
-                          <option value="EWS">EWS</option>
-                        </select>
+                      <div className="sm:col-span-2">
+                        <Input
+                          label="Father / Guardian Full Name (पिता / अभिभावक का नाम) *"
+                          placeholder="e.g. Shri Devendra Singh"
+                          value={formData.fatherName}
+                          onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
+                          required
+                        />
                       </div>
-                      <Input
-                        label="Blood Group (रक्त समूह)"
-                        placeholder="e.g. B+ / O+ / A+"
-                        value={formData.bloodGroup}
-                        onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        label="Aadhaar Card Number (12 अंक आधार क्रमांक)"
-                        placeholder="XXXX-XXXX-XXXX"
-                        value={formData.aadhaarNumber}
-                        onChange={(e) => setFormData({ ...formData, aadhaarNumber: e.target.value })}
-                      />
-                      <ImageUploader
-                        label="Student Passport Size Photograph"
-                        value={formData.photoUrl}
-                        onChange={(url) => setFormData({ ...formData, photoUrl: url })}
-                        aspectRatio="portrait"
-                        helperText="Upload recent color photo with white background (Cloudinary CDN)."
-                      />
-                    </div>
-                  </div>
-
-                  {/* Section 3: Parents & Contacts */}
-                  <div className="p-6 sm:p-8 space-y-5">
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">3</span>
-                      <h3 className="font-black text-slate-900 text-base">Parent / Guardian Information (अभिभावक विवरण)</h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        label="Father's Full Name (पिता का नाम) *"
-                        placeholder="e.g. Shri Devendra Singh"
-                        value={formData.fatherName}
-                        onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
-                        required
-                      />
-                      <Input
-                        label="Father's Occupation (व्यवसाय)"
-                        placeholder="e.g. Farmer / Merchant / Govt Service"
-                        value={formData.fatherOccupation}
-                        onChange={(e) => setFormData({ ...formData, fatherOccupation: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        label="Mother's Full Name (माता का नाम) *"
-                        placeholder="e.g. Smt. Gayatri Devi"
-                        value={formData.motherName}
-                        onChange={(e) => setFormData({ ...formData, motherName: e.target.value })}
-                        required
-                      />
-                      <Input
-                        label="Mother's Occupation (व्यवसाय)"
-                        placeholder="e.g. Homemaker / Teacher"
-                        value={formData.motherOccupation}
-                        onChange={(e) => setFormData({ ...formData, motherOccupation: e.target.value })}
-                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <Input
-                        label="Primary Calling Phone Number *"
+                        label="Mobile / WhatsApp Number *"
                         placeholder="e.g. +91 94500 XXXXX"
                         value={formData.fatherPhone}
                         onChange={(e) => setFormData({ ...formData, fatherPhone: e.target.value })}
                         required
                       />
                       <Input
-                        label="WhatsApp Notification Phone"
-                        placeholder="e.g. +91 94500 XXXXX"
-                        value={formData.whatsappNumber}
-                        onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                        label="Village / Town / City *"
+                        placeholder="e.g. Shamsabad"
+                        value={formData.city}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                        required
                       />
-                      <Input
-                        label="Email Address (Optional)"
-                        placeholder="e.g. parent@gmail.com"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                      <div className="sm:col-span-2">
-                        <Input
-                          label="Street Address / Village / Locality *"
-                          placeholder="e.g. Near Bus Stand, Shamsabad"
-                          value={formData.address}
-                          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                          required
-                        />
-                      </div>
                       <Input
                         label="District *"
+                        placeholder="e.g. Farrukhabad"
                         value={formData.district}
                         onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                      />
-                      <Input
-                        label="Postal PIN Code *"
-                        value={formData.pincode}
-                        onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+                        required
                       />
                     </div>
                   </div>
 
-                  {/* Section 4: Previous Record & Document Uploads */}
+                  {/* Section 3: Background & Scholar Photograph (Optional) */}
                   <div className="p-6 sm:p-8 space-y-5">
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">4</span>
-                      <h3 className="font-black text-slate-900 text-base">Previous Academic Background &amp; Documents</h3>
+                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">3</span>
+                      <h3 className="font-black text-slate-900 text-base">Additional Information &amp; Photograph (वैकल्पिक विवरण)</h3>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="sm:col-span-2">
-                        <Input
-                          label="Previous School / Institute Attended"
-                          placeholder="e.g. Adarsh Bal Vidya Mandir, Farrukhabad"
-                          value={formData.previousSchool}
-                          onChange={(e) => setFormData({ ...formData, previousSchool: e.target.value })}
-                        />
-                      </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input
-                        label="Marks % in Last Class Passed"
-                        placeholder="e.g. 88.5%"
-                        type="number"
-                        step="0.1"
-                        value={formData.previousMarksPercent}
-                        onChange={(e) => setFormData({ ...formData, previousMarksPercent: parseFloat(e.target.value) || 0 })}
+                        label="Previous School Attended (पूर्व विद्यालय - यदि लागू हो)"
+                        placeholder="e.g. Primary School, Shamsabad"
+                        value={formData.previousSchool}
+                        onChange={(e) => setFormData({ ...formData, previousSchool: e.target.value })}
+                      />
+                      <Input
+                        label="Any Question / Note for Counselor (संदेश)"
+                        placeholder="e.g. Inquiry about bus transport / hostel facility"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-                      <ImageUploader
-                        label="Birth Certificate or Transfer Certificate (TC) Image"
-                        value={formData.birthCertificateUrl}
-                        onChange={(url) => setFormData({ ...formData, birthCertificateUrl: url })}
-                        aspectRatio="video"
-                        helperText="Upload clear photo or scan of Birth Certificate / TC (Cloudinary CDN)."
-                      />
-                      <ImageUploader
-                        label="Previous Class Marksheet Scan / Photo"
-                        value={formData.marksheetUrl}
-                        onChange={(url) => setFormData({ ...formData, marksheetUrl: url })}
-                        aspectRatio="video"
-                        helperText="Upload marksheet photo for merit assessment (Cloudinary CDN)."
+                    <div className="pt-2">
+                      <AvatarPicker
+                        label="Scholar Photograph (छात्र / छात्रा का फोटो - Optional)"
+                        value={formData.photoUrl}
+                        onChange={(url) => setFormData({ ...formData, photoUrl: url })}
+                        helperText="Upload passport photo or select a student avatar preset."
                       />
                     </div>
                   </div>
 
-                  {/* Section 5: Submit Button */}
+                  {/* Section 4: Submit Button */}
                   <div className="p-6 sm:p-8 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <label className="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
                       <input
@@ -684,14 +561,14 @@ export default function AdmissionsPublicPage() {
                         required
                       />
                       <span>
-                        I declare that all details furnished above are authentic. I agree to comply with the school code of conduct and regulations.
+                        I declare that the information provided is correct. I wish to register for admission.
                       </span>
                     </label>
 
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full sm:w-auto px-8 bg-blue-600 hover:bg-blue-700 font-black shadow-lg shadow-blue-600/30 text-xs sm:text-sm"
+                      className="w-full sm:w-auto px-8 bg-blue-600 hover:bg-blue-700 font-black shadow-lg shadow-blue-600/30 text-xs sm:text-sm rounded-2xl"
                       isLoading={isSubmitting}
                       leftIcon={<Send className="w-4 h-4" />}
                     >

@@ -16,6 +16,8 @@ import {
   Sparkles,
   ChevronDown,
   Loader2,
+  Edit2,
+  Trash2,
 } from 'lucide-react';
 import { PortalLayout } from '../../../components/layout/portal-layout';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -23,6 +25,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { useToast } from '../../../components/ui/toast';
+import { AvatarPicker } from '../../../components/ui/avatar-picker';
 import { apiClient } from '../../../lib/api-client';
 import { downloadElementAsPdf, downloadElementAsImage, printIsolatedDocument } from '../../../lib/pdf-download';
 import { ClientPortal } from '../../../components/ui/client-portal';
@@ -133,6 +136,7 @@ export default function TeachersAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDept, setSelectedDept] = useState('all');
   const [activeTeacherModal, setActiveTeacherModal] = useState<any | null>(null);
+  const [editingTeacher, setEditingTeacher] = useState<any | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -159,12 +163,16 @@ export default function TeachersAdminPage() {
 
   const [newTeacher, setNewTeacher] = useState({
     name: '',
+    avatar: '',
+    photoUrl: '',
     department: 'Physics',
     designation: 'Senior Lecturer',
     qualification: 'M.Sc., B.Ed.',
+    experience: '5+ Years',
     phone: '',
     email: '',
     assignedClass: 'Class 10-A',
+    status: 'active',
   });
 
   useEffect(() => {
@@ -187,25 +195,79 @@ export default function TeachersAdminPage() {
       .catch(() => {});
   }, []);
 
-  const handleAddTeacher = (e: React.FormEvent) => {
+  const handleAddTeacher = async (e: React.FormEvent) => {
     e.preventDefault();
+    const photo =
+      newTeacher.avatar ||
+      newTeacher.photoUrl ||
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
     const created = {
       _id: 't_' + Date.now(),
       employeeId: `EMP-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
       name: newTeacher.name,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      avatar: photo,
+      photoUrl: photo,
       designation: newTeacher.designation,
       department: newTeacher.department,
       qualification: newTeacher.qualification,
-      experience: '5+ Years',
+      experience: newTeacher.experience || '5+ Years',
       phone: newTeacher.phone || '+91 9451234999',
       email: newTeacher.email || `${newTeacher.name.toLowerCase().replace(/\s+/g, '.')}@sarswati.edu`,
-      status: 'active',
+      status: newTeacher.status || 'active',
       assignedClass: newTeacher.assignedClass,
     };
+
+    try {
+      await apiClient.post('/teachers', created);
+    } catch {}
+
     setTeachers([created, ...teachers]);
     setIsAddModalOpen(false);
-    toast.success(`Faculty member ${created.name} added successfully!`, 'Faculty Enrolled');
+    setNewTeacher({
+      name: '',
+      avatar: '',
+      photoUrl: '',
+      department: 'Physics',
+      designation: 'Senior Lecturer',
+      qualification: 'M.Sc., B.Ed.',
+      experience: '5+ Years',
+      phone: '',
+      email: '',
+      assignedClass: 'Class 10-A',
+      status: 'active',
+    });
+    toast.success(`Faculty member ${created.name} enrolled successfully!`, 'Faculty Enrolled');
+  };
+
+  const handleUpdateTeacher = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTeacher) return;
+
+    const photo = editingTeacher.avatar || editingTeacher.photoUrl;
+    const updated = {
+      ...editingTeacher,
+      avatar: photo,
+      photoUrl: photo,
+    };
+
+    try {
+      await apiClient.put(`/teachers/${editingTeacher._id}`, updated);
+    } catch {}
+
+    setTeachers(teachers.map((t) => (t._id === editingTeacher._id ? updated : t)));
+    setEditingTeacher(null);
+    toast.success(`Faculty member ${editingTeacher.name} profile updated!`, 'Faculty Updated');
+  };
+
+  const handleDeleteTeacher = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to remove faculty member ${name}?`)) return;
+
+    try {
+      await apiClient.delete(`/teachers/${id}`);
+    } catch {}
+
+    setTeachers(teachers.filter((t) => t._id !== id));
+    toast.success(`Faculty member ${name} removed.`, 'Faculty Removed');
   };
 
   const handleBulkUpload = () => {
@@ -294,69 +356,97 @@ export default function TeachersAdminPage() {
               key={t._id}
               className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between"
             >
-              <CardContent className="p-5 space-y-4">
-                <div className="flex items-start gap-3.5">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-sm relative">
-                    <img
-                      src={
-                        t.photoUrl ||
-                        t.avatar ||
-                        (t.gender === 'female'
-                          ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                          : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
-                      }
-                      alt={t.name}
-                      onError={(e: any) => {
-                        e.currentTarget.src =
-                          t.gender === 'female'
+              <CardContent className="p-5 space-y-4 flex flex-col justify-between h-full">
+                <div className="space-y-3.5">
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 bg-slate-100 flex-shrink-0 shadow-sm relative">
+                      <img
+                        src={
+                          t.avatar ||
+                          t.photoUrl ||
+                          (t.gender === 'female'
                             ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                            : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
-                      }}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                        {t.employeeId}
-                      </span>
-                      <Badge size="sm" variant="success">
-                        {t.status}
-                      </Badge>
+                            : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
+                        }
+                        alt={t.name}
+                        onError={(e: any) => {
+                          e.currentTarget.src =
+                            t.gender === 'female'
+                              ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+                              : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
+                        }}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <h3 className="text-sm font-black text-slate-900 mt-1 truncate">{t.name}</h3>
-                    <p className="text-xs text-slate-500 font-medium truncate">{t.designation}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                          {t.employeeId}
+                        </span>
+                        <Badge size="sm" variant="success">
+                          {t.status}
+                        </Badge>
+                      </div>
+                      <h3 className="text-sm font-black text-slate-900 mt-1 truncate">{t.name}</h3>
+                      <p className="text-xs text-slate-500 font-medium truncate">{t.designation}</p>
+                    </div>
+                  </div>
+
+                  {/* Qualifications & Academic Meta Box */}
+                  <div className="space-y-2 text-xs bg-slate-50/80 p-3 rounded-2xl border border-slate-200/70">
+                    <div className="flex items-center justify-between text-[11.5px]">
+                      <span className="text-slate-500 font-medium">Department:</span>
+                      <span className="font-bold text-slate-800">{t.department}</span>
+                    </div>
+                    <div className="pt-1.5 border-t border-slate-200/60">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-slate-500 font-medium text-[11px] shrink-0">Qualifications:</span>
+                        <span
+                          className="font-bold text-slate-800 text-right text-[11.5px] leading-snug line-clamp-2 max-w-[65%]"
+                          title={t.qualification}
+                        >
+                          {t.qualification || 'N/A'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-[11.5px] pt-1.5 border-t border-slate-200/60">
+                      <span className="text-slate-500 font-medium">Class Incharge:</span>
+                      <span className="font-bold text-blue-700">{t.assignedClass || 'General Faculty'}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Department:</span>
-                    <span className="font-bold text-slate-800">{t.department}</span>
+                <div className="pt-2 flex items-center justify-between text-xs gap-1 border-t border-slate-100 mt-2">
+                  <div className="text-[11px] text-slate-500 flex items-center gap-1 font-mono truncate mr-1">
+                    <Phone className="w-3 h-3 text-emerald-600 shrink-0" /> {t.phone}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Qualifications:</span>
-                    <span className="font-semibold text-slate-800">{t.qualification}</span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setEditingTeacher({ ...t, avatar: t.avatar || t.photoUrl, photoUrl: t.avatar || t.photoUrl })}
+                      className="p-1.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 transition"
+                      title="Edit Profile & Photo"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTeacher(t._id, t.name)}
+                      className="p-1.5 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition"
+                      title="Remove Faculty"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs px-2 rounded-xl"
+                      onClick={() => setActiveTeacherModal(t)}
+                      leftIcon={<Printer className="w-3.5 h-3.5 text-amber-600" />}
+                    >
+                      ID Badge
+                    </Button>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Class Incharge:</span>
-                    <span className="font-bold text-blue-700">{t.assignedClass}</span>
-                  </div>
-                </div>
-
-                <div className="pt-1 flex items-center justify-between text-xs">
-                  <div className="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
-                    <Phone className="w-3 h-3 text-emerald-600" /> {t.phone}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs"
-                    onClick={() => setActiveTeacherModal(t)}
-                    leftIcon={<Printer className="w-3.5 h-3.5 text-amber-600" />}
-                  >
-                    ID Badge
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -398,119 +488,96 @@ export default function TeachersAdminPage() {
                     <img src="/logo.png" alt="SGM Logo" className="w-full h-full object-contain" />
                   </div>
                   <h3 className="font-serif font-black text-xs text-amber-300 leading-tight tracking-wider uppercase">
-                    सरस्वती ज्ञान मन्दिर
+                    SARSWATI GYAM MANDIR
                   </h3>
-                  <p className="text-[7.5px] uppercase tracking-widest text-slate-200 font-bold mt-0.5">
-                    INTERMEDIATE COLLEGE &bull; SHAMSABAD
+                  <p className="text-[9.5px] font-bold text-blue-100 uppercase tracking-widest mt-0.5">
+                    INTER COLLEGE &bull; SHAMSABAD
                   </p>
-                  <div className="mt-1 bg-blue-950 text-amber-300 text-[7px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-blue-800 inline-block font-mono shadow-xs">
-                    FACULTY IDENTITY CARD &bull; ACADEMIC STAFF
+                  <div className="mt-1 inline-block bg-amber-400 text-[#002060] font-black text-[9px] px-2 py-0.5 rounded-full tracking-wider shadow-xs uppercase">
+                    OFFICIAL FACULTY IDENTITY CARD
                   </div>
                 </div>
 
-                <div className="p-2.5 text-center space-y-1.5 bg-gradient-to-b from-white to-slate-50">
-                  {/* Faculty Portrait Photo */}
-                  <div className="w-15 h-15 rounded-2xl overflow-hidden border-2 border-blue-700 mx-auto shadow-md relative bg-slate-100 p-0.5 ring-2 ring-amber-400/80">
+                {/* ID Card Body */}
+                <div className="p-3 text-center space-y-2 bg-gradient-to-b from-white to-slate-50 relative">
+                  {/* Watermark Crest */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                    <img src="/logo.png" alt="Watermark" className="w-28 h-28 object-contain" />
+                  </div>
+
+                  {/* Teacher Photo */}
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-400 bg-white p-0.5 shadow-md mx-auto relative z-10 ring-2 ring-blue-900/10">
                     <img
                       src={
-                        activeTeacherModal.photoUrl ||
                         activeTeacherModal.avatar ||
-                        (activeTeacherModal.gender === 'female'
-                          ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                          : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80')
+                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
                       }
                       alt={activeTeacherModal.name}
-                      onError={(e: any) => {
-                        e.currentTarget.src =
-                          activeTeacherModal.gender === 'female'
-                            ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
-                            : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80';
-                      }}
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
 
-                  <div>
-                    <h4 className="text-xs font-black text-slate-950 font-serif tracking-wide uppercase leading-tight">{activeTeacherModal.name}</h4>
-                    <p className="text-[9.5px] font-bold text-blue-900 mt-0.5">{activeTeacherModal.designation}</p>
-                    <span className="inline-block bg-blue-100 text-blue-900 font-mono font-bold text-[7.5px] px-2.5 py-0.5 rounded-full mt-1 border border-blue-200">
-                      EMP ID: {activeTeacherModal.employeeId}
-                    </span>
+                  <div className="relative z-10">
+                    <h4 className="font-bold text-sm text-slate-900 leading-tight font-serif">
+                      {activeTeacherModal.name}
+                    </h4>
+                    <p className="text-[10.5px] font-bold text-blue-700 mt-0.5">
+                      {activeTeacherModal.designation}
+                    </p>
                   </div>
 
-                  {/* Demographic Matrix */}
-                  <div className="bg-white p-2 rounded-xl text-left text-[9px] space-y-1 border border-slate-200 shadow-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 font-bold uppercase text-[7.5px]">Department:</span>
-                      <span className="font-bold text-slate-800">{activeTeacherModal.department}</span>
+                  {/* Faculty Meta Grid */}
+                  <div className="bg-slate-100/90 rounded-xl p-2 text-[10.5px] text-left space-y-1 border border-slate-200 relative z-10">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500 font-medium">Emp ID:</span>
+                      <span className="font-bold font-mono text-slate-900">{activeTeacherModal.employeeId}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 font-bold uppercase text-[7.5px]">Qualification:</span>
-                      <span className="font-bold text-slate-800 truncate max-w-[130px]">{activeTeacherModal.qualification}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500 font-medium">Dept:</span>
+                      <span className="font-bold text-slate-900">{activeTeacherModal.department}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 font-bold uppercase text-[7.5px]">Official Phone:</span>
-                      <span className="font-mono font-bold text-slate-900">{activeTeacherModal.phone}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500 font-medium">Assigned:</span>
+                      <span className="font-bold text-blue-700">{activeTeacherModal.assignedClass}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 font-bold uppercase text-[7.5px]">Status:</span>
-                      <span className="font-mono font-bold text-rose-700">Regular Faculty</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500 font-medium">Emergency:</span>
+                      <span className="font-bold font-mono text-slate-900">{activeTeacherModal.phone}</span>
                     </div>
                   </div>
 
-                  {/* Barcode & Security Strip */}
-                  <div className="bg-slate-100 py-0.5 px-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                    <div className="font-mono font-black text-[7.5px] text-slate-600 tracking-wider">
-                      |||||| | |||| || ||| | |||
+                  {/* Principal Sign */}
+                  <div className="pt-2 flex items-center justify-between border-t border-slate-200 text-[8.5px] text-slate-500 relative z-10 px-1">
+                    <div className="text-left font-mono">
+                      <span>Valid Till: <strong>2026-27</strong></span>
                     </div>
-                    <span className="text-[7px] font-bold text-slate-500 uppercase font-mono">STAFF BADGE</span>
-                  </div>
-
-                  {/* Stamped Seals & Principal Signature */}
-                  <div className="pt-1 pb-0.5 flex items-end justify-between text-[7px] text-slate-400 border-t border-slate-200 px-0.5">
-                    <div className="text-left space-y-0.2">
-                      <img
-                        src="/images/stamps/principal-round-seal.png"
-                        alt="Round Seal"
-                        className="w-7 h-7 object-contain drop-shadow-xs transform -rotate-3 filter contrast-125"
-                      />
-                      <span className="font-mono text-[6.5px] block font-bold text-slate-700">Valid: 2026-2027</span>
-                    </div>
-                    <div className="text-center">
-                      <img
-                        src="/images/stamps/principal-signature.png"
-                        alt="Principal Sig"
-                        className="w-16 h-6 object-contain mx-auto filter contrast-150"
-                      />
-                      <span className="text-[6.5px] font-bold text-slate-700 block uppercase">Head of Institution</span>
+                    <div className="text-right">
+                      <div className="font-serif italic font-bold text-slate-800 text-[10px]">R.K. Sharma</div>
+                      <div className="text-[8px] uppercase tracking-wider text-slate-400">Principal Sign</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-1.5 pt-0.5">
+              {/* Action Buttons */}
+              <div className="flex gap-1.5 pt-1">
                 <Button
                   size="sm"
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold text-xs h-8 shadow-sm"
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs py-1.5 h-auto rounded-xl"
                   onClick={handleDownloadTeacherIdImage}
                   disabled={isDownloading}
                   leftIcon={isDownloading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
                 >
-                  {isDownloading ? 'Saving...' : 'Download ID Card'}
+                  {isDownloading ? 'Exporting...' : 'Download Card'}
                 </Button>
                 <Button
+                  variant="outline"
                   size="sm"
-                  className="bg-blue-700 hover:bg-blue-800 font-bold text-xs h-8 px-2.5"
-                  onClick={() => {
-                    printIsolatedDocument('faculty-id-card-inner');
-                    toast.success('Sent Faculty ID Card to printer.', 'Print Ready');
-                  }}
-                  leftIcon={<Printer className="w-3 h-3" />}
+                  className="text-xs py-1.5 h-auto rounded-xl"
+                  onClick={() => printIsolatedDocument('faculty-id-card-inner')}
+                  leftIcon={<Printer className="w-3 h-3 text-slate-600" />}
                 >
                   Print
-                </Button>
-                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs" onClick={() => setActiveTeacherModal(null)}>
-                  Close
                 </Button>
               </div>
             </div>
@@ -522,17 +589,25 @@ export default function TeachersAdminPage() {
       {isAddModalOpen && (
         <ClientPortal>
           <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
-            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 my-auto">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto border border-slate-200">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                   <Plus className="w-4 h-4 text-blue-600" /> Enroll New Faculty Member
                 </h3>
-                <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1">
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               <form onSubmit={handleAddTeacher} className="space-y-3.5 text-xs">
+                {/* Photo Uploader */}
+                <AvatarPicker
+                  label="Faculty Photograph"
+                  value={newTeacher.avatar || newTeacher.photoUrl}
+                  onChange={(url) => setNewTeacher({ ...newTeacher, avatar: url, photoUrl: url })}
+                  helperText="Upload official photograph or choose an educator avatar preset."
+                />
+
                 <Input
                   label="Full Name *"
                   required
@@ -546,7 +621,7 @@ export default function TeachersAdminPage() {
                     <label className="block text-xs font-bold text-slate-700 mb-1">Department *</label>
                     <div className="relative">
                       <select
-                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
                         value={newTeacher.department}
                         onChange={(e) => setNewTeacher({ ...newTeacher, department: e.target.value })}
                       >
@@ -569,7 +644,7 @@ export default function TeachersAdminPage() {
                     <label className="block text-xs font-bold text-slate-700 mb-1">Class Incharge</label>
                     <div className="relative">
                       <select
-                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-sm"
+                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
                         value={newTeacher.assignedClass}
                         onChange={(e) => setNewTeacher({ ...newTeacher, assignedClass: e.target.value })}
                       >
@@ -586,13 +661,22 @@ export default function TeachersAdminPage() {
                   </div>
                 </div>
 
-                <Input
-                  label="Qualifications *"
-                  required
-                  placeholder="e.g. M.Sc. (Physics), B.Ed."
-                  value={newTeacher.qualification}
-                  onChange={(e) => setNewTeacher({ ...newTeacher, qualification: e.target.value })}
-                />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Designation *"
+                    required
+                    placeholder="e.g. Senior Lecturer"
+                    value={newTeacher.designation}
+                    onChange={(e) => setNewTeacher({ ...newTeacher, designation: e.target.value })}
+                  />
+                  <Input
+                    label="Qualifications *"
+                    required
+                    placeholder="e.g. M.Sc. (Physics), B.Ed."
+                    value={newTeacher.qualification}
+                    onChange={(e) => setNewTeacher({ ...newTeacher, qualification: e.target.value })}
+                  />
+                </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <Input
@@ -602,18 +686,133 @@ export default function TeachersAdminPage() {
                     onChange={(e) => setNewTeacher({ ...newTeacher, phone: e.target.value })}
                   />
                   <Input
-                    label="Email Address"
+                    label="Official Email"
                     placeholder="teacher@sarswati.edu"
                     value={newTeacher.email}
                     onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
                   />
                 </div>
 
-                <div className="flex gap-2 pt-3">
-                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 font-bold">
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                  <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 font-bold rounded-2xl">
                     Save &amp; Generate ID Badge
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                  <Button type="button" variant="outline" className="rounded-2xl" onClick={() => setIsAddModalOpen(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ClientPortal>
+      )}
+
+      {/* Edit Teacher Modal */}
+      {editingTeacher && (
+        <ClientPortal>
+          <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 my-auto border border-slate-200">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
+                  <Edit2 className="w-4 h-4 text-blue-600" /> Edit Faculty Member: {editingTeacher.name}
+                </h3>
+                <button onClick={() => setEditingTeacher(null)} className="text-slate-400 hover:text-slate-600 p-1">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleUpdateTeacher} className="space-y-3.5 text-xs">
+                <AvatarPicker
+                  label="Update Faculty Photo"
+                  value={editingTeacher.avatar || editingTeacher.photoUrl}
+                  onChange={(url) => setEditingTeacher({ ...editingTeacher, avatar: url, photoUrl: url })}
+                />
+
+                <Input
+                  label="Full Name *"
+                  required
+                  value={editingTeacher.name}
+                  onChange={(e) => setEditingTeacher({ ...editingTeacher, name: e.target.value })}
+                />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Department</label>
+                    <div className="relative">
+                      <select
+                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
+                        value={editingTeacher.department}
+                        onChange={(e) => setEditingTeacher({ ...editingTeacher, department: e.target.value })}
+                      >
+                        <option value="Physics">Physics</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Sanskrit">Sanskrit</option>
+                        <option value="English">English</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Hindi">Hindi</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Class Incharge</label>
+                    <div className="relative">
+                      <select
+                        className="w-full appearance-none pl-3.5 pr-9 py-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:bg-white focus:bg-white text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:outline-none transition cursor-pointer shadow-xs"
+                        value={editingTeacher.assignedClass}
+                        onChange={(e) => setEditingTeacher({ ...editingTeacher, assignedClass: e.target.value })}
+                      >
+                        <option value="Class 9-A">Class 9-A</option>
+                        <option value="Class 10-A">Class 10-A</option>
+                        <option value="Class 11-A (PCM)">Class 11-A (PCM)</option>
+                        <option value="Class 12-A (PCM)">Class 12-A (PCM)</option>
+                        <option value="Class 12-B (PCB)">Class 12-B (PCB)</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Designation *"
+                    required
+                    value={editingTeacher.designation}
+                    onChange={(e) => setEditingTeacher({ ...editingTeacher, designation: e.target.value })}
+                  />
+                  <Input
+                    label="Qualifications *"
+                    required
+                    value={editingTeacher.qualification}
+                    onChange={(e) => setEditingTeacher({ ...editingTeacher, qualification: e.target.value })}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Phone Number"
+                    value={editingTeacher.phone}
+                    onChange={(e) => setEditingTeacher({ ...editingTeacher, phone: e.target.value })}
+                  />
+                  <Input
+                    label="Official Email"
+                    value={editingTeacher.email}
+                    onChange={(e) => setEditingTeacher({ ...editingTeacher, email: e.target.value })}
+                  />
+                </div>
+
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                  <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 font-bold rounded-2xl">
+                    Save Changes
+                  </Button>
+                  <Button type="button" variant="outline" className="rounded-2xl" onClick={() => setEditingTeacher(null)}>
                     Cancel
                   </Button>
                 </div>
@@ -629,7 +828,7 @@ export default function TeachersAdminPage() {
           <div className="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto w-full h-full min-h-screen">
             <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 my-auto">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                <h3 className="text-sm font-black text-slate-900 flex items-center gap-2 font-serif">
                   <Upload className="w-4 h-4 text-blue-600" /> Bulk Import Faculty CSV
                 </h3>
                 <button onClick={() => setIsBulkModalOpen(false)} className="text-slate-400 hover:text-slate-600">
